@@ -1,6 +1,6 @@
 import { Text, TouchableOpacity, StyleSheet } from "react-native";
 import React from "react";
-import COLORS from "../colors";
+import COLORS from "../../Spots-On/colors";
 
 const Button = (props) => {
   const filledBgColor = props.color || COLORS.primary;

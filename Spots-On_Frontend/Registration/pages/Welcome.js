@@ -10,7 +10,7 @@ const Welcome = ({ navigation }) => {
       style={{
         flex: 1,
       }}
-      colors={[COLORS.lightorange, COLORS.turquoise]}
+      colors={[COLORS.blue, COLORS.turquoise]}
     >
       <View style={{ flex: 1 }}>
         <View>
