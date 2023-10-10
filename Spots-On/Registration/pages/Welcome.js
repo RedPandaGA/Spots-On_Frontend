@@ -2,7 +2,7 @@ import { View, Text, Pressable, Image } from "react-native";
 import React from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import COLORS from "../colors";
-import Button from "../components/Button";
+import Button from "../button";
 
 const Welcome = ({ navigation }) => {
   return (
@@ -88,10 +88,10 @@ const Welcome = ({ navigation }) => {
               width: 200,
               borderRadius: 20,
               position: "absolute",
-              top: 110,
-              left: 100,
+              top: 90,
+              left: 80,
               transform: [
-                { translateX: 50 },
+                { translateX: 10 },
                 { translateY: 50 },
                 { rotate: "-15deg" },
               ],
