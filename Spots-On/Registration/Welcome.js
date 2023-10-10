@@ -128,26 +128,6 @@ const Welcome = ({ navigation }) => {
             Started
           </Text>
 
-          <View style={{ marginVertical: 22 }}>
-            <Text
-              style={{
-                fontSize: 16,
-                color: COLORS.white,
-                marginVertical: 4,
-              }}
-            >
-              Connect with each other with chatting
-            </Text>
-            <Text
-              style={{
-                fontSize: 16,
-                color: COLORS.white,
-              }}
-            >
-              Calling, Enjoy Safe and private texting
-            </Text>
-          </View>
-
           <Button
             title="Join Now"
             onPress={() => navigation.navigate("Signup")}
