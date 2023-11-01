@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
+import { StyleSheet, View, TouchableOpacity, TouchableWithoutFeedback, Keyboard, Image } from "react-native";
 import MapView, { Marker } from "react-native-maps";
-import MapButton from "../components/navButton";
+import MapButton from "../components/mapButton";
 import SearchBar from "../components/searchBar";
+import ColonySlider from "../components/colonySlider";
 
-export default function MainMap() {
+export default function MainMap({ navigation }) {
     const [mapRegion, setmapRegion] = useState({
         latitude: 30.4133,
         longitude: -91.1800,
@@ -16,6 +17,9 @@ export default function MainMap() {
         latitude: 30.41,
         longitude: -91.18,
     });
+
+    const [incognito, setIncognito] = useState(false);
+    const [status, setStatus] = useState(false);
 
     let locationsOfInterest = [
         {
@@ -49,93 +53,125 @@ export default function MainMap() {
         });
     };
 
+    const handleIncognito = () => {
+        console.log("Pressed incognito button");
+        if(incognito) {
+            setIncognito(false);
+        } else {
+            setIncognito(true);
+        }
+    }
+
+    const handleStatus = () => {
+        console.log("Pressed status button");
+        if(status) {
+            setStatus(false);
+        } else {
+            setStatus(true);
+        }
+    }
+
     return(
-        <View>
-            {/* Main Map */}
-            <MapView 
-                style={styles.map}
-                region={mapRegion}
-                initialRegion={mapRegion}
-            >
-                {showLocationsOfInterest()}
-                <Marker 
-                    draggable
-                    pinColor={'#0000ff'}
-                    coordinate={draggableMarkerCoord}
-                    onDragEnd={(e) => setDraggableMarkerCoord(e.nativeEvent.coordinate)}
-                    description="This is a draggable marker"
-                    title='draggable marker'
-                />
-            </MapView>
-
-            {/* ------ MAIN NAV BUTTONS ------ */}
-            {/* Friends Button */}
-            <MapButton
-                imageSource={require('../assets/people.png')} 
-                style={styles.friendsButton} 
-                onPress={() => console.log("Pressed friends button")}
-                width={60}
-                height={60}
-            />
-            {/* Social Button */}
-            <TouchableOpacity onPress={() => console.log("Pressed social button")} style={styles.socialButtonOnMap}>
-                <View style={styles.socialButton}>
-                    <Image 
-                        source={require('../assets/ladybugfixed.png')}
-                        style={styles.socialImage}
+        <TouchableWithoutFeedback onPress={() => {
+            Keyboard.dismiss();
+            //console.log('dismissed keyboard');
+        }}>
+            <View>
+                {/* Main Map */}
+                <MapView 
+                    style={styles.map}
+                    region={mapRegion}
+                    initialRegion={mapRegion}
+                >
+                    {showLocationsOfInterest()}
+                    <Marker 
+                        draggable
+                        pinColor={'#0000ff'}
+                        coordinate={draggableMarkerCoord}
+                        onDragEnd={(e) => setDraggableMarkerCoord(e.nativeEvent.coordinate)}
+                        description="This is a draggable marker"
+                        title='draggable marker'
                     />
-                </View>
-            </TouchableOpacity>
-            {/* Chats Button */}
-            <MapButton 
-                imageSource={require('../assets/speech-bubble.png')} 
-                style={styles.chatButton} 
-                onPress={() => console.log("Pressed chats button")}
-                width={60}
-                height={60}
-            />
+                </MapView>
 
-            {/* ------ SEARCH BAR ------ */}
-            <SearchBar 
-                imageSource={require('../assets/search.png')}
-                style={styles.searchBar}
-                onPress={() => console.log("Pressed search bar")}
-            />
+                {/* ------ MAIN NAV BUTTONS ------ */}
+                {/* Friends Button */}
+                <MapButton
+                    imageSource={require('../assets/people.png')} 
+                    style={styles.friendsButton} 
+                    onPress={() => console.log("Pressed friends button")}
+                    width={60}
+                    height={60}
+                />
+                {/* Social Button */}
+                <TouchableOpacity onPress={() => console.log("Pressed social button")} style={styles.socialButtonOnMap}>
+                    <View style={styles.socialButton}>
+                        <Image 
+                            source={require('../assets/ladybugfixed.png')}
+                            style={styles.socialImage}
+                        />
+                    </View>
+                </TouchableOpacity>
+                {/* Chats Button */}
+                <MapButton 
+                    imageSource={require('../assets/speech-bubble.png')} 
+                    style={styles.chatButton} 
+                    onPress={() => console.log("Pressed chats button")}
+                    width={60}
+                    height={60}
+                />
 
-            {/* ------ SIDE BUTTONS ------ */}
-            {/* Incognito Buttons */}
-            <MapButton 
-                imageSource={require('../assets/incognito.png')} 
-                style={styles.incognitoButton} 
-                onPress={() => console.log("Pressed incognito button")}
-                width={45}
-                height={45}
-            />
-            {/* Status Button */}
-            <MapButton 
-                imageSource={require('../assets/sensor.png')} 
-                style={styles.statusButton} 
-                onPress={() => console.log("Pressed status button")}
-                width={45}
-                height={45}
-            />
-            {/* Change Map View Button */}
-            <MapButton 
-                imageSource={require('../assets/layers.png')} 
-                style={styles.mapViewButton} 
-                onPress={() => console.log("Pressed map view button")}
-                width={45}
-                height={45}
-            />
-            {/* Settings Button */}
-            <MapButton 
-                imageSource={require('../assets/setting.png')} 
-                style={styles.settingsButton} 
-                onPress={() => console.log("Pressed settings button")}
-                width={45}
-                height={45}
-            />
-        </View>
+                {/* ------ SEARCH BAR ------ */}
+                <SearchBar 
+                    imageSource={require('../assets/search.png')}
+                    style={styles.searchBar}
+                    onPress={() => console.log("Pressed search bar")}
+                />
+
+                {/* Colony Buttons Slider */}
+                <ColonySlider style={styles.colonySlider} />
+
+                {/* ------ SIDE BUTTONS ------ */}
+                {/* Incognito Buttons */}
+                <MapButton 
+                    imageSource={require('../assets/incognito.png')} 
+                    style={styles.incognitoButton} 
+                    onPress={() => handleIncognito()}
+                    width={45}
+                    height={45}
+                    active={incognito}
+                />
+                {/* Status Button */}
+                <MapButton 
+                    imageSource={require('../assets/sensor.png')} 
+                    style={styles.statusButton} 
+                    onPress={() => handleStatus()}
+                    width={45}
+                    height={45}
+                    active={status}
+                />
+                {/* Change Map View Button */}
+                <MapButton 
+                    imageSource={require('../assets/layers.png')} 
+                    style={styles.mapViewButton} 
+                    onPress={() => console.log("Pressed map view button")}
+                    width={45}
+                    height={45}
+                />
+                {/* Settings Button */}
+                <MapButton 
+                    imageSource={require('../assets/setting.png')} 
+                    style={styles.settingsButton} 
+                    onPress={() => {
+                        console.log("Pressed settings button");
+                        navigation.navigate('Settings');
+                    }}
+                    width={45}
+                    height={45}
+                />
+            </View>
+        </TouchableWithoutFeedback>
+        
     )
 }
 
@@ -158,6 +194,11 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: '5%',
         left: '5%',
+    },
+    colonySlider: {
+        position: 'absolute',
+        top: '12%',
+        left: '4%',
     },
     incognitoButton: {
         position: 'absolute',
@@ -188,9 +229,9 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: '5%',
         left: '40%',
-        elevation: 10,
-        backgroundColor: 'rgba(0, 0, 0, .1)',
-        borderRadius: 50
+        elevation: 22,
+        shadowColor: '#000',
+        borderRadius: 50,
     },
     socialButton: {
         alignItems: 'center',
