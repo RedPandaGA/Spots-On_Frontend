@@ -1,24 +1,16 @@
-import {
-  View,
-  Text,
-  Image,
-  Pressable,
-  TextInput,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, Image, Pressable, TextInput, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import COLORS from "../../../Spots-On/colors";
+import COLORS from "../components/colors";
 import { Ionicons } from "@expo/vector-icons";
 import Checkbox from "expo-checkbox";
-import Button from "../components/Button";
+import Button from "../components/button";
 
-const Login = ({ navigation }) => {
+const Signup = ({ navigation }) => {
   const [isPasswordShown, setIsPasswordShown] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
-
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#2C6765' }}>
       <View style={{ flex: 1, marginHorizontal: 22 }}>
         <View style={{ marginVertical: 22 }}>
           <Text
@@ -26,19 +18,19 @@ const Login = ({ navigation }) => {
               fontSize: 22,
               fontWeight: "bold",
               marginVertical: 12,
-              color: COLORS.black,
+              color: COLORS.white,
             }}
           >
-            Hi Welcome Back ! 👋
+            Create Account
           </Text>
 
           <Text
             style={{
               fontSize: 16,
-              color: COLORS.black,
+              color: COLORS.white,
             }}
           >
-            Hello again you have been missed!
+            Connect with your friend today!
           </Text>
         </View>
 
@@ -48,6 +40,7 @@ const Login = ({ navigation }) => {
               fontSize: 16,
               fontWeight: 400,
               marginVertical: 8,
+              color: 'white'
             }}
           >
             Email address
@@ -57,7 +50,8 @@ const Login = ({ navigation }) => {
             style={{
               width: "100%",
               height: 48,
-              borderColor: COLORS.black,
+              borderColor: COLORS.white,
+              backgroundColor: 'white',
               borderWidth: 1,
               borderRadius: 8,
               alignItems: "center",
@@ -82,6 +76,56 @@ const Login = ({ navigation }) => {
               fontSize: 16,
               fontWeight: 400,
               marginVertical: 8,
+              color: 'white'
+            }}
+          >
+            Mobile Number
+          </Text>
+
+          <View
+            style={{
+              width: "100%",
+              height: 48,
+              borderColor: COLORS.white,
+              borderWidth: 1,
+              borderRadius: 8,
+              alignItems: "center",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              backgroundColor: 'white',
+              paddingLeft: 22,
+            }}
+          >
+            <TextInput
+              placeholder="+1"
+              placeholderTextColor={COLORS.black}
+              keyboardType="numeric"
+              style={{
+                width: "12%",
+                borderRightWidth: 1,
+                borderLeftColor: COLORS.white,
+                height: "100%",
+              }}
+            />
+
+            <TextInput
+              placeholder="Enter your phone number"
+              placeholderTextColor={COLORS.black}
+              keyboardType="numeric"
+              style={{
+                width: "80%",
+              }}
+            />
+          </View>
+        </View>
+
+        <View style={{ marginBottom: 12 }}>
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: 400,
+              marginVertical: 8,
+              color: 'white'
             }}
           >
             Password
@@ -91,12 +135,13 @@ const Login = ({ navigation }) => {
             style={{
               width: "100%",
               height: 48,
-              borderColor: COLORS.black,
+              borderColor: COLORS.white,
               borderWidth: 1,
               borderRadius: 8,
               alignItems: "center",
               justifyContent: "center",
               paddingLeft: 22,
+              backgroundColor: 'white'
             }}
           >
             <TextInput
@@ -116,9 +161,9 @@ const Login = ({ navigation }) => {
               }}
             >
               {isPasswordShown == true ? (
-                <Ionicons name="eye-off" size={24} color={COLORS.black} />
+                <Ionicons name="eye-off" size={24} color={COLORS.white} />
               ) : (
-                <Ionicons name="eye" size={24} color={COLORS.black} />
+                <Ionicons name="eye" size={24} color={COLORS.white} />
               )}
             </TouchableOpacity>
           </View>
@@ -137,16 +182,18 @@ const Login = ({ navigation }) => {
             color={isChecked ? COLORS.primary : undefined}
           />
 
-          <Text>Remenber Me</Text>
+          <Text style={{color: 'white'}}>I agree to the terms and conditions</Text>
         </View>
 
         <Button
-          title="Login"
-          filled
+          title="Sign Up"
           style={{
             marginTop: 18,
             marginBottom: 4,
+            backgroundColor: 'white',
+            borderColor: 'white'
           }}
+          onPress={() => navigation.navigate('Home')}
         />
 
         <View
@@ -164,7 +211,7 @@ const Login = ({ navigation }) => {
               marginHorizontal: 10,
             }}
           />
-          <Text style={{ fontSize: 14 }}>Or Login with</Text>
+          <Text style={{ fontSize: 14, color: 'white' }}>Or Sign up with</Text>
           <View
             style={{
               flex: 1,
@@ -190,7 +237,8 @@ const Login = ({ navigation }) => {
               flexDirection: "row",
               height: 52,
               borderWidth: 1,
-              borderColor: COLORS.grey,
+              borderColor: COLORS.white,
+              backgroundColor: 'white',
               marginRight: 4,
               borderRadius: 10,
             }}
@@ -217,7 +265,8 @@ const Login = ({ navigation }) => {
               flexDirection: "row",
               height: 52,
               borderWidth: 1,
-              borderColor: COLORS.grey,
+              borderColor: COLORS.white,
+              backgroundColor: 'white',
               marginRight: 4,
               borderRadius: 10,
             }}
@@ -243,19 +292,19 @@ const Login = ({ navigation }) => {
             marginVertical: 22,
           }}
         >
-          <Text style={{ fontSize: 16, color: COLORS.black }}>
-            Don't have an account ?{" "}
+          <Text style={{ fontSize: 16, color: COLORS.white }}>
+            Already have an account?
           </Text>
-          <Pressable onPress={() => navigation.navigate("Signup")}>
+          <Pressable onPress={() => navigation.navigate("Login")}>
             <Text
               style={{
                 fontSize: 16,
-                color: COLORS.primary,
+                color: COLORS.white,
                 fontWeight: "bold",
                 marginLeft: 6,
               }}
             >
-              Register
+              Login
             </Text>
           </Pressable>
         </View>
@@ -264,4 +313,4 @@ const Login = ({ navigation }) => {
   );
 };
 
-export default Login;
+export default Signup;

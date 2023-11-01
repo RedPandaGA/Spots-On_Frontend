@@ -1,21 +1,21 @@
 import { View, Text, Pressable, Image } from "react-native";
 import React from "react";
 import { LinearGradient } from "expo-linear-gradient";
-import COLORS from "../colors";
-import Button from "../button";
+import COLORS from "../components/colors";
+import Button from "../components/button";
 
 const Welcome = ({ navigation }) => {
   return (
-    <LinearGradient
-      style={{
-        flex: 1,
-      }}
-      colors={[COLORS.blue, COLORS.turquoise]}
-    >
-      <View style={{ flex: 1 }}>
+    // <LinearGradient
+    //   style={{
+    //     flex: 1,
+    //   }}
+    //   colors={['rgba(44, 103, 101)', 'rgba(0, 0, 0)']}
+    // >
+      <View style={{ flex: 1, backgroundColor: '#2C6765' }}>
         <View>
-          <Image
-            source={require("../ladybug1.png")}
+          {/* <Image
+            source={require("../assets/ladybug1.png")}
             style={{
               height: 100,
               width: 100,
@@ -28,10 +28,10 @@ const Welcome = ({ navigation }) => {
                 { rotate: "-15deg" },
               ],
             }}
-          />
+          /> */}
 
-          <Image
-            source={require("../ladybug2.png")}
+          {/* <Image
+            source={require("../assets/ladybug2.png")}
             style={{
               height: 100,
               width: 100,
@@ -45,10 +45,10 @@ const Welcome = ({ navigation }) => {
                 { rotate: "-5deg" },
               ],
             }}
-          />
+          /> */}
 
-          <Image
-            source={require("../ladybug3.png")}
+          {/* <Image
+            source={require("../assets/ladybug3.png")}
             style={{
               width: 100,
               height: 100,
@@ -62,10 +62,10 @@ const Welcome = ({ navigation }) => {
                 { rotate: "15deg" },
               ],
             }}
-          />
+          /> */}
 
-          <Image
-            source={require("../ladybug4.png")}
+          {/* <Image
+            source={require("../assets/ladybug4.png")}
             style={{
               height: 200,
               width: 200,
@@ -79,10 +79,10 @@ const Welcome = ({ navigation }) => {
                 { rotate: "-15deg" },
               ],
             }}
-          />
+          /> */}
 
-          <Image
-            source={require("../ladybug5.png")}
+          {/* <Image
+            source={require("../assets/ladybug5.png")}
             style={{
               height: 200,
               width: 200,
@@ -96,7 +96,7 @@ const Welcome = ({ navigation }) => {
                 { rotate: "-15deg" },
               ],
             }}
-          />
+          /> */}
         </View>
 
         {/* content  */}
@@ -167,7 +167,7 @@ const Welcome = ({ navigation }) => {
           </View>
         </View>
       </View>
-    </LinearGradient>
+    // </LinearGradient>
   );
 };
 
