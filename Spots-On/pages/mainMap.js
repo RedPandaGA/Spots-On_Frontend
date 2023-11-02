@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Image, Button, Modal } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import MapButton from "../components/navButton";
 import SearchBar from "../components/searchBar";
@@ -35,6 +35,17 @@ export default function MainMap() {
             description: "Tiger Stadium"
         }
     ];
+
+    const [isFriendsListVisible, setFriendsListVisible] = useState(false);
+    const [isColonyChatListVisible, setColonyChatListVisible] = useState(false);
+
+    const toggleFriendsList = () => {
+        setFriendsListVisible(!isFriendsListVisible);
+    };
+
+    const toggleColonyChatList = () => {
+        setColonyChatListVisible(!isColonyChatListVisible);
+    };
 
     const showLocationsOfInterest = () => {
         return locationsOfInterest.map((item, index) => {
@@ -73,7 +84,7 @@ export default function MainMap() {
             <MapButton
                 imageSource={require('../assets/people.png')} 
                 style={styles.friendsButton} 
-                onPress={() => console.log("Pressed friends button")}
+                onPress={toggleFriendsList}
                 width={60}
                 height={60}
             />
@@ -90,7 +101,7 @@ export default function MainMap() {
             <MapButton 
                 imageSource={require('../assets/speech-bubble.png')} 
                 style={styles.chatButton} 
-                onPress={() => console.log("Pressed chats button")}
+                onPress={toggleColonyChatList}
                 width={60}
                 height={60}
             />
@@ -135,11 +146,46 @@ export default function MainMap() {
                 width={45}
                 height={45}
             />
+
+                    {/* Friends List (left modal)*/}
+            <Modal
+                isVisible={isFriendsListVisible}
+                style={[styles.modal, styles.FriendsList]}
+                animationIn="slideInLeft"
+                animationOut="slideOutLeft"
+            >
+                <View style={styles.modalContent}>
+                <Text>Left Modal Content</Text>
+                <TouchableOpacity onPress={toggleFriendsList}>
+                    <Text>Close</Text>
+                </TouchableOpacity>
+                </View>
+            </Modal>
+
+            {/* Colony Chat List (right modal) */}
+            <Modal
+                isVisible={isColonyChatListVisible}
+                style={[styles.modal, styles.ColonyChatList]}
+                animationIn="slideInRight"
+                animationOut="slideOutRight"
+            >
+                <View style={styles.modalContent}>
+                <Text>Right Modal Content</Text>
+                <TouchableOpacity onPress={toggleColonyChatList}>
+                    <Text>Close</Text>
+                </TouchableOpacity>
+                </View>
+            </Modal>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
     map: {
         height: '100%',
         width: '100%',
@@ -202,5 +248,21 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         backgroundColor: 'rgba(44, 103, 101, .8)'
     },
+    modal: {
+        backgroundColor: 'white',
+        margin: 0,
+        justifyContent: 'flex-end',
+      },
+      modalContent: {
+        padding: 20,
+        alignItems: 'center',
+      },
+      FriendsList: {
+        width: '90%', // Adjust as needed
+      },
+      ColonyChatList: {
+        width: '90%', // Adjust as needed
+        alignSelf: 'flex-end'
+      },
 
 });
