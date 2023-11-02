@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, TouchableOpacity, FlatList } from 'react-native
 
 export default function ColonySlider({ style }) {
     const [colony, setColony] = useState([
-        { name: 'sase', key: 1 },
+        { name: 'SASE', key: 1 },
         { name: 'lsu engineering', key: 2 },
         { name: 'swim friends', key: 3 },
         { name: 'ood group', key: 4 },
@@ -25,7 +25,7 @@ export default function ColonySlider({ style }) {
                 data={colony}
                 showsHorizontalScrollIndicator={false}
                 renderItem={({ item }) => (
-                    <View >
+                    <View>
                         <TouchableOpacity onPress={() => onPress(item.name)} >
                             <View style={styles.button}>
                                 <Text style={styles.text}>{item.name}</Text>
@@ -53,7 +53,6 @@ const styles = StyleSheet.create({
     },
     text: {
         textAlign: 'center',
-        textTransform: 'capitalize',
         fontSize: 16,
         color: 'white',
         fontWeight: 'bold'
