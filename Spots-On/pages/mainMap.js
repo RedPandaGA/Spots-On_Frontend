@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { StyleSheet, Animated, Text, View, TouchableOpacity, TouchableWithoutFeedback, Keyboard, Image, KeyboardAvoidingView, Modal, PanResponder } from "react-native";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Circle, Marker } from "react-native-maps";
 import MapButton from "../components/mapButton";
 import SearchBar from "../components/searchBar";
 import ColonySlider from "../components/colonySlider";
@@ -9,7 +9,7 @@ import SocialModal from "../components/socialModal";
 export default function MainMap({ navigation }) {
 
     // Manage the location of the map
-    const [mapRegion, setmapRegion] = useState({
+    const [mapRegion, setMapRegion] = useState({
         latitude: 30.4133,
         longitude: -91.1800,
         latitudeDelta: 0.0922,
@@ -24,7 +24,13 @@ export default function MainMap({ navigation }) {
 
     // Track incognito and status choices
     const [incognito, setIncognito] = useState(false);
-    const [showStatus, setshowStatus] = useState(false);
+    const [showStatus, setShowStatus] = useState(false);
+
+    // Track social button modal
+    const [isSocialModalVisible, setIsSocialModalVisible] = useState(false);
+
+    // Track map type changes
+    const [mapType, setMapType] = useState('standard');
 
     const handleIncognito = () => {
         console.log("Pressed incognito button");
@@ -35,17 +41,14 @@ export default function MainMap({ navigation }) {
         }
     }
 
-    const handleshowStatus = () => {
+    const handleShowStatus = () => {
         console.log("Pressed show status button");
         if(showStatus) {
-            setshowStatus(false);
+            setShowStatus(false);
         } else {
-            setshowStatus(true);
+            setShowStatus(true);
         }
     }
-
-    // Track social button modal
-    const [isSocialModalVisible, setIsSocialModalVisible] = useState(false);
 
     const showSocialModal = () => {
         setIsSocialModalVisible(true);
@@ -53,6 +56,14 @@ export default function MainMap({ navigation }) {
 
     const hideSocialModal = () => {
         setIsSocialModalVisible(false);
+    };
+
+    const handleMapType = () => {
+        if(mapType == 'standard') {
+            setMapType('satellite');
+        } else {
+            setMapType('standard');
+        }
     };
 
 
@@ -83,6 +94,7 @@ export default function MainMap({ navigation }) {
                     coordinate={item.location}
                     title={item.title}
                     description={item.description}
+                    style={{height: 100}}
                 />
             )
         });
@@ -124,16 +136,42 @@ export default function MainMap({ navigation }) {
                         style={styles.map}
                         region={mapRegion}
                         initialRegion={mapRegion}
-                        onRegionChange={newRegion => setmapRegion(newRegion)}
+                        onRegionChange={newRegion => setMapRegion(newRegion)}
+                        mapType={mapType}
                     >
                         {showLocationsOfInterest()}
                         <Marker 
                             draggable
                             pinColor={'#0000ff'}
                             coordinate={draggableMarkerCoord}
-                            onDragEnd={(e) => setDraggableMarkerCoord(e.nativeEvent.coordinate)}
+                            onDragEnd={(e) => {
+                                setDraggableMarkerCoord(e.nativeEvent.coordinate);
+                                console.log("New coordinates for marker:");
+                                console.log(e.nativeEvent.coordinate)
+                            }}
                             description="This is a draggable marker"
                             title='draggable marker'
+                        />
+                        <Circle 
+                            center={{"latitude": 30.41699914895536, "longitude": -91.17555990815163}} 
+                            radius={1000} 
+                            strokeWidth={1} 
+                            strokeColor="#2C6765"
+                            fillColor='rgba(44, 103, 101, .3)'
+                        />
+                        <Circle 
+                            center={{"latitude": 30.39950609050538, "longitude": -91.18346974253654}}
+                            radius={400} 
+                            strokeWidth={1} 
+                            strokeColor="#2C6765"
+                            fillColor='rgba(44, 103, 101, .3)'
+                        />
+                        <Circle 
+                            center={{"latitude": 30.39446465572983, "longitude": -91.17913294583559}}
+                            radius={200} 
+                            strokeWidth={1} 
+                            strokeColor="#rgba(255, 85, 85, 1)"
+                            fillColor='rgba(255, 85, 85, .3)'
                         />
                     </MapView>
 
@@ -195,7 +233,7 @@ export default function MainMap({ navigation }) {
                     <MapButton 
                         imageSource={require('../assets/sensor.png')} 
                         style={styles.statusButton} 
-                        onPress={() => handleshowStatus()}
+                        onPress={() => handleShowStatus()}
                         width={45}
                         height={45}
                         active={showStatus}
@@ -204,7 +242,10 @@ export default function MainMap({ navigation }) {
                     <MapButton 
                         imageSource={require('../assets/layers.png')} 
                         style={styles.mapViewButton} 
-                        onPress={() => console.log("Pressed map view button")}
+                        onPress={() => {
+                            handleMapType();
+                            console.log("Pressed map view button");
+                        }}
                         width={45}
                         height={45}
                     />
@@ -295,6 +336,11 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         backgroundColor: 'rgba(44, 103, 101, .8)'
     },
+    markerImage: {
+        height: 50,
+        width: 50,
+        borderRadius: 50,
+    }
 
 
 });
