@@ -2,29 +2,29 @@ import React from 'react';
 import { Modal, Dimensions, StyleSheet, View, Text, TouchableOpacity, Animated, PanResponder } from 'react-native';
 import Bar from './bar';
 
-const SocialModal = ({ isModalVisible, hideModal }) => {
+const SocialModal = ({ isModalVisible, hideModal, setViewEvents }) => {
     const screenHeight = Dimensions.get('window').height;
-    const percentageThreshold = 0.4; // Adjust the percentage as needed
+    const percentageThreshold = 0.5; // Adjust the percentage as needed
 
     const panResponder = PanResponder.create({
         onStartShouldSetPanResponder: (e, gestureState) => {
-        // Calculate the threshold based on a percentage of the screen height
-        const threshold = screenHeight * percentageThreshold;
-        return e.nativeEvent.pageY > threshold;
+            // Calculate the threshold based on a percentage of the screen height
+            const threshold = screenHeight * percentageThreshold;
+            return e.nativeEvent.pageY > threshold && e.nativeEvent.pageY < screenHeight * (percentageThreshold + .1);
         },
         onPanResponderMove: (event, gestureState) => {
-        if (gestureState.dy > 0) {
-            if (gestureState.dy < screenHeight * percentageThreshold) {
-            modalPosition.setValue(gestureState.dy);
+            if (gestureState.dy > 0) {
+                if (gestureState.dy < screenHeight * percentageThreshold) {
+                    modalPosition.setValue(gestureState.dy);
+                }
             }
-        }
         },
         onPanResponderRelease: (event, gestureState) => {
-        if (gestureState.dy > 200) {
-            hideModal();
-        } else {
-            modalPosition.setValue(0);
-        }
+            if (gestureState.dy > 200) {
+                hideModal();
+            } else {
+                modalPosition.setValue(0);
+            }
         },
     });
 
@@ -38,6 +38,8 @@ const SocialModal = ({ isModalVisible, hideModal }) => {
             console.log('Set Status clicked');
         },
         () => {
+            hideModal();
+            setViewEvents(true);
             console.log('View Events clicked');
             // Handle specific action for Button 2
             // You can customize this function for each button
@@ -80,7 +82,7 @@ const SocialModal = ({ isModalVisible, hideModal }) => {
             </View>
         </Modal>
     );
-    };
+};
 
 const styles = StyleSheet.create({
     modalContainer: {

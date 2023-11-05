@@ -2,18 +2,13 @@ import React from 'react';
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { createDrawerNavigator } from '@react-navigation/drawer';
 import MainMap from './pages/mainMap';
 import Settings from './pages/settings';
-
 
 const Stack = createStackNavigator();
 
 export default function App() {
   return (
-    // <View style={styles.container}>
-    //   <MainMap />
-    // </View>
     <NavigationContainer>
       <Stack.Navigator initialRouteName='Home'>
         <Stack.Screen 
@@ -28,19 +23,76 @@ export default function App() {
         />
       </Stack.Navigator>
     </NavigationContainer>
-
-    // <View>
-    //   <ColonySlider />
-    // </View>
   );
 }
+
+// import React, { useState } from "react";
+// import { Modal, Text, View, Button, StyleSheet } from "react-native";
+
+// export function ModalA({ isVisible, onClose }) {
+//   return (
+//     <Modal transparent={true} visible={isVisible} animationType="slide">
+//       <View style={styles.modalContainer}>
+//         <View style={styles.modalContent}>
+//           <Text>Content A</Text>
+//           <Button title="Close Modal" onPress={onClose} />
+//         </View>
+//       </View>
+//     </Modal>
+//   );
+// }
+
+// export function ModalB({ isVisible, onClose }) {
+//   return (
+//     <Modal transparent={true} visible={isVisible} animationType="slide">
+//       <View style={styles.modalContainer}>
+//         <View style={styles.modalContent}>
+//           <Text>Content B</Text>
+//           <Button title="Close Modal" onPress={onClose} />
+//         </View>
+//       </View>
+//     </Modal>
+//   );
+// }
+
+// export default function MyModal() {
+//   const [showModalA, setShowModalA] = useState(false);
+//   const [showModalB, setShowModalB] = useState(false);
+
+//   return (
+//     <View style={styles.container}>
+//       <View style={styles.buttonContainer}>
+//         <Button title="Open Modal A" onPress={() => setShowModalA(true)} />
+//         <Button title="Open Modal B" onPress={() => setShowModalB(true)} />
+//       </View>
+
+//       <ModalA isVisible={showModalA} onClose={() => setShowModalA(false)} />
+//       <ModalB isVisible={showModalB} onClose={() => setShowModalB(false)} />
+//     </View>
+//   );
+// }
 
 // const styles = StyleSheet.create({
 //   container: {
 //     flex: 1,
-//     backgroundColor: '#fff',
-//     alignItems: 'center',
-//     justifyContent: 'center',
+//     justifyContent: "center",
+//     alignItems: "center",
 //   },
-  
+//   buttonContainer: {
+//     flexDirection: "row",
+//     justifyContent: "center",
+//     alignItems: "center",
+//     marginBottom: 20,
+//   },
+//   modalContainer: {
+//     flex: 1,
+//     justifyContent: "center",
+//     alignItems: "center",
+//   },
+//   modalContent: {
+//     backgroundColor: "white",
+//     padding: 20,
+//     borderRadius: 10,
+//     width: 300,
+//   },
 // });

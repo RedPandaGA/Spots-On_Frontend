@@ -5,6 +5,7 @@ import MapButton from "../components/mapButton";
 import SearchBar from "../components/searchBar";
 import ColonySlider from "../components/colonySlider";
 import SocialModal from "../components/socialModal";
+import ViewEventsModal from "../components/viewEventsModal";
 
 export default function MainMap({ navigation }) {
 
@@ -28,6 +29,9 @@ export default function MainMap({ navigation }) {
 
     // Track social button modal
     const [isSocialModalVisible, setIsSocialModalVisible] = useState(false);
+
+    // Track view events modal
+    const [isViewEventsModalVisible, setIsViewEventsModalVisible] = useState(false);
 
     // Track map type changes
     const [mapType, setMapType] = useState('standard');
@@ -56,6 +60,14 @@ export default function MainMap({ navigation }) {
 
     const hideSocialModal = () => {
         setIsSocialModalVisible(false);
+    };
+
+    const showViewEventsModal = () => {
+        setIsViewEventsModalVisible(true);
+    };
+
+    const hideViewEventsModal = () => {
+        setIsViewEventsModalVisible(false);
     };
 
     const handleMapType = () => {
@@ -196,10 +208,8 @@ export default function MainMap({ navigation }) {
                             />
                         </View>
                     </TouchableOpacity>
-                    <SocialModal
-                        isModalVisible={isSocialModalVisible}
-                        hideModal={hideSocialModal}
-                    />                    
+                    {isSocialModalVisible && <SocialModal isModalVisible={isSocialModalVisible} hideModal={hideSocialModal} setViewEvents={setIsViewEventsModalVisible}/>}
+                    {isViewEventsModalVisible && <ViewEventsModal isModalVisible={isViewEventsModalVisible} hideModal={hideViewEventsModal} setSocialModal={setIsSocialModalVisible}/>}
                     {/* Chats Button */}
                     <MapButton 
                         imageSource={require('../assets/speech-bubble.png')} 
