@@ -1,17 +1,22 @@
 import React from "react";
-import { StyleSheet, Image, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Image, View, TextInput } from 'react-native';
 
-export default function SearchBar({ imageSource, onPress, style, width, height }) {
+export default function SearchBar({ imageSource, style }) {
     return (
         <View style={[style, styles.shadow]}>
-            <TouchableOpacity onPress={onPress} >
-                <View style={styles.button}>
-                    <Image 
-                        source={imageSource}
-                        style={styles.image}
-                    />
-                </View>
-            </TouchableOpacity>
+            <View style={styles.button}>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Search for groups"
+                    placeholderTextColor='white'
+                    // value={searchText}
+                    // onChangeText={setSearchText}
+                />
+                <Image 
+                    source={imageSource}
+                    style={styles.image}
+                />
+            </View>
         </View>
     )
 }
@@ -25,19 +30,26 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         paddingVertical: 14,
         paddingHorizontal: 10,
-        backgroundColor: 'rgba(44, 103, 101, .8)',
-        flexDirection: 'row-reverse',
+        backgroundColor: 'rgba(44, 103, 101, .7)',
+        flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between'
+    },
+    input: {
+        height: 45,
+        width: 250,
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: 16
     },
     image: {
         width: 30,
         height: 30,
-        left: 5
+        right: 5
     },
     shadow: {
-        elevation: 10,
-        backgroundColor: 'rgba(0, 0, 0, .1)',
+        elevation: 20,
+        shadowColor: '#000',
         borderRadius: 50,
     }
 });

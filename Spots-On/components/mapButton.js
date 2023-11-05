@@ -1,11 +1,16 @@
 import React from "react";
 import { StyleSheet, Image, View, TouchableOpacity } from 'react-native';
 
-export default function MapButton({ imageSource, onPress, style, width, height }) {
+export default function MapButton({ imageSource, onPress, style, width, height, active }) {
+    let backgroundColor = 'rgba(44, 103, 101, .8)';
+    if (active) {
+        backgroundColor = 'rgba(255, 85, 85, .8)'
+    }
+    
     return (
         <View style={[style, styles.shadow]}>
             <TouchableOpacity onPress={onPress} >
-                <View style={[styles.button, {width: width, height: height}]}>
+                <View style={[styles.button, {width: width, height: height, backgroundColor: backgroundColor}]}>
                     <Image 
                         source={imageSource}
                         style={styles.image}
@@ -23,15 +28,14 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         paddingVertical: 14,
         paddingHorizontal: 10,
-        backgroundColor: 'rgba(44, 103, 101, .8)'
     },
     image: {
         width: 35,
         height: 35,
     },
     shadow: {
-        elevation: 10,
-        backgroundColor: 'rgba(0, 0, 0, .1)',
+        elevation: 20,
+        shadowColor: '#000',
         borderRadius: 50,
     }
 });
