@@ -6,6 +6,7 @@ import SearchBar from "../components/searchBar";
 import ColonySlider from "../components/colonySlider";
 import SocialModal from "../components/socialModal";
 import ViewEventsModal from "../components/viewEventsModal";
+import CreateEventModal from "../components/createEventModal";
 
 export default function MainMap({ navigation }) {
 
@@ -32,6 +33,9 @@ export default function MainMap({ navigation }) {
 
     // Track view events modal
     const [isViewEventsModalVisible, setIsViewEventsModalVisible] = useState(false);
+
+    // Track create event modal
+    const [isCreateEventModalVisible, setIsCreateEventModalVisible] = useState(false);
 
     // Track map type changes
     const [mapType, setMapType] = useState('standard');
@@ -69,6 +73,14 @@ export default function MainMap({ navigation }) {
     const hideViewEventsModal = () => {
         setIsViewEventsModalVisible(false);
     };
+
+    const showCreateEventModal = () => {
+        setIsCreateEventModalVisible(true);
+    }
+
+    const hideCreateEventModal = () => {
+        setIsCreateEventModalVisible(false);
+    }
 
     const handleMapType = () => {
         if(mapType == 'standard') {
@@ -208,8 +220,9 @@ export default function MainMap({ navigation }) {
                             />
                         </View>
                     </TouchableOpacity>
-                    {isSocialModalVisible && <SocialModal isModalVisible={isSocialModalVisible} hideModal={hideSocialModal} setViewEvents={setIsViewEventsModalVisible}/>}
+                    {isSocialModalVisible && <SocialModal isModalVisible={isSocialModalVisible} hideModal={hideSocialModal} setViewEvents={setIsViewEventsModalVisible} setCreateEvent={setIsCreateEventModalVisible}/>}
                     {isViewEventsModalVisible && <ViewEventsModal isModalVisible={isViewEventsModalVisible} hideModal={hideViewEventsModal} setSocialModal={setIsSocialModalVisible}/>}
+                    {isCreateEventModalVisible && <CreateEventModal isModalVisible={isCreateEventModalVisible} hideModal={hideCreateEventModal} setSocialModal={setIsSocialModalVisible}/>}
                     {/* Chats Button */}
                     <MapButton 
                         imageSource={require('../assets/speech-bubble.png')} 

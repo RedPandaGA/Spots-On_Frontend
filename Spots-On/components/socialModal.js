@@ -2,7 +2,7 @@ import React from 'react';
 import { Modal, Dimensions, StyleSheet, View, Text, TouchableOpacity, Animated, PanResponder } from 'react-native';
 import Bar from './bar';
 
-const SocialModal = ({ isModalVisible, hideModal, setViewEvents }) => {
+const SocialModal = ({ isModalVisible, hideModal, setViewEvents, setCreateEvent }) => {
     const screenHeight = Dimensions.get('window').height;
     const percentageThreshold = 0.5; // Adjust the percentage as needed
 
@@ -45,6 +45,8 @@ const SocialModal = ({ isModalVisible, hideModal, setViewEvents }) => {
             // You can customize this function for each button
         },
         () => {
+            hideModal();
+            setCreateEvent(true);
             console.log('Create Event clicked');
             // Handle specific action for Button 3
         },

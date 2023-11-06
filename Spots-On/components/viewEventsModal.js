@@ -2,19 +2,19 @@ import React, { useState } from 'react';
 import { Modal, Dimensions, StyleSheet, View, Text, Image, Animated, PanResponder, TouchableOpacity, FlatList } from 'react-native';
 import Bar from './bar';
 
-const ViewEventsModal = ({ isModalVisible, hideModal, setViewEvents, setSocialModal }) => {
+const ViewEventsModal = ({ isModalVisible, hideModal, setSocialModal }) => {
 
     const [isTodayPressed, setIsTodayPressed] = useState(true);
     const [isUpcomingPressed, setIsUpcomingPressed] = useState(false);
 
     const screenHeight = Dimensions.get('window').height;
-    const percentageThreshold = 0.4; // Adjust the percentage as needed
+    const percentageThreshold = 0.6; // Adjust the percentage as needed
 
     const panResponder = PanResponder.create({
         onStartShouldSetPanResponder: (e, gestureState) => {
         // Calculate the threshold based on a percentage of the screen height
             const threshold = screenHeight * percentageThreshold;
-            return e.nativeEvent.pageY > threshold && e.nativeEvent.pageY < screenHeight * (percentageThreshold + .1);
+            return e.nativeEvent.pageY < threshold;
         },
         onPanResponderMove: (event, gestureState) => {
         if (gestureState.dy > 0) {
@@ -130,7 +130,7 @@ const ViewEventsModal = ({ isModalVisible, hideModal, setViewEvents, setSocialMo
                         </TouchableOpacity>
                         <Text style={styles.modalTitle}>Events</Text>
                     </View>
-                    <View style={styles.buttonWrapper}>
+                    <View style={styles.buttonContainer}>
                         <TouchableOpacity 
                             style={isTodayPressed ? styles.buttonPressed : styles.buttonNormal}
                             onPress={() => {
@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         letterSpacing: 1
     },
-    buttonWrapper: {
+    buttonContainer: {
         flexDirection: 'row',
         width: '100%',
         justifyContent: 'space-between',
