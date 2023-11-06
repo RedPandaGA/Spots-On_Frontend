@@ -5,6 +5,7 @@ import MapButton from "../components/mapButton";
 import SearchBar from "../components/searchBar";
 import ColonySlider from "../components/colonySlider";
 import SocialModal from "../components/socialModal";
+import FriendsModal from "../components/friendsModal";
 
 export default function MainMap({ navigation }) {
 
@@ -28,6 +29,9 @@ export default function MainMap({ navigation }) {
 
     // Track social button modal
     const [isSocialModalVisible, setIsSocialModalVisible] = useState(false);
+
+    // Track friends button modal
+    const [isFriendsModalVisible, setIsFriendsModalVisible] = useState(false);
 
     // Track map type changes
     const [mapType, setMapType] = useState('standard');
@@ -58,6 +62,14 @@ export default function MainMap({ navigation }) {
         setIsSocialModalVisible(false);
     };
 
+    const showFriendsModal = () => {
+        setIsFriendsModalVisible(true);
+    };
+
+    const hideFriendsModal = () => {
+        setIsFriendsModalVisible(false);
+    };
+
     const handleMapType = () => {
         if(mapType == 'standard') {
             setMapType('satellite');
@@ -85,17 +97,6 @@ export default function MainMap({ navigation }) {
             description: "Tiger Stadium"
         }
     ];
-
-    const [isFriendsListVisible, setFriendsListVisible] = useState(false);
-    const [isColonyChatListVisible, setColonyChatListVisible] = useState(false);
-
-    const toggleFriendsList = () => {
-        setFriendsListVisible(!isFriendsListVisible);
-    };
-
-    const toggleColonyChatList = () => {
-        setColonyChatListVisible(!isColonyChatListVisible);
-    };
 
     const showLocationsOfInterest = () => {
         return locationsOfInterest.map((item, index) => {
@@ -188,13 +189,21 @@ export default function MainMap({ navigation }) {
 
                     {/* ------ MAIN NAV BUTTONS ------ */}
                     {/* Friends Button */}
-                    <MapButton
-                        imageSource={require('../assets/people.png')} 
-                        style={styles.friendsButton} 
-                        onPress={() => console.log("Pressed friends button")}
-                        width={60}
-                        height={60}
-                    />
+                    <TouchableOpacity onPress={() => {
+                        showFriendsModal();
+                        console.log("Pressed friends button");
+                    }} style={styles.friendsButtonOnMap}>
+                        <View style={styles.friendsButton}>
+                            <Image 
+                                source={require('../assets/people.png')}
+                                style={styles.friendsImage}
+                            />
+                        </View>
+                    </TouchableOpacity>
+                    <FriendsModal
+                        isModalVisible={isFriendsModalVisible}
+                        hideModal={hideFriendsModal}
+                    />                    
                     {/* Social Button */}
                     <TouchableOpacity onPress={() => {
                         showSocialModal();
@@ -293,6 +302,29 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: '5%',
         left: '15%',
+    },
+    friendsImage: {
+        height: 45,
+        width: 45,
+        left: 2,
+    },
+    friendsButtonOnMap: {
+        position: 'absolute',
+        bottom: '5%',
+        left: '10%',
+        elevation: 22,
+        shadowColor: '#000',
+        borderRadius: 50,
+    },
+    friendsButton: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 60,
+        height: 60,
+        borderRadius: 50,
+        paddingVertical: 14,
+        paddingHorizontal: 10,
+        backgroundColor: 'rgba(44, 103, 101, .8)'
     },
     chatButton: {
         position: 'absolute',
