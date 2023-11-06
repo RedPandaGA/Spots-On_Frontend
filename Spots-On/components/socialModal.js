@@ -2,7 +2,7 @@ import React from 'react';
 import { Modal, Dimensions, StyleSheet, View, Text, TouchableOpacity, Animated, PanResponder } from 'react-native';
 import Bar from './bar';
 
-const SocialModal = ({ isModalVisible, hideModal, setViewEvents, setCreateEvent }) => {
+const SocialModal = ({ isModalVisible, hideModal, setViewEvents, setCreateEvent, setCreateColony }) => {
     const screenHeight = Dimensions.get('window').height;
     const percentageThreshold = 0.5; // Adjust the percentage as needed
 
@@ -55,6 +55,8 @@ const SocialModal = ({ isModalVisible, hideModal, setViewEvents, setCreateEvent 
             // Handle specific action for Button 4
         },
         () => {
+            hideModal();
+            setCreateColony(true);
             console.log('Create Colony clicked');
             // Handle specific action for Button 5
         },
