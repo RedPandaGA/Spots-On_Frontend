@@ -1,13 +1,12 @@
 import React from 'react';
-import { Modal, Dimensions, StyleSheet, View, Text, TouchableOpacity, Animated, PanResponder } from 'react-native';
+import { Modal, Dimensions, StyleSheet, View, Text, Animated, PanResponder, FlatList } from 'react-native';
 import ColonySlider from "../components/colonySlider";
 import SearchBar from "../components/searchBar";
-import FriendsList from "../components/friendsList";
 import * as Animatable from 'react-native-animatable';
 
 const FriendsModal = ({ isModalVisible, hideModal }) => {
     const screenWidth = Dimensions.get('window').width;
-    const percentageThreshold = .5; // Adjust the percentage as needed
+    const percentageThreshold = 0.5; // Adjust the percentage as needed
 
     const panResponder = PanResponder.create({
         onStartShouldSetPanResponder: (e, gestureState) => {
@@ -33,22 +32,32 @@ const FriendsModal = ({ isModalVisible, hideModal }) => {
 
     const modalPosition = new Animated.Value(0);
 
+    // Define an array of friends and their statuses
+    const friendsData = [
+        { friendName: 'Friend 1', status: 'Status 1' },
+        { friendName: 'Friend 2', status: 'Status 2' },
+        { friendName: 'Friend 3', status: 'Status 3' },
+        // Add more friends and statuses as needed
+    ];
+
     return (
-        <Modal transparent visible={isModalVisible} onRequestClose={hideModal} animationIn="slideInLeft" animationOut="slideOutLeft" >
+        <Modal transparent visible={isModalVisible} onRequestClose={hideModal} animationIn="slideInLeft" animationOut="slideOutLeft">
             <View style={styles.modalContainer} {...panResponder.panHandlers}>
                 <Animated.View
                     style={[
                         styles.modalContent,
-                        { transform: [{ translateX: modalPosition }] },
+                        { transform: [{ translateX: modalPosition }],
+                        }
                     ]}
                 >
                 </Animated.View>
                 <Animatable.View
-                    animation="slideInLeft" // Specify the animation type
+                    animation="slideInLeft"
                     easing="ease-out"
-                    duration={500} // Optional: Set the duration of the animation
+                    duration={500}
                     style={styles.modalContainer}
-                ></Animatable.View>
+                >
+                </Animatable.View>
                 {/* Colony Buttons Slider */}
                 {/* ------ SEARCH BAR ------ */}
                 <SearchBar
@@ -57,12 +66,18 @@ const FriendsModal = ({ isModalVisible, hideModal }) => {
                     onPress={() => console.log("Pressed search bar")}
                 />
                 <ColonySlider style={styles.colonySlider} />
-                {/* <FriendsList friendsData={[{
-                    friendName: 'Michelle Vo',
-                    status: 'dont talk to me, studying'
-                }
-                ]}
-                /> */}
+
+                {/* Display the list of friends and statuses using FlatList */}
+                <FlatList
+                    data={friendsData}
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={({ item }) => (
+                        <View style={styles.friendItem}>
+                            <Text style={styles.friendName}>{item.friendName}</Text>
+                            <Text style={styles.friendStatus}>{item.status}</Text>
+                        </View>
+                    )}
+                />
             </View>
         </Modal>
     );
@@ -74,7 +89,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'flex-end',
         backgroundColor: 'transparent',
-        width: '90%'
+        width: '90%',
     },
     modalContent: {
         backgroundColor: '#43AA8B',
@@ -82,28 +97,7 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 50,
         height: Dimensions.get('window').height,
         alignItems: 'center',
-        justifyContent: 'center'
-    },
-    modalTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginBottom: 10,
-        color: '#2C6765',
-    },
-    modalButton: {
-        padding: 10,
-        width: 350,
-        height: 50,
-        borderRadius: 10,
-        borderWidth: 1.5,
-        borderColor: '#ccc',
-        marginVertical: 5,
-    },
-    buttonText: {
-        fontSize: 20,
-        color: '#2C6765',
-        textAlign: 'center',
-        fontWeight: 'bold'
+        justifyContent: 'center',
     },
     colonySlider: {
         position: 'absolute',
@@ -114,7 +108,21 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: '5%',
         left: '5%',
-    }
+    },
+    friendItem: {
+        borderBottomWidth: 1,
+        borderColor: '#CCC',
+        padding: 10,
+    },
+    friendName: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#2C6765',
+    },
+    friendStatus: {
+        fontSize: 16,
+        color: '#2C6765',
+    },
 });
 
 export default FriendsModal;
