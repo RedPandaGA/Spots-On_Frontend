@@ -2,6 +2,7 @@ import React from 'react';
 import { Modal, Dimensions, StyleSheet, View, Text, TouchableOpacity, Animated, PanResponder } from 'react-native';
 import ColonySlider from "../components/colonySlider";
 import SearchBar from "../components/searchBar";
+import * as Animatable from 'react-native-animatable';
 
 const FriendsModal = ({ isModalVisible, hideModal }) => {
     const screenWidth = Dimensions.get('window').width;
@@ -32,16 +33,21 @@ const FriendsModal = ({ isModalVisible, hideModal }) => {
     const modalPosition = new Animated.Value(0);
 
     return (
-        <Modal transparent visible={isModalVisible} onRequestClose={hideModal}  animationType="fade" animationIn="slideInLeft" animationOut="slideOutLeft" >
+        <Modal transparent visible={isModalVisible} onRequestClose={hideModal} animationIn="slideInLeft" animationOut="slideOutLeft" >
             <View style={styles.modalContainer} {...panResponder.panHandlers}>
                 <Animated.View
                 style={[
                     styles.modalContent,
-                    { transform: [{ translateY: modalPosition }] },
+                    { transform: [{ translateX: modalPosition }] },
                 ]}
-                >
-                    
+                >  
                 </Animated.View>
+                <Animatable.View
+        animation="slideInLeft" // Specify the animation type
+        easing="ease-out"
+        duration={500} // Optional: Set the duration of the animation
+        style={styles.modalContainer}
+      ></Animatable.View>
                 {/* Colony Buttons Slider */}
                                     {/* ------ SEARCH BAR ------ */}
                                     <SearchBar 
