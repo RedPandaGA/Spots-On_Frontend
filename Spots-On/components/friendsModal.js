@@ -1,5 +1,7 @@
 import React from 'react';
 import { Modal, Dimensions, StyleSheet, View, Text, TouchableOpacity, Animated, PanResponder } from 'react-native';
+import ColonySlider from "../components/colonySlider";
+import SearchBar from "../components/searchBar";
 
 const FriendsModal = ({ isModalVisible, hideModal }) => {
     const screenWidth = Dimensions.get('window').width;
@@ -40,6 +42,14 @@ const FriendsModal = ({ isModalVisible, hideModal }) => {
                 >
                     
                 </Animated.View>
+                {/* Colony Buttons Slider */}
+                                    {/* ------ SEARCH BAR ------ */}
+                                    <SearchBar 
+                        imageSource={require('../assets/search.png')}
+                        style={styles.searchBar}
+                        onPress={() => console.log("Pressed search bar")}
+                />
+                <ColonySlider style={styles.colonySlider} />
             </View>
         </Modal>
     );
@@ -82,6 +92,16 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontWeight: 'bold'
     },
+    colonySlider: {
+        position: 'absolute',
+        top: '12%',
+        left: '4%',
+    },
+    searchBar: {
+        position: 'absolute',
+        top: '5%',
+        left: '5%',
+    }
 });
 
 export default FriendsModal;
