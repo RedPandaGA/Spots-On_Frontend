@@ -9,6 +9,8 @@ import FriendsModal from "../components/friendsModal";
 import ViewEventsModal from "../components/viewEventsModal";
 import CreateEventModal from "../components/createEventModal";
 import CreateColonyModal from "../components/createColonyModal";
+import { StatusBar } from 'react-native';
+
 
 export default function MainMap({ navigation }) {
 
@@ -173,6 +175,7 @@ export default function MainMap({ navigation }) {
                 //console.log('dismissed keyboard');
             }}>
                 <View>
+                    <StatusBar/>
                     {/* Main Map */}
                     <MapView 
                         style={styles.map}
@@ -337,6 +340,7 @@ export default function MainMap({ navigation }) {
                         height={45}
                     />
                 </View>
+                
             </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
         

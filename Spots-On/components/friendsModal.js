@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
         height: '100%'
     },
     modalContent: {
-        backgroundColor: '#43AA8B',
+        backgroundColor: '#2C6765',
         borderBottomRightRadius: 50,
         borderTopRightRadius: 50,
         height: '100%',
@@ -135,6 +135,8 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: '5%',
         left: '5%',
+        backgroundColor: '#E7EFCA',
+        transparent: '0%'
     },
     infoContainer: {
         flexDirection: 'row',
@@ -149,17 +151,20 @@ const styles = StyleSheet.create({
     friendName: {
         fontSize: 18,
         fontWeight: 'bold',
-        color: '#2C6765',
+        color: '#E7EFCA',
+        left: 80,
     },
     friendStatus: {
         fontSize: 16,
-        color: '#2C6765',
+        color: '#D5B747',
+        left: 80,
     },
     friendImage: {
         height: 40,
         width: 40,
+        left: 20,
         position: 'absolute',
-        left: -50,
+        tintColor: '#E7EFCA'
     },
 });
 
