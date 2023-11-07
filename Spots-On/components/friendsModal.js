@@ -42,6 +42,46 @@ const FriendsModal = ({ isModalVisible, hideModal }) => {
             name: 'Milan Nguyen',
             status: 'studyingggg',
         },
+        {
+            name: 'Aeryn Shadingdong',
+            status: 'volunteering at the hospital',
+        },
+        {
+            name: 'Sacaen winds',
+            status: 'working on OOD 2',
+        },
+        {
+            name: 'bawmba',
+            status: 'watching utube',
+        },
+        {
+            name: 'anviii',
+            status: 'chilling in PFT commons',
+        },
+        {
+            name: 'sycosyclopse',
+            status: 'studyingggg',
+        },
+        {
+            name: 'austin',
+            status: 'volunteering at the hospital',
+        },
+        {
+            name: 'kelli dinh',
+            status: 'working on OOD 2',
+        },
+        {
+            name: 'Fred juley',
+            status: 'watching utube',
+        },
+        {
+            name: 'betsi cao',
+            status: 'chilling in PFT commons',
+        },
+        {
+            name: 'Rot Nguyen',
+            status: 'studyingggg',
+        },
     ];
 
     const renderItem = ({ item }) => (

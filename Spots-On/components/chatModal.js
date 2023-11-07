@@ -105,7 +105,7 @@ const ChatModal = ({ isModalVisible, hideModal }) => {
                     </View>
 
                     {/* Display the list of friends and statuses using FlatList */}
-                    <View style={{ marginTop: '50%', flex: 1, width: '100%' }}>
+                    <View style={{ marginTop: '3%', flex: 1, width: '100%' }}>
                         <FlatList
                             data={chatList}
                             renderItem={renderItem}
@@ -179,24 +179,27 @@ const styles = StyleSheet.create({
     buttonContainer: {
         flexDirection: 'row',
         width: '100%',
-        justifyContent: 'space-between',
+        justifyContent: 'center',
+        marginTop: '30%'
     },
     buttonNormal: {
         borderRadius: 30,
-        width: 170,
+        width: 140,
         borderWidth: 1.5,
         borderColor: '#ccc',
         marginVertical: 5,
         alignItems: 'center',
+        marginHorizontal: 5
     },
     buttonPressed: {
         borderRadius: 30,
-        width: 170,
+        width: 140,
         borderWidth: 1.5,
         borderColor: '#ccc',
         marginVertical: 5,
         alignItems: 'center',
-        backgroundColor: '#E7EFCA'
+        backgroundColor: '#E7EFCA',
+        marginHorizontal: 5
     },
     buttonText: {
         fontSize: 20,
