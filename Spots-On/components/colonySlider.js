@@ -25,13 +25,11 @@ export default function ColonySlider({ style }) {
                 data={colony}
                 showsHorizontalScrollIndicator={false}
                 renderItem={({ item }) => (
-                    <View>
-                        <TouchableOpacity onPress={() => onPress(item.name)} >
-                            <View style={styles.button}>
-                                <Text style={styles.text}>{item.name}</Text>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
+                    <TouchableOpacity onPress={() => onPress(item.name)} >
+                        <View style={styles.button}>
+                            <Text style={styles.text}>{item.name}</Text>
+                        </View>
+                    </TouchableOpacity>
                 )}
             />
         </View>
@@ -47,9 +45,17 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         paddingVertical: 11,
         paddingHorizontal: 10,
-        backgroundColor: 'rgba(44, 103, 101, .9)',
+        backgroundColor: 'rgba(44, 103, 101, .8)',
         height: 45,
         width: 100,
+        shadowColor: 'rgb(0, 0, 0)',
+        shadowOffset: {
+            width: 5,
+            height: 5,
+        },
+        shadowOpacity: 0.5,
+        shadowRadius: 50,
+        elevation: 2,
     },
     text: {
         textAlign: 'center',
@@ -57,12 +63,7 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: 'bold'
     },
-    shadow: {
-        elevation: 20,
-        shadowColor: '#000',
-        borderRadius: 50,
-    },
     list: {
-        width: '41%'
+        marginRight: 20
     }
 });

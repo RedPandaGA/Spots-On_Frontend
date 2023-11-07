@@ -6,6 +6,9 @@ import SearchBar from "../components/searchBar";
 import ColonySlider from "../components/colonySlider";
 import SocialModal from "../components/socialModal";
 import FriendsModal from "../components/friendsModal";
+import ViewEventsModal from "../components/viewEventsModal";
+import CreateEventModal from "../components/createEventModal";
+import CreateColonyModal from "../components/createColonyModal";
 
 export default function MainMap({ navigation }) {
 
@@ -32,6 +35,14 @@ export default function MainMap({ navigation }) {
 
     // Track friends button modal
     const [isFriendsModalVisible, setIsFriendsModalVisible] = useState(false);
+    // Track view events modal
+    const [isViewEventsModalVisible, setIsViewEventsModalVisible] = useState(false);
+
+    // Track create event modal
+    const [isCreateEventModalVisible, setIsCreateEventModalVisible] = useState(false);
+
+    // Track create colony modal
+    const [isCreateColonyModalVisible, setIsCreateColonyModalVisible] = useState(false);
 
     // Track map type changes
     const [mapType, setMapType] = useState('standard');
@@ -69,6 +80,25 @@ export default function MainMap({ navigation }) {
     const hideFriendsModal = () => {
         setIsFriendsModalVisible(false);
     };
+    // const showViewEventsModal = () => {
+    //     setIsViewEventsModalVisible(true);
+    // };
+
+    const hideViewEventsModal = () => {
+        setIsViewEventsModalVisible(false);
+    };
+
+    // const showCreateEventModal = () => {
+    //     setIsCreateEventModalVisible(true);
+    // }
+
+    const hideCreateEventModal = () => {
+        setIsCreateEventModalVisible(false);
+    }
+
+    const hideCreateColonyModal = () => {
+        setIsCreateColonyModalVisible(false);
+    }
 
     const handleMapType = () => {
         if(mapType == 'standard') {
@@ -216,10 +246,36 @@ export default function MainMap({ navigation }) {
                             />
                         </View>
                     </TouchableOpacity>
-                    <SocialModal
-                        isModalVisible={isSocialModalVisible}
-                        hideModal={hideSocialModal}
-                    />                    
+                    {isSocialModalVisible && 
+                        <SocialModal 
+                            isModalVisible={isSocialModalVisible} 
+                            hideModal={hideSocialModal} 
+                            setViewEvents={setIsViewEventsModalVisible} 
+                            setCreateEvent={setIsCreateEventModalVisible}
+                            setCreateColony={setIsCreateColonyModalVisible}
+                        />
+                    }
+                    {isViewEventsModalVisible && 
+                        <ViewEventsModal 
+                            isModalVisible={isViewEventsModalVisible} 
+                            hideModal={hideViewEventsModal} 
+                            setSocialModal={setIsSocialModalVisible}
+                        />
+                    }
+                    {isCreateEventModalVisible && 
+                        <CreateEventModal 
+                            isModalVisible={isCreateEventModalVisible} 
+                            hideModal={hideCreateEventModal} 
+                            setSocialModal={setIsSocialModalVisible}
+                        />
+                    }
+                    {isCreateColonyModalVisible && 
+                        <CreateColonyModal 
+                            isModalVisible={isCreateColonyModalVisible} 
+                            hideModal={hideCreateColonyModal} 
+                            setSocialModal={setIsSocialModalVisible}
+                        />
+                    }
                     {/* Chats Button */}
                     <MapButton 
                         imageSource={require('../assets/speech-bubble.png')} 

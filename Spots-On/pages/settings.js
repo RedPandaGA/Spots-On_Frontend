@@ -73,7 +73,6 @@ export default function Settings({ navigation }) {
           </View>
         </TouchableOpacity>
         <Text style={styles.title}>Settings</Text>
-
       </View>
       <View style={styles.settingsItems}>
         {personalList.map((buttonText, index) => renderPersonalButton(buttonText, index))}
