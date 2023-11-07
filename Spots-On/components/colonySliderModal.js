@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, FlatList } from 'react-native';
 
-export default function ColonySlider({ style }) {
+export default function ColonySliderModal({ style }) {
     const [colony, setColony] = useState([
         { name: 'SASE', key: 1 },
         { name: 'lsu engineering', key: 2 },
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         paddingVertical: 11,
         paddingHorizontal: 10,
-        backgroundColor: 'rgba(44, 103, 101, .8)',
+        backgroundColor: '#E7EFCA',
         height: 45,
         width: 100,
         shadowColor: 'rgb(0, 0, 0)',
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     text: {
         textAlign: 'center',
         fontSize: 16,
-        color: 'white',
+        color: '#2C6765',
         fontWeight: 'bold'
     },
     list: {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal, Dimensions, StyleSheet, View, Text, Animated, PanResponder, FlatList, Image } from 'react-native';
-import ColonySlider from "../components/colonySlider";
+import ColonySliderModal from "../components/colonySliderModal";
 import SearchBarModal from "../components/searchBarModal";
 import * as Animatable from 'react-native-animatable';
 
@@ -10,22 +10,11 @@ const FriendsModal = ({ isModalVisible, hideModal }) => {
 
     const panResponder = PanResponder.create({
         onStartShouldSetPanResponder: (e, gestureState) => {
-            // Calculate the threshold based on a percentage of the screen width
-            const threshold = screenWidth * percentageThreshold;
-            return e.nativeEvent.pageX > threshold;
+            return true; // Always allow the gesture to start
         },
         onPanResponderMove: (event, gestureState) => {
-            if (gestureState.dx > 0) {
-                if (gestureState.dx < screenWidth * percentageThreshold) {
-                    modalPosition.setValue(gestureState.dx);
-                }
-            }
-        },
-        onPanResponderRelease: (event, gestureState) => {
-            if (gestureState.dx > 200) {
+            if (gestureState.dx > 0) { // You can adjust this threshold as needed
                 hideModal();
-            } else {
-                modalPosition.setValue(0);
             }
         },
     });
@@ -70,12 +59,11 @@ const FriendsModal = ({ isModalVisible, hideModal }) => {
     );
 
     return (
-        <Modal transparent visible={isModalVisible} onRequestClose={hideModal} animationIn="slideInLeft" animationOut="slideOutLeft">
+        <Modal transparent visible={isModalVisible} onRequestClose={hideModal}>
             <View style={styles.modalContainer} {...panResponder.panHandlers}>
                 <Animatable.View
                     animation="slideInLeft"
-                    easing="ease-out"
-                    duration={500}
+                    duration={200}
                     style={[
                         styles.modalContent,
                         { transform: [{ translateX: modalPosition }],
@@ -91,10 +79,10 @@ const FriendsModal = ({ isModalVisible, hideModal }) => {
                 />
 
                 {/* Colony Buttons Slider */}
-                <ColonySlider style={styles.colonySlider} />
+                <ColonySliderModal style={styles.colonySlider} />
 
                 {/* Display the list of friends and statuses using FlatList */}
-                <View style={{marginTop: '45%', flex: 1, width: '100%'}}>
+                <View style={{marginTop: '50%', flex: 1, width: '100%'}}>
                     <FlatList
                         data={friendsList}
                         renderItem={renderItem}
@@ -139,7 +127,7 @@ const styles = StyleSheet.create({
     infoContainer: {
         flexDirection: 'row',
         display: 'flex',
-        alignContent: 'space-around'
+        alignContent: 'space-around',
     },
     friendItem: {
         borderBottomWidth: 1,
