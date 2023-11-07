@@ -1,14 +1,14 @@
 import React from "react";
 import { StyleSheet, Image, View, TextInput } from 'react-native';
 
-export default function SearchBar({ imageSource, style, color }) {
+export default function SearchBarModal({ imageSource, style, color }) {
     return (
         <View style={[style, styles.shadow]}>
             <View style={styles.button}>
                 <TextInput
                     style={styles.input}
                     placeholder="Search for groups"
-                    placeholderTextColor='white'
+                    placeholderTextColor='#2C6765'
                     // value={searchText}
                     // onChangeText={setSearchText}
                 />
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         paddingVertical: 14,
         paddingHorizontal: 10,
-        backgroundColor: 'rgba(44, 103, 101, .7)',
+        backgroundColor: '#E7EFCA',
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between'
@@ -38,14 +38,15 @@ const styles = StyleSheet.create({
     input: {
         height: 45,
         width: 250,
-        color: 'white',
+        color: '#2C6765',
         fontWeight: 'bold',
         fontSize: 16
     },
     image: {
         width: 30,
         height: 30,
-        right: 5
+        right: 5,
+        tintColor: '#2C6765'
     },
     shadow: {
         elevation: 20,

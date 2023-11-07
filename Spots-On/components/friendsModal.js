@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, Dimensions, StyleSheet, View, Text, Animated, PanResponder, FlatList, Image } from 'react-native';
 import ColonySlider from "../components/colonySlider";
-import SearchBar from "../components/searchBar";
+import SearchBarModal from "../components/searchBarModal";
 import * as Animatable from 'react-native-animatable';
 
 const FriendsModal = ({ isModalVisible, hideModal }) => {
@@ -84,7 +84,7 @@ const FriendsModal = ({ isModalVisible, hideModal }) => {
                 >
 
                 {/* ------ SEARCH BAR ------ */}
-                <SearchBar
+                <SearchBarModal
                     imageSource={require('../assets/search.png')}
                     style={styles.searchBar}
                     onPress={() => console.log("Pressed search bar")}
@@ -135,8 +135,6 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: '5%',
         left: '5%',
-        backgroundColor: '#E7EFCA',
-        transparent: '0%'
     },
     infoContainer: {
         flexDirection: 'row',
