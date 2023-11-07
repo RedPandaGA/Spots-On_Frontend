@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Dimensions, StyleSheet, View, Text, Animated, PanResponder, FlatList } from 'react-native';
+import { Modal, Dimensions, StyleSheet, View, Text, Animated, PanResponder, FlatList, Image } from 'react-native';
 import ColonySlider from "../components/colonySlider";
 import SearchBar from "../components/searchBar";
 import * as Animatable from 'react-native-animatable';
@@ -33,51 +33,77 @@ const FriendsModal = ({ isModalVisible, hideModal }) => {
     const modalPosition = new Animated.Value(0);
 
     // Define an array of friends and their statuses
-    const friendsData = [
-        { friendName: 'Friend 1', status: 'Status 1' },
-        { friendName: 'Friend 2', status: 'Status 2' },
-        { friendName: 'Friend 3', status: 'Status 3' },
-        // Add more friends and statuses as needed
+    const friendsList = [
+        {
+            name: 'Michelle Vo',
+            status: 'volunteering at the hospital',
+        },
+        {
+            name: 'Faris Khattak',
+            status: 'working on OOD 2',
+        },
+        {
+            name: 'Gavin Avery',
+            status: 'watching utube',
+        },
+        {
+            name: 'Richard Jiang',
+            status: 'chilling in PFT commons',
+        },
+        {
+            name: 'Milan Nguyen',
+            status: 'studyingggg',
+        },
     ];
+
+    const renderItem = ({ item }) => (
+        <View style={styles.friendItem}>
+            <View styles={styles.infoContainer}>
+                <Image
+                    style={styles.friendImage}
+                    source={require('../assets/marker.png')}
+                />
+                <Text style={styles.friendName}>{item.name}</Text>
+            </View>
+            <Text style={styles.friendStatus}>{item.status}</Text>
+        </View>
+    );
 
     return (
         <Modal transparent visible={isModalVisible} onRequestClose={hideModal} animationIn="slideInLeft" animationOut="slideOutLeft">
             <View style={styles.modalContainer} {...panResponder.panHandlers}>
-                <Animated.View
-                    style={[
-                        styles.modalContent,
-                        { transform: [{ translateX: modalPosition }],
-                        }
-                    ]}
-                >
-                </Animated.View>
                 <Animatable.View
                     animation="slideInLeft"
                     easing="ease-out"
                     duration={500}
-                    style={styles.modalContainer}
+                    style={[
+                        styles.modalContent,
+                        { transform: [{ translateX: modalPosition }],
+                        height: Dimensions.get('window').height,
+                        }
+                    ]}
                 >
-                </Animatable.View>
-                {/* Colony Buttons Slider */}
+
                 {/* ------ SEARCH BAR ------ */}
                 <SearchBar
                     imageSource={require('../assets/search.png')}
                     style={styles.searchBar}
                     onPress={() => console.log("Pressed search bar")}
                 />
+
+                {/* Colony Buttons Slider */}
                 <ColonySlider style={styles.colonySlider} />
 
                 {/* Display the list of friends and statuses using FlatList */}
-                <FlatList
-                    data={friendsData}
-                    keyExtractor={(item, index) => index.toString()}
-                    renderItem={({ item }) => (
-                        <View style={styles.friendItem}>
-                            <Text style={styles.friendName}>{item.friendName}</Text>
-                            <Text style={styles.friendStatus}>{item.status}</Text>
-                        </View>
-                    )}
-                />
+                <View style={{flex: 1, width: '100%'}}>
+                    <FlatList
+                        data={friendsList}
+                        renderItem={renderItem}
+                        keyExtractor={(item, index) => index.toString()}
+                        showsVerticalScrollIndicator={false}
+                    />
+                </View>
+                </Animatable.View>
             </View>
         </Modal>
     );
@@ -109,6 +135,11 @@ const styles = StyleSheet.create({
         top: '5%',
         left: '5%',
     },
+    infoContainer: {
+        flexDirection: 'row',
+        display: 'flex',
+        alignContent: 'space-around'
+    },
     friendItem: {
         borderBottomWidth: 1,
         borderColor: '#CCC',
@@ -122,6 +153,12 @@ const styles = StyleSheet.create({
     friendStatus: {
         fontSize: 16,
         color: '#2C6765',
+    },
+    friendImage: {
+        height: 40,
+        width: 40,
+        position: 'absolute',
+        left: -50,
     },
 });
 
