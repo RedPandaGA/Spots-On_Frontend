@@ -1,17 +1,15 @@
-import React from 'react';
-import { Modal, Dimensions, StyleSheet, View, Text, Animated, PanResponder, FlatList, Image } from 'react-native';
-import ColonySliderModal from "./colonySliderModal";
+import React, { useState } from 'react';
+import { Modal, Dimensions, StyleSheet, View, Text, Animated, PanResponder, FlatList, Image, TouchableOpacity } from 'react-native';
 import SearchBarModal from "./searchBarModal";
 import * as Animatable from 'react-native-animatable';
 
 const ChatModal = ({ isModalVisible, hideModal }) => {
     const screenWidth = Dimensions.get('window').width;
     const percentageThreshold = 0.2;
-
     const panResponder = PanResponder.create({
         onStartShouldSetPanResponder: (e, gestureState) => true,
         onPanResponderMove: (event, gestureState) => {
-            if (gestureState.dx < -screenWidth * percentageThreshold) {
+            if (gestureState.dx > screenWidth * percentageThreshold) {
                 // Close the modal when swiped to the right
                 hideModal();
             }
@@ -44,6 +42,9 @@ const ChatModal = ({ isModalVisible, hideModal }) => {
         },
     ];
 
+    const [isColoniesPressed, setIsColoniesPressed] = useState(true);
+    const [isFriendsPressed, setIsFriendsPressed] = useState(false);
+
     const renderItem = ({ item }) => (
         <View style={styles.chatItem}>
             <View styles={styles.infoContainer}>
@@ -53,7 +54,7 @@ const ChatModal = ({ isModalVisible, hideModal }) => {
                 />
                 <Text style={styles.chatName}>{item.name}</Text>
             </View>
-            <Text style={styles.memberCount}>{item.memberCount}</Text>
+            <Text style={styles.memberCount}>{item.memberCount} members</Text>
         </View>
     );
 
@@ -61,35 +62,57 @@ const ChatModal = ({ isModalVisible, hideModal }) => {
         <Modal transparent visible={isModalVisible} onRequestClose={hideModal}>
             <View style={styles.modalContainer} {...panResponder.panHandlers}>
                 <Animatable.View
-                // milan => need to make this slide out to the right
+                    // milan => need to make this slide out to the right
                     animation={isModalVisible ? "slideInRight" : "slideOutRight"}
                     duration={200}
                     style={[
                         styles.modalContent,
-                        { transform: [{ translateX: modalPosition }],
+                        {
+                            transform: [{ translateX: modalPosition }],
                         }
                     ]}
                 >
 
-                {/* ------ SEARCH BAR ------ */}
-                <SearchBarModal
-                    imageSource={require('../assets/search.png')}
-                    style={styles.searchBar}
-                    onPress={() => console.log("Pressed search bar")}
-                />
-
-                {/* Colony Buttons Slider */}
-                <ColonySliderModal style={styles.colonySlider} />
-
-                {/* Display the list of friends and statuses using FlatList */}
-                <View style={{marginTop: '50%', flex: 1, width: '100%'}}>
-                    <FlatList
-                        data={chatList}
-                        renderItem={renderItem}
-                        keyExtractor={(item, index) => index.toString()}
-                        showsVerticalScrollIndicator={false}
+                    {/* ------ SEARCH BAR ------ */}
+                    <SearchBarModal
+                        imageSource={require('../assets/search.png')}
+                        style={styles.searchBar}
+                        onPress={() => console.log("Pressed search bar")}
                     />
-                </View>
+
+                    {/* the choices */}
+                    <View style={styles.buttonContainer}>
+                        <TouchableOpacity
+                            style={isColoniesPressed ? styles.buttonPressed : styles.buttonNormal}
+                            onPress={() => {
+                                setIsColoniesPressed(true);
+                                setIsFriendsPressed(false);
+                                console.log("Pressed Colonies");
+                            }}
+                        >
+                            <Text style={styles.buttonText}>Colonies</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={isFriendsPressed ? styles.buttonPressed : styles.buttonNormal}
+                            onPress={() => {
+                                setIsColoniesPressed(false);
+                                setIsFriendsPressed(true);
+                                console.log("Pressed Friends");
+                            }}
+                        >
+                            <Text style={styles.buttonText}>Friends</Text>
+                        </TouchableOpacity>
+                    </View>
+
+                    {/* Display the list of friends and statuses using FlatList */}
+                    <View style={{ marginTop: '50%', flex: 1, width: '100%' }}>
+                        <FlatList
+                            data={chatList}
+                            renderItem={renderItem}
+                            keyExtractor={(item, index) => index.toString()}
+                            showsVerticalScrollIndicator={false}
+                        />
+                    </View>
                 </Animatable.View>
             </View>
         </Modal>
@@ -103,12 +126,13 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
         backgroundColor: 'transparent',
         width: '90%',
-        height: '100%'
+        height: '100%',
+        alignSelf: 'flex-end'
     },
     modalContent: {
         backgroundColor: '#2C6765',
-        borderBottomRightRadius: 50,
-        borderTopRightRadius: 50,
+        borderBottomLeftRadius: 50,
+        borderTopLeftRadius: 50,
         height: '100%',
         //height: Dimensions.get('window').height, // this explodes it
         alignItems: 'center',
@@ -151,6 +175,37 @@ const styles = StyleSheet.create({
         left: 20,
         position: 'absolute',
         tintColor: '#E7EFCA'
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        width: '100%',
+        justifyContent: 'space-between',
+    },
+    buttonNormal: {
+        borderRadius: 30,
+        width: 170,
+        borderWidth: 1.5,
+        borderColor: '#ccc',
+        marginVertical: 5,
+        alignItems: 'center',
+    },
+    buttonPressed: {
+        borderRadius: 30,
+        width: 170,
+        borderWidth: 1.5,
+        borderColor: '#ccc',
+        marginVertical: 5,
+        alignItems: 'center',
+        backgroundColor: '#E7EFCA'
+    },
+    buttonText: {
+        fontSize: 20,
+        color: '#2C6765',
+        textAlign: 'center',
+        fontWeight: 'bold',
+        paddingHorizontal: 10,
+        paddingVertical: 10,
+        alignSelf: 'center'
     },
 });
 
