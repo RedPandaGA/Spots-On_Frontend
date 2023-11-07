@@ -6,6 +6,7 @@ import SearchBar from "../components/searchBar";
 import ColonySlider from "../components/colonySlider";
 import SocialModal from "../components/socialModal";
 import FriendsModal from "../components/friendsModal";
+import ChatModal from "../components/chatModal";
 import ViewEventsModal from "../components/viewEventsModal";
 import CreateEventModal from "../components/createEventModal";
 import CreateColonyModal from "../components/createColonyModal";
@@ -37,6 +38,10 @@ export default function MainMap({ navigation }) {
 
     // Track friends button modal
     const [isFriendsModalVisible, setIsFriendsModalVisible] = useState(false);
+
+    // Track chat button modal
+    const [isChatModalVisible, setIsChatModalVisible] = useState(false);
+
     // Track view events modal
     const [isViewEventsModalVisible, setIsViewEventsModalVisible] = useState(false);
 
@@ -81,6 +86,14 @@ export default function MainMap({ navigation }) {
 
     const hideFriendsModal = () => {
         setIsFriendsModalVisible(false);
+    };
+
+    const showChatModal = () => {
+        setIsChatModalVisible(true);
+    };
+
+    const hideChatModal = () => {
+        setIsChatModalVisible(false);
     };
     // const showViewEventsModal = () => {
     //     setIsViewEventsModalVisible(true);
@@ -145,7 +158,7 @@ export default function MainMap({ navigation }) {
     };
 
     const panResponder = PanResponder.create({
-        onStartShouldSetPanResponder: () => true,
+        onStartShouldSetPanResponder: () => isSocialModalVisible,
         onPanResponderMove: (event, gestureState) => {
           if (gestureState.dy > 0) {
             if (gestureState.dy < 150) {
@@ -179,7 +192,7 @@ export default function MainMap({ navigation }) {
                     {/* Main Map */}
                     <MapView 
                         style={styles.map}
-                        region={mapRegion}
+                        // region={mapRegion}
                         initialRegion={mapRegion}
                         onRegionChange={newRegion => setMapRegion(newRegion)}
                         mapType={mapType}
@@ -222,17 +235,16 @@ export default function MainMap({ navigation }) {
 
                     {/* ------ MAIN NAV BUTTONS ------ */}
                     {/* Friends Button */}
-                    <TouchableOpacity onPress={() => {
-                        showFriendsModal();
-                        console.log("Pressed friends button");
-                    }} style={styles.friendsButtonOnMap}>
-                        <View style={styles.friendsButton}>
-                            <Image 
-                                source={require('../assets/people.png')}
-                                style={styles.friendsImage}
-                            />
-                        </View>
-                    </TouchableOpacity>
+                    <MapButton 
+                        imageSource={require('../assets/people.png')}
+                        style={styles.friendsButton}
+                        onPress={() => {
+                            showFriendsModal();
+                            console.log("Pressed friends button");
+                        }}
+                        width={60}
+                        height={60}
+                    />
                     <FriendsModal
                         isModalVisible={isFriendsModalVisible}
                         hideModal={hideFriendsModal}
@@ -279,14 +291,22 @@ export default function MainMap({ navigation }) {
                             setSocialModal={setIsSocialModalVisible}
                         />
                     }
+
                     {/* Chats Button */}
                     <MapButton 
-                        imageSource={require('../assets/speech-bubble.png')} 
-                        style={styles.chatButton} 
-                        onPress={() => console.log("Pressed chats button")}
+                        imageSource={require('../assets/speech-bubble.png')}
+                        style={styles.chatButton}
+                        onPress={() => {
+                            showChatModal();
+                            console.log("Pressed chat button");
+                        }}
                         width={60}
                         height={60}
                     />
+                    <ChatModal
+                        isModalVisible={isChatModalVisible}
+                        hideModal={hideChatModal}
+                    /> 
 
                     {/* ------ SEARCH BAR ------ */}
                     <SearchBar 
@@ -349,11 +369,11 @@ export default function MainMap({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-      },
+    // container: {
+    //     flex: 1,
+    //     justifyContent: 'center',
+    //     alignItems: 'center',
+    //   },
     map: {
         height: '100%',
         width: '100%',
@@ -362,29 +382,6 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: '5%',
         left: '15%',
-    },
-    friendsImage: {
-        height: 45,
-        width: 45,
-        left: 2,
-    },
-    friendsButtonOnMap: {
-        position: 'absolute',
-        bottom: '5%',
-        left: '10%',
-        elevation: 22,
-        shadowColor: '#000',
-        borderRadius: 50,
-    },
-    friendsButton: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: 60,
-        height: 60,
-        borderRadius: 50,
-        paddingVertical: 14,
-        paddingHorizontal: 10,
-        backgroundColor: 'rgba(44, 103, 101, .8)'
     },
     chatButton: {
         position: 'absolute',
@@ -449,6 +446,4 @@ const styles = StyleSheet.create({
         width: 50,
         borderRadius: 50,
     }
-
-
 });

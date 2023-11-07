@@ -1,10 +1,10 @@
 import React from 'react';
 import { Modal, Dimensions, StyleSheet, View, Text, Animated, PanResponder, FlatList, Image } from 'react-native';
-import ColonySliderModal from "../components/colonySliderModal";
-import SearchBarModal from "../components/searchBarModal";
+import ColonySliderModal from "./colonySliderModal";
+import SearchBarModal from "./searchBarModal";
 import * as Animatable from 'react-native-animatable';
 
-const FriendsModal = ({ isModalVisible, hideModal }) => {
+const ChatModal = ({ isModalVisible, hideModal }) => {
     const screenWidth = Dimensions.get('window').width;
     const percentageThreshold = 0.2;
 
@@ -12,7 +12,7 @@ const FriendsModal = ({ isModalVisible, hideModal }) => {
         onStartShouldSetPanResponder: (e, gestureState) => true,
         onPanResponderMove: (event, gestureState) => {
             if (gestureState.dx < -screenWidth * percentageThreshold) {
-                // Close the modal when swiped to the left
+                // Close the modal when swiped to the right
                 hideModal();
             }
         },
@@ -21,39 +21,39 @@ const FriendsModal = ({ isModalVisible, hideModal }) => {
     const modalPosition = new Animated.Value(0);
 
     // Define an array of friends and their statuses
-    const friendsList = [
+    const chatList = [
         {
-            name: 'Michelle Vo',
-            status: 'volunteering at the hospital',
+            name: 'Bestiesss',
+            memberCount: 3,
         },
         {
-            name: 'Faris Khattak',
-            status: 'working on OOD 2',
+            name: 'Volleyball squad',
+            memberCount: 4,
         },
         {
-            name: 'Gavin Avery',
-            status: 'watching utube',
+            name: 'OOD group',
+            memberCount: 5,
         },
         {
-            name: 'Richard Jiang',
-            status: 'chilling in PFT commons',
+            name: 'CSC 3102',
+            memberCount: 20,
         },
         {
-            name: 'Milan Nguyen',
-            status: 'studyingggg',
+            name: 'SASE people',
+            memberCount: 28,
         },
     ];
 
     const renderItem = ({ item }) => (
-        <View style={styles.friendItem}>
+        <View style={styles.chatItem}>
             <View styles={styles.infoContainer}>
                 <Image
-                    style={styles.friendImage}
+                    style={styles.chatImage}
                     source={require('../assets/marker.png')}
                 />
-                <Text style={styles.friendName}>{item.name}</Text>
+                <Text style={styles.chatName}>{item.name}</Text>
             </View>
-            <Text style={styles.friendStatus}>{item.status}</Text>
+            <Text style={styles.memberCount}>{item.memberCount}</Text>
         </View>
     );
 
@@ -61,8 +61,8 @@ const FriendsModal = ({ isModalVisible, hideModal }) => {
         <Modal transparent visible={isModalVisible} onRequestClose={hideModal}>
             <View style={styles.modalContainer} {...panResponder.panHandlers}>
                 <Animatable.View
-                // milan => need to make this slide out to the left 
-                    animation={isModalVisible ? "slideInLeft" : "slideOutLeft"}
+                // milan => need to make this slide out to the right
+                    animation={isModalVisible ? "slideInRight" : "slideOutRight"}
                     duration={200}
                     style={[
                         styles.modalContent,
@@ -84,7 +84,7 @@ const FriendsModal = ({ isModalVisible, hideModal }) => {
                 {/* Display the list of friends and statuses using FlatList */}
                 <View style={{marginTop: '50%', flex: 1, width: '100%'}}>
                     <FlatList
-                        data={friendsList}
+                        data={chatList}
                         renderItem={renderItem}
                         keyExtractor={(item, index) => index.toString()}
                         showsVerticalScrollIndicator={false}
@@ -129,23 +129,23 @@ const styles = StyleSheet.create({
         display: 'flex',
         alignContent: 'space-around',
     },
-    friendItem: {
+    chatItem: {
         borderBottomWidth: 1,
         borderColor: '#CCC',
         padding: 10,
     },
-    friendName: {
+    chatName: {
         fontSize: 18,
         fontWeight: 'bold',
         color: '#E7EFCA',
         left: 80,
     },
-    friendStatus: {
+    memberCount: {
         fontSize: 16,
         color: '#D5B747',
         left: 80,
     },
-    friendImage: {
+    chatImage: {
         height: 40,
         width: 40,
         left: 20,
@@ -154,4 +154,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default FriendsModal;
+export default ChatModal;
