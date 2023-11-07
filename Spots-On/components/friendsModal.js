@@ -6,14 +6,13 @@ import * as Animatable from 'react-native-animatable';
 
 const FriendsModal = ({ isModalVisible, hideModal }) => {
     const screenWidth = Dimensions.get('window').width;
-    const percentageThreshold = 0.4; // Adjust the percentage as needed
+    const percentageThreshold = 0.2;
 
     const panResponder = PanResponder.create({
-        onStartShouldSetPanResponder: (e, gestureState) => {
-            return true; // Always allow the gesture to start
-        },
+        onStartShouldSetPanResponder: (e, gestureState) => true,
         onPanResponderMove: (event, gestureState) => {
-            if (gestureState.dx > 0) { // You can adjust this threshold as needed
+            if (gestureState.dx < -screenWidth * percentageThreshold) {
+                // Close the modal when swiped to the left
                 hideModal();
             }
         },
@@ -62,7 +61,7 @@ const FriendsModal = ({ isModalVisible, hideModal }) => {
         <Modal transparent visible={isModalVisible} onRequestClose={hideModal}>
             <View style={styles.modalContainer} {...panResponder.panHandlers}>
                 <Animatable.View
-                    animation="slideInLeft"
+                    animation={isModalVisible ? "slideInLeft" : "slideOutLeft"}
                     duration={200}
                     style={[
                         styles.modalContent,
