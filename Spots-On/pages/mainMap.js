@@ -15,8 +15,8 @@ export default function MainMap({ navigation }) {
     const [mapRegion, setMapRegion] = useState({
         latitude: 30.4133,
         longitude: -91.1800,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
+        latitudeDelta: 0.0522,
+        longitudeDelta: 0.00421,
     });
 
     // Manage the location of the draggable Marker
@@ -24,6 +24,9 @@ export default function MainMap({ navigation }) {
         latitude: 30.41,
         longitude: -91.18,
     });
+
+    // Track status description
+    const [statusDescription, setStatusDescription] = useState('');
 
     // Track incognito and status choices
     const [incognito, setIncognito] = useState(false);
@@ -133,7 +136,7 @@ export default function MainMap({ navigation }) {
     };
 
     const panResponder = PanResponder.create({
-        onStartShouldSetPanResponder: () => true,
+        onStartShouldSetPanResponder: () => isSocialModalVisible,
         onPanResponderMove: (event, gestureState) => {
           if (gestureState.dy > 0) {
             if (gestureState.dy < 150) {
@@ -166,7 +169,6 @@ export default function MainMap({ navigation }) {
                     {/* Main Map */}
                     <MapView 
                         style={styles.map}
-                        region={mapRegion}
                         initialRegion={mapRegion}
                         onRegionChange={newRegion => setMapRegion(newRegion)}
                         mapType={mapType}
@@ -235,6 +237,8 @@ export default function MainMap({ navigation }) {
                             setViewEvents={setIsViewEventsModalVisible} 
                             setCreateEvent={setIsCreateEventModalVisible}
                             setCreateColony={setIsCreateColonyModalVisible}
+                            statusDescription={statusDescription}
+                            setStatusDescription={setStatusDescription}
                         />
                     }
                     {isViewEventsModalVisible && 
@@ -318,6 +322,15 @@ export default function MainMap({ navigation }) {
                         width={45}
                         height={45}
                     />
+                    <MapButton 
+                        imageSource={require('../assets/spots.png')} 
+                        style={styles.spotsButton} 
+                        onPress={() => {
+                            console.log("Pressed spots button");
+                        }}
+                        width={45}
+                        height={45}
+                    />
                 </View>
             </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
@@ -350,6 +363,11 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: '12%',
         left: '4%',
+    },
+    spotsButton: {
+        position: 'absolute',
+        bottom: '35%',
+        left: '85%',
     },
     incognitoButton: {
         position: 'absolute',
