@@ -6,7 +6,7 @@ import * as Animatable from 'react-native-animatable';
 
 const FriendsModal = ({ isModalVisible, hideModal }) => {
     const screenWidth = Dimensions.get('window').width;
-    const percentageThreshold = 0.5; // Adjust the percentage as needed
+    const percentageThreshold = 0.4; // Adjust the percentage as needed
 
     const panResponder = PanResponder.create({
         onStartShouldSetPanResponder: (e, gestureState) => {
@@ -79,7 +79,6 @@ const FriendsModal = ({ isModalVisible, hideModal }) => {
                     style={[
                         styles.modalContent,
                         { transform: [{ translateX: modalPosition }],
-                        height: Dimensions.get('window').height,
                         }
                     ]}
                 >
@@ -95,7 +94,7 @@ const FriendsModal = ({ isModalVisible, hideModal }) => {
                 <ColonySlider style={styles.colonySlider} />
 
                 {/* Display the list of friends and statuses using FlatList */}
-                <View style={{flex: 1, width: '100%'}}>
+                <View style={{marginTop: '45%', flex: 1, width: '100%'}}>
                     <FlatList
                         data={friendsList}
                         renderItem={renderItem}
@@ -116,12 +115,14 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
         backgroundColor: 'transparent',
         width: '90%',
+        height: '100%'
     },
     modalContent: {
         backgroundColor: '#43AA8B',
         borderBottomRightRadius: 50,
         borderTopRightRadius: 50,
-        height: Dimensions.get('window').height,
+        height: '100%',
+        //height: Dimensions.get('window').height, // this explodes it
         alignItems: 'center',
         justifyContent: 'center',
     },
