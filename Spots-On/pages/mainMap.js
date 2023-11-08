@@ -25,9 +25,6 @@ export default function MainMap({ navigation }) {
         longitude: -91.18,
     });
 
-    // Track status description
-    const [statusDescription, setStatusDescription] = useState('');
-
     // Track incognito and status choices
     const [incognito, setIncognito] = useState(false);
     const [showStatus, setShowStatus] = useState(false);
@@ -237,8 +234,6 @@ export default function MainMap({ navigation }) {
                             setViewEvents={setIsViewEventsModalVisible} 
                             setCreateEvent={setIsCreateEventModalVisible}
                             setCreateColony={setIsCreateColonyModalVisible}
-                            statusDescription={statusDescription}
-                            setStatusDescription={setStatusDescription}
                         />
                     }
                     {isViewEventsModalVisible && 
