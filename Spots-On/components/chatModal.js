@@ -111,6 +111,7 @@ const ChatModal = ({ isModalVisible, hideModal }) => {
                             renderItem={renderItem}
                             keyExtractor={(item, index) => index.toString()}
                             showsVerticalScrollIndicator={false}
+                            noBorder
                         />
                     </View>
                 </Animatable.View>
@@ -180,13 +181,13 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         width: '100%',
         justifyContent: 'center',
-        marginTop: '30%'
+        marginTop: '31%'
     },
     buttonNormal: {
         borderRadius: 30,
         width: 140,
-        borderWidth: 1.5,
-        borderColor: '#ccc',
+        borderWidth: 2,
+        borderColor: '#507c74',
         marginVertical: 5,
         alignItems: 'center',
         marginHorizontal: 5
@@ -195,15 +196,15 @@ const styles = StyleSheet.create({
         borderRadius: 30,
         width: 140,
         borderWidth: 1.5,
-        borderColor: '#ccc',
+        borderColor: '#507c74',
         marginVertical: 5,
         alignItems: 'center',
-        backgroundColor: '#E7EFCA',
+        backgroundColor: '#507c74',
         marginHorizontal: 5
     },
     buttonText: {
-        fontSize: 20,
-        color: '#2C6765',
+        fontSize: 16,
+        color: '#E7EFCA',
         textAlign: 'center',
         fontWeight: 'bold',
         paddingHorizontal: 10,
