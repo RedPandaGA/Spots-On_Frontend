@@ -1,4 +1,11 @@
-import { View, Text, Image, Pressable, TextInput, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import COLORS from "../components/colors";
@@ -11,7 +18,7 @@ const Login = ({ navigation }) => {
   const [isChecked, setIsChecked] = useState(false);
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#2C6765' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#2C6765" }}>
       <View style={{ flex: 1, marginHorizontal: 22 }}>
         <View style={{ marginVertical: 22 }}>
           <Text
@@ -41,7 +48,7 @@ const Login = ({ navigation }) => {
               fontSize: 16,
               fontWeight: 400,
               marginVertical: 8,
-              color: 'white'
+              color: "white",
             }}
           >
             Email address
@@ -52,7 +59,7 @@ const Login = ({ navigation }) => {
               width: "100%",
               height: 48,
               borderColor: COLORS.white,
-              backgroundColor: 'white',
+              backgroundColor: "#2C6765",
               borderWidth: 1,
               borderRadius: 8,
               alignItems: "center",
@@ -77,7 +84,7 @@ const Login = ({ navigation }) => {
               fontSize: 16,
               fontWeight: 400,
               marginVertical: 8,
-              color: 'white'
+              color: "white",
             }}
           >
             Password
@@ -88,7 +95,7 @@ const Login = ({ navigation }) => {
               width: "100%",
               height: 48,
               borderColor: COLORS.white,
-              backgroundColor: 'white',
+              backgroundColor: "#2C6765",
               borderWidth: 1,
               borderRadius: 8,
               alignItems: "center",
@@ -134,7 +141,7 @@ const Login = ({ navigation }) => {
             color={isChecked ? COLORS.white : undefined}
           />
 
-          <Text style={{color: 'white'}}>Remember Me</Text>
+          <Text style={{ color: "white" }}>Remember Me</Text>
         </View>
 
         <Button
@@ -142,10 +149,10 @@ const Login = ({ navigation }) => {
           style={{
             marginTop: 18,
             marginBottom: 4,
-            backgroundColor: 'white',
-            borderColor: 'white'
+            backgroundColor: "#2C6765",
+            borderColor: "white",
           }}
-          onPress={() => navigation.navigate('Home')}
+          onPress={() => navigation.navigate("Home")}
         />
 
         <View
@@ -163,7 +170,7 @@ const Login = ({ navigation }) => {
               marginHorizontal: 10,
             }}
           />
-          <Text style={{ fontSize: 14, color: 'white' }}>Or Login with</Text>
+          <Text style={{ fontSize: 14, color: "white" }}>Or Login with</Text>
           <View
             style={{
               flex: 1,
@@ -190,22 +197,11 @@ const Login = ({ navigation }) => {
               height: 52,
               borderWidth: 1,
               borderColor: COLORS.white,
-              backgroundColor: 'white',
+              backgroundColor: '#2C6765',
               marginRight: 4,
               borderRadius: 10,
             }}
           >
-            <Image
-              source={require("../assets/facebook.png")}
-              style={{
-                height: 36,
-                width: 36,
-                marginRight: 8,
-              }}
-              resizeMode="contain"
-            />
-
-            <Text>Facebook</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -218,24 +214,11 @@ const Login = ({ navigation }) => {
               height: 52,
               borderWidth: 1,
               borderColor: COLORS.white,
-              backgroundColor: 'white',
+              backgroundColor: '#2C6765',
               marginRight: 4,
               borderRadius: 10,
             }}
           >
-            <Image
-              source={require("../assets/google.png")}
-              style={{
-                height: 36,
-                width: 36,
-                marginRight: 8,
-              }}
-              resizeMode="contain"
-            />
-
-            <Text>Google</Text>
-          </TouchableOpacity>
-        </View>
 
         <View
           style={{
