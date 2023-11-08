@@ -221,21 +221,23 @@ export default function MainMap({ navigation }) {
 
                     {/* ------ MAIN NAV BUTTONS ------ */}
                     {/* Friends Button */}
-                    <TouchableOpacity onPress={() => {
-                        showFriendsModal();
-                        console.log("Pressed friends button");
-                    }} style={styles.friendsButtonOnMap}>
-                        <View style={styles.friendsButton}>
-                            <Image 
-                                source={require('../assets/people.png')}
-                                style={styles.friendsImage}
-                            />
-                        </View>
-                    </TouchableOpacity>
-                    <FriendsModal
-                        isModalVisible={isFriendsModalVisible}
-                        hideModal={hideFriendsModal}
-                    />                    
+                    <MapButton
+                        imageSource={require('../assets/people.png')} 
+                        style={styles.friendsButton} 
+                        onPress={() => {
+                            showFriendsModal();
+                            console.log("Pressed friends button")
+                        }}
+                        width={60}
+                        height={60}
+                    />
+                    {isFriendsModalVisible && (
+                        <FriendsModal
+                            isModalVisible={isFriendsModalVisible}
+                            hideModal={hideFriendsModal}
+                        />     
+                    )}
+
                     {/* Social Button */}
                     <TouchableOpacity onPress={() => {
                         showSocialModal();
@@ -248,7 +250,7 @@ export default function MainMap({ navigation }) {
                             />
                         </View>
                     </TouchableOpacity>
-                    {isSocialModalVisible && 
+                    {isSocialModalVisible && (
                         <SocialModal 
                             isModalVisible={isSocialModalVisible} 
                             hideModal={hideSocialModal} 
@@ -256,28 +258,28 @@ export default function MainMap({ navigation }) {
                             setCreateEvent={setIsCreateEventModalVisible}
                             setCreateColony={setIsCreateColonyModalVisible}
                         />
-                    }
-                    {isViewEventsModalVisible && 
+                    )}
+                    {isViewEventsModalVisible && (
                         <ViewEventsModal 
                             isModalVisible={isViewEventsModalVisible} 
                             hideModal={hideViewEventsModal} 
                             setSocialModal={setIsSocialModalVisible}
                         />
-                    }
-                    {isCreateEventModalVisible && 
+                    )}
+                    {isCreateEventModalVisible && (
                         <CreateEventModal 
                             isModalVisible={isCreateEventModalVisible} 
                             hideModal={hideCreateEventModal} 
                             setSocialModal={setIsSocialModalVisible}
                         />
-                    }
-                    {isCreateColonyModalVisible && 
+                    )}
+                    {isCreateColonyModalVisible && (
                         <CreateColonyModal 
                             isModalVisible={isCreateColonyModalVisible} 
                             hideModal={hideCreateColonyModal} 
                             setSocialModal={setIsSocialModalVisible}
                         />
-                    }
+                    )}
                     {/* Chats Button */}
                     <MapButton 
                         imageSource={require('../assets/speech-bubble.png')} 
@@ -370,29 +372,6 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: '5%',
         left: '15%',
-    },
-    friendsImage: {
-        height: 45,
-        width: 45,
-        left: 2,
-    },
-    friendsButtonOnMap: {
-        position: 'absolute',
-        bottom: '5%',
-        left: '10%',
-        elevation: 22,
-        shadowColor: '#000',
-        borderRadius: 50,
-    },
-    friendsButton: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: 60,
-        height: 60,
-        borderRadius: 50,
-        paddingVertical: 14,
-        paddingHorizontal: 10,
-        backgroundColor: 'rgba(44, 103, 101, .8)'
     },
     chatButton: {
         position: 'absolute',
