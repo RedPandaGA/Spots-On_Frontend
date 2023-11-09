@@ -96,3 +96,92 @@ export default function App() {
 //     width: 300,
 //   },
 // });
+
+// import React, { useState } from 'react';
+// import { Modal, View, Text, Animated, PanResponder, StyleSheet, TouchableOpacity } from 'react-native';
+// import HorizontalDraggableModal from './components/horizontalDraggableModal';
+
+// // const HorizontalDraggableModal = ({ isModalVisible, hideModal }) => {
+// //   const [isDragging, setIsDragging] = useState(false);
+// //   const [modalPosition] = useState(new Animated.Value(0));
+
+// //   const panResponder = PanResponder.create({
+// //     onStartShouldSetPanResponder: () => true,
+// //     onMoveShouldSetPanResponder: () => true,
+// //     onPanResponderMove: (event, gestureState) => {
+// //       if (isDragging) {
+// //         modalPosition.setValue(gestureState.dx);
+// //       }
+// //     },
+// //     onPanResponderRelease: (event, gestureState) => {
+// //       if (isDragging) {
+// //         setIsDragging(false);
+// //         if (gestureState.dx > 100) {
+// //           // Close the modal when swiped to the right (adjust threshold as needed)
+// //           hideModal();
+// //         } else {
+// //           // Animate back to the initial position
+// //           Animated.spring(modalPosition, { toValue: 0, useNativeDriver: false }).start();
+// //         }
+// //       }
+// //     },
+// //   });
+
+// //   const onModalShow = () => {
+// //     setIsDragging(true);
+// //   };
+
+// //   return (
+// //     <Modal transparent visible={isModalVisible} onShow={onModalShow}>
+// //       <View style={styles.modalContainer} {...panResponder.panHandlers}>
+// //         <Animated.View style={[styles.modalContent, { transform: [{ translateX: modalPosition }] }]}>
+// //           <Text style={styles.modalText}>Horizontally Draggable Modal</Text>
+// //           <TouchableOpacity onPress={hideModal} style={styles.closeButton}>
+// //             <Text style={styles.closeButtonText}>Close</Text>
+// //           </TouchableOpacity>
+// //         </Animated.View>
+// //       </View>
+// //     </Modal>
+// //   );
+// // };
+
+// const App = () => {
+//   const [isModalVisible, setIsModalVisible] = useState(false);
+
+//   const showModal = () => {
+//     setIsModalVisible(true);
+//   };
+
+//   const hideModal = () => {
+//     setIsModalVisible(false);
+//   };
+
+//   return (
+//     <View style={styles.container}>
+//       <TouchableOpacity onPress={showModal} style={styles.showModalButton}>
+//         <Text style={styles.showModalButtonText}>Show Modal</Text>
+//       </TouchableOpacity>
+//       <HorizontalDraggableModal isModalVisible={isModalVisible} hideModal={hideModal} />
+//     </View>
+//   );
+// };
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     backgroundColor: '#F5FCFF',
+//   },
+//   showModalButton: {
+//     backgroundColor: 'blue',
+//     padding: 10,
+//     borderRadius: 5,
+//   },
+//   showModalButtonText: {
+//     color: 'white',
+//     fontSize: 18,
+//   },
+// });
+
+// export default App;
