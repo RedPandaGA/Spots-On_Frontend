@@ -453,12 +453,12 @@ const styles = StyleSheet.create({
     },
     friendsButton: {
         position: 'absolute',
-        bottom: '10%',
+        bottom: '7%',
         left: '15%',
     },
     chatButton: {
         position: 'absolute',
-        bottom: '10%',
+        bottom: '7%',
         left: '70%',
     },
     searchBar: {
@@ -503,7 +503,7 @@ const styles = StyleSheet.create({
     },
     socialButtonOnMap: {
         position: 'absolute',
-        bottom: '10%',
+        bottom: '7%',
         left: '40%',
         elevation: 22,
         shadowColor: '#000',
