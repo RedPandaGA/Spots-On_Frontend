@@ -298,6 +298,7 @@ const Signup = ({ navigation }) => {
             </Text>
           </Pressable>
         </View>
+        </View>
       </View>
     </SafeAreaView>
   );
