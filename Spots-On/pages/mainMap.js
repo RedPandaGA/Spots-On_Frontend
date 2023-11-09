@@ -10,6 +10,7 @@ import ViewEventsModal from "../components/viewEventsModal";
 import CreateEventModal from "../components/createEventModal";
 import CreateColonyModal from "../components/createColonyModal";
 import { StatusBar } from 'react-native';
+import CreateSpotModal from "../components/spotsModal";
 
 
 export default function MainMap({ navigation }) {
@@ -31,6 +32,7 @@ export default function MainMap({ navigation }) {
     // Track incognito and status choices
     const [incognito, setIncognito] = useState(false);
     const [showStatus, setShowStatus] = useState(false);
+    const [createSpot, setCreateSpot] = useState(false);
 
     // Track social button modal
     const [isSocialModalVisible, setIsSocialModalVisible] = useState(false);
@@ -45,6 +47,9 @@ export default function MainMap({ navigation }) {
 
     // Track create colony modal
     const [isCreateColonyModalVisible, setIsCreateColonyModalVisible] = useState(false);
+
+    // Track create spots modal
+    const [isSpotsModalVisible, setIsSpotsModalVisible] = useState(false);
 
     // Track map type changes
     const [mapType, setMapType] = useState('standard');
@@ -65,6 +70,15 @@ export default function MainMap({ navigation }) {
         } else {
             setShowStatus(true);
         }
+    };
+
+    const handleCreateSpot = () => {
+        console.log("Pressed create spot button");
+        setCreateSpot(true);
+    };
+
+    const cancelCreateSpot = () => {
+        setCreateSpot(false);
     }
 
     const showSocialModal = () => {
@@ -82,25 +96,26 @@ export default function MainMap({ navigation }) {
     const hideFriendsModal = () => {
         setIsFriendsModalVisible(false);
     };
-    // const showViewEventsModal = () => {
-    //     setIsViewEventsModalVisible(true);
-    // };
 
     const hideViewEventsModal = () => {
         setIsViewEventsModalVisible(false);
     };
 
-    // const showCreateEventModal = () => {
-    //     setIsCreateEventModalVisible(true);
-    // }
-
     const hideCreateEventModal = () => {
         setIsCreateEventModalVisible(false);
-    }
+    };
 
     const hideCreateColonyModal = () => {
         setIsCreateColonyModalVisible(false);
-    }
+    };
+
+    const showSpotsModal = () => {
+        setIsSpotsModalVisible(true);
+    };
+
+    const hideSpotsModal = () => {
+        setIsSpotsModalVisible(false);
+    };
 
     const handleMapType = () => {
         if(mapType == 'standard') {
@@ -110,39 +125,75 @@ export default function MainMap({ navigation }) {
         }
     };
 
+    const [spots, setSpots] = useState([]);
 
-    let locationsOfInterest = [
-        {
-            title: "First",
-            location: {
-                latitude: 30.4077,
-                longitude: -91.17989,
-            },
-            description: "Patrick F Taylor Hall"
-        },
-        {
-            title: "Second",
-            location: {
-                latitude: 30.412035,
-                longitude: -91.183815,
-            },
-            description: "Tiger Stadium"
-        }
-    ];
+    const [newSpot, setNewSpot] = useState({
+        name: '',
+        colonyName: '',
+        radius: 1,
+        coordinate: {},
+        safe: true,
 
-    const showLocationsOfInterest = () => {
-        return locationsOfInterest.map((item, index) => {
-            return (
-                <Marker 
-                    key={index}
-                    coordinate={item.location}
-                    title={item.title}
-                    description={item.description}
-                    style={{height: 100}}
-                />
-            )
+    });
+
+    const resetNewSpot = () => {
+        setNewSpot({
+            name: '',
+            colonyName: '',
+            radius: 1,
+            coordinate: {},
+            safe: true,
         });
     };
+
+    const addSpot = (event) => {
+        if (createSpot) {
+            currentSpot = newSpot;
+            const updatedSpot = {
+                ...currentSpot,
+                id: Date.now(),
+                coordinate: event.nativeEvent.coordinate,
+            };
+
+            setSpots([...spots, updatedSpot]);
+            resetNewSpot();
+            setCreateSpot(false);
+        }
+    }
+
+    
+    // let locationsOfInterest = [
+    //     {
+    //         title: "First",
+    //         location: {
+    //             latitude: 30.4077,
+    //             longitude: -91.17989,
+    //         },
+    //         description: "Patrick F Taylor Hall"
+    //     },
+    //     {
+    //         title: "Second",
+    //         location: {
+    //             latitude: 30.412035,
+    //             longitude: -91.183815,
+    //         },
+    //         description: "Tiger Stadium"
+    //     }
+    // ];
+
+    // const showLocationsOfInterest = () => {
+    //     return locationsOfInterest.map((item, index) => {
+    //         return (
+    //             <Marker 
+    //                 key={index}
+    //                 coordinate={item.location}
+    //                 title={item.title}
+    //                 description={item.description}
+    //                 style={{height: 100}}
+    //             />
+    //         )
+    //     });
+    // };
 
     const panResponder = PanResponder.create({
         onStartShouldSetPanResponder: () => isSocialModalVisible,
@@ -182,8 +233,9 @@ export default function MainMap({ navigation }) {
                         initialRegion={mapRegion}
                         onRegionChange={newRegion => setMapRegion(newRegion)}
                         mapType={mapType}
+                        onPress={addSpot}
                     >
-                        {showLocationsOfInterest()}
+                        {/* {showLocationsOfInterest()}
                         <Marker 
                             draggable
                             pinColor={'#0000ff'}
@@ -195,7 +247,25 @@ export default function MainMap({ navigation }) {
                             }}
                             description="This is a draggable marker"
                             title='draggable marker'
-                        />
+                        /> */}
+                        {spots.map((spot) => (
+                            <View key={spot.id}>
+                                <Circle 
+                                    center={spot.coordinate}
+                                    radius={500}
+                                    strokeWidth={1} 
+                                    strokeColor="#2C6765"
+                                    fillColor='rgba(44, 103, 101, .3)'
+                                />
+                                <Marker 
+                                    coordinate={spot.coordinate}
+                                    title={spot.name}
+                                    description={spot.colonyName}
+                                >
+                                    <Image source={require('../assets/pin.png')} style={{ width: 40, height: 40 }} />
+                                </Marker>
+                            </View>
+                        ))}
                         <Circle 
                             center={{"latitude": 30.41699914895536, "longitude": -91.17555990815163}} 
                             radius={1000} 
@@ -329,6 +399,28 @@ export default function MainMap({ navigation }) {
                         width={45}
                         height={45}
                     />
+                    {/* Spots Modal Button */}
+                    <MapButton 
+                        imageSource={require('../assets/spots.png')} 
+                        style={styles.spotsButton}
+                        active={createSpot} 
+                        onPress={() => {
+                            showSpotsModal();
+                            handleCreateSpot();
+                        }}
+                        width={45}
+                        height={45}
+                    />
+                    {isSpotsModalVisible && (
+                        <CreateSpotModal 
+                            isModalVisible={isSpotsModalVisible} 
+                            hideModal={hideSpotsModal} 
+                            cancelCreateSpot={cancelCreateSpot}
+                            newSpot={newSpot}
+                            setNewSpot={setNewSpot}
+                            resetNewSpot={resetNewSpot}
+                        /> 
+                    )}
                     {/* Settings Button */}
                     <MapButton 
                         imageSource={require('../assets/setting.png')} 
@@ -336,15 +428,6 @@ export default function MainMap({ navigation }) {
                         onPress={() => {
                             console.log("Pressed settings button");
                             navigation.navigate('Settings');
-                        }}
-                        width={45}
-                        height={45}
-                    />
-                    <MapButton 
-                        imageSource={require('../assets/spots.png')} 
-                        style={styles.spotsButton} 
-                        onPress={() => {
-                            console.log("Pressed spots button");
                         }}
                         width={45}
                         height={45}
@@ -370,12 +453,12 @@ const styles = StyleSheet.create({
     },
     friendsButton: {
         position: 'absolute',
-        bottom: '5%',
+        bottom: '10%',
         left: '15%',
     },
     chatButton: {
         position: 'absolute',
-        bottom: '5%',
+        bottom: '10%',
         left: '70%',
     },
     searchBar: {
@@ -420,7 +503,7 @@ const styles = StyleSheet.create({
     },
     socialButtonOnMap: {
         position: 'absolute',
-        bottom: '5%',
+        bottom: '10%',
         left: '40%',
         elevation: 22,
         shadowColor: '#000',
