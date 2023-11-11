@@ -5,13 +5,19 @@ import { createStackNavigator } from '@react-navigation/stack';
 import MainMap from './pages/mainMap';
 import Settings from './pages/settings';
 import Login from './pages/login';
+import Signup from './pages/signup';
 
 const Stack = createStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName='Login'>
+      <Stack.Navigator initialRouteName='Signup'>
+      <Stack.Screen 
+          name='Signup' 
+          component={Signup} 
+          options={{ headerShown: false}}
+        />
         <Stack.Screen 
           name='Login' 
           component={Login} 

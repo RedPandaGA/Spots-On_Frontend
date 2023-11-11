@@ -10,7 +10,12 @@ const Login = ({ navigation }) => {
     // Navigate to the main app screen
     console.log("Logged into account: " + phoneNumber + " with password: " + password);
     navigation.navigate('Home');
+  };
 
+  const handleSignup = () => {
+    // Navigate to the main app screen
+    console.log("Clicked Create Account");
+    navigation.navigate('Signup');
   };
 
   return (
@@ -41,9 +46,7 @@ const Login = ({ navigation }) => {
       </TouchableOpacity>
       <TouchableOpacity
         style={[styles.button, { alignSelf: 'center', marginTop: 20 }]}
-        onPress={() => {
-          console.log("clicked Create Account");
-        }}
+        onPress={handleSignup}
       >
         <Text style={styles.buttonText}>Create Account</Text>
       </TouchableOpacity>
