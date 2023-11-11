@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Dimensions, StyleSheet, View, Text, Animated, PanResponder, FlatList, Image } from 'react-native';
+import { Modal, Dimensions, StyleSheet, View, Text, Animated, PanResponder, FlatList, Image, TouchableOpacity } from 'react-native';
 import ColonySliderModal from "../components/colonySliderModal";
 import SearchBarModal from "../components/searchBarModal";
 import * as Animatable from 'react-native-animatable';
@@ -42,6 +42,46 @@ const FriendsModal = ({ isModalVisible, hideModal }) => {
             name: 'Milan Nguyen',
             status: 'studyingggg',
         },
+        {
+            name: 'Aeryn Shadingdong',
+            status: 'volunteering at the hospital',
+        },
+        {
+            name: 'Sacaen winds',
+            status: 'working on OOD 2',
+        },
+        {
+            name: 'bawmba',
+            status: 'watching utube',
+        },
+        {
+            name: 'anviii',
+            status: 'chilling in PFT commons',
+        },
+        {
+            name: 'sycosyclopse',
+            status: 'studyingggg',
+        },
+        {
+            name: 'austin',
+            status: 'volunteering at the hospital',
+        },
+        {
+            name: 'kelli dinh',
+            status: 'working on OOD 2',
+        },
+        {
+            name: 'Fred juley',
+            status: 'watching utube',
+        },
+        {
+            name: 'betsi cao',
+            status: 'chilling in PFT commons',
+        },
+        {
+            name: 'Rot Nguyen',
+            status: 'studyingggg',
+        },
     ];
 
     const renderItem = ({ item }) => (
@@ -61,6 +101,7 @@ const FriendsModal = ({ isModalVisible, hideModal }) => {
         <Modal transparent visible={isModalVisible} onRequestClose={hideModal}>
             <View style={styles.modalContainer} {...panResponder.panHandlers}>
                 <Animatable.View
+                // milan => need to make this slide out to the left 
                     animation={isModalVisible ? "slideInLeft" : "slideOutLeft"}
                     duration={200}
                     style={[
@@ -79,6 +120,11 @@ const FriendsModal = ({ isModalVisible, hideModal }) => {
 
                 {/* Colony Buttons Slider */}
                 <ColonySliderModal style={styles.colonySlider} />
+
+                 {/* Small Button */}
+                 <TouchableOpacity style={styles.plusButton}>
+                        <Text style={styles.plusText}>+</Text>
+                 </TouchableOpacity>
 
                 {/* Display the list of friends and statuses using FlatList */}
                 <View style={{marginTop: '50%', flex: 1, width: '100%'}}>
@@ -117,6 +163,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: '12%',
         left: '4%',
+        width: '82%'
     },
     searchBar: {
         position: 'absolute',
@@ -150,6 +197,23 @@ const styles = StyleSheet.create({
         left: 20,
         position: 'absolute',
         tintColor: '#E7EFCA'
+    },
+    plusButton: {
+        backgroundColor: '#E7EFCA',
+        padding: 10,
+        width: 45,
+        height: 45,
+        borderRadius: 100,
+        position: 'absolute',
+        top: '12.5%', // Adjust this to position the button as desired
+        right: '3%', // Adjust this to position the button as desired
+    },
+    plusText: {
+        fontSize: 40, // Adjust the font size as needed
+        color: '#2C6765',
+        fontWeight: 'bold',
+        textAlign: 'center',
+        marginTop: -16,
     },
 });
 
