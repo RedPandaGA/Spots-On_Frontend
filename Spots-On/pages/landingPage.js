@@ -9,15 +9,16 @@ const LandingPage = ({ navigation }) => {
   };
 
   return (
-    <Swiper style={styles.wrapper} showsButtons={false} loop={false}>
+    <Swiper style={styles.wrapper} showsButtons={false} loop={false} dotStyle={styles.paginationDot}
+    activeDotStyle={styles.activePaginationDot}>
       <View style={styles.slide}>
-        <Text style={styles.text}>Page 1</Text>
+        <Text style={styles.text}>Plan</Text>
       </View>
       <View style={styles.slide}>
-        <Text style={styles.text}>Page 2</Text>
+        <Text style={styles.text}>Meet</Text>
       </View>
       <View style={styles.slide}>
-        <Text style={styles.text}>Page 3</Text>
+        <Text style={styles.text}>Connect</Text>
         <TouchableOpacity style={styles.createAccountButton} onPress={handleGetStarted}>
           <Text style={styles.createAccountButtonText}>Get Started</Text>
         </TouchableOpacity>
@@ -49,6 +50,20 @@ const styles = StyleSheet.create({
     color: '#E7EFCA',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  paginationDot: {
+    backgroundColor: '#305c5c', // Change the color of inactive dots
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    margin: 3,
+  },
+  activePaginationDot: {
+    backgroundColor: '#E7EFCA', // Change the color of active dot
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    margin: 3,
   },
 });
 
