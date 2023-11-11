@@ -244,7 +244,13 @@ export default function MainMap({ navigation }) {
                 <View>
                     <StatusBar/>
                     {/* Main Map */}
-                    <MapView                     >
+                    <MapView 
+                        style={styles.map}
+                        initialRegion={mapRegion}
+                        onRegionChange={newRegion => setMapRegion(newRegion)}
+                        mapType={mapType}
+                        onPress={addSpot}
+                    >
                         {/* {showLocationsOfInterest()}
                         <Marker 
                             draggable
