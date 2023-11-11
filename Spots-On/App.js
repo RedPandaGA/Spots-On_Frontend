@@ -6,14 +6,20 @@ import MainMap from './pages/mainMap';
 import Settings from './pages/settings';
 import Login from './pages/login';
 import Signup from './pages/signup';
+import LandingPage from './pages/landingPage';
 
 const Stack = createStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName='Signup'>
+      <Stack.Navigator initialRouteName='LandingPage'>
       <Stack.Screen 
+          name='LandingPage' 
+          component={LandingPage} 
+          options={{ headerShown: false}}
+        />
+        <Stack.Screen 
           name='Signup' 
           component={Signup} 
           options={{ headerShown: false}}
