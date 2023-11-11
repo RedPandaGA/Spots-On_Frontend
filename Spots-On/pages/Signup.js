@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Button, StyleSheet, Image, TextInput, TouchableOpacity} from 'react-native';
+import { View, Text, Button, StyleSheet, Image, TextInput, TouchableOpacity } from 'react-native';
 
 const Signup = ({ navigation }) => {
 
@@ -7,7 +7,7 @@ const Signup = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  
+
 
   const handleSignup = () => {
     // Navigate to the main app screen
@@ -25,15 +25,15 @@ const Signup = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Image source={require('../assets/ladybugfixed.png')} style={styles.icon} />
-      <TextInput  
-        style={[styles.input, {marginTop: 30}]}
-        keyboardType="numeric" 
+      <TextInput
+        style={[styles.input, { marginTop: 30 }]}
+        keyboardType="numeric"
         placeholder="Phone #"
         placeholderTextColor={"#E7EFCA"}
         value={phoneNumber}
         onChangeText={(text) => setPhoneNumber(text)}
       />
-      <TextInput  
+      <TextInput
         style={styles.input}
         placeholder="Email"
         placeholderTextColor={"#E7EFCA"}
@@ -62,9 +62,9 @@ const Signup = ({ navigation }) => {
       >
         <Text style={styles.buttonText}>Signup</Text>
       </TouchableOpacity>
-      <Text style={[styles.buttonText, { marginTop: 20}]}>Already have an account?</Text>
+      <Text style={[styles.buttonText, { marginTop: 20 }]}>Already have an account?</Text>
       <TouchableOpacity
-        style={[styles.button, { alignSelf: 'center'}]}
+        style={[styles.button, { alignSelf: 'center' }]}
         onPress={handleLogin}
       >
         <Text style={styles.buttonText}>Login</Text>
@@ -106,14 +106,14 @@ const styles = StyleSheet.create({
     width: '50%',
     backgroundColor: "#305c5c",
     alignItems: 'center',
-},
-buttonText: {
-  fontSize: 16,
-  color: '#E7EFCA',
-  textAlign: 'center',
-  fontWeight: 'bold',
-  paddingVertical: 12,
-},
+  },
+  buttonText: {
+    fontSize: 16,
+    color: '#E7EFCA',
+    textAlign: 'center',
+    fontWeight: 'bold',
+    paddingVertical: 12,
+  },
 });
 
 export default Signup;

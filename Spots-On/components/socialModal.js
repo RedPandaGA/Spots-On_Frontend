@@ -1,8 +1,32 @@
-import React from 'react';
-import { Modal, Dimensions, StyleSheet, View, Text, TouchableOpacity, Animated, PanResponder } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { Modal, Dimensions, StyleSheet, View, Text, TouchableOpacity, Animated, PanResponder, TextInput, KeyboardAvoidingView, Image } from 'react-native';
 import Bar from './bar';
 
 const SocialModal = ({ isModalVisible, hideModal, setViewEvents, setCreateEvent, setCreateColony }) => {
+    
+    const [joinColonyCode, setJoinColonyCode] = useState('');
+    const [statusInput, setStatusInput] = useState('');
+    
+    const [isStatusInputFocused, setIsStatusInputFocused] = useState(false);
+    const [isJoinColonyInputFocused, setIsJoinColonyInputFocused] = useState(false);
+
+    const handleStatusFocus = () => {
+        setIsStatusInputFocused(true);
+    };
+
+    const handleStatusBlur = () => {
+        setStatusInput('');
+        setIsStatusInputFocused(false);
+    };
+
+    const handleJoinColonyFocus = () => {
+        setIsJoinColonyInputFocused(true);
+    };
+
+    const handleJoinColonyBlur = () => {
+        setIsJoinColonyInputFocused(false);
+    };
+
     const screenHeight = Dimensions.get('window').height;
     const percentageThreshold = 0.5; // Adjust the percentage as needed
 
@@ -30,12 +54,22 @@ const SocialModal = ({ isModalVisible, hideModal, setViewEvents, setCreateEvent,
 
     const modalPosition = new Animated.Value(0);
 
-    const buttonList = ['Set Status', 'View Events', 'Create Event', 'Join Colony', 'Create Colony'];
+    const buttonList = ['Set Status', 'Join Colony', 'Create Colony', 'View Events', 'Create Event'];
 
       // Create an array of functions to handle button actions
     const buttonActions = [
         () => {
             console.log('Set Status clicked');
+        },
+        () => {
+            console.log('Join Colony clicked');
+            // Handle specific action for Button 4
+        },
+        () => {
+            hideModal();
+            setCreateColony(true);
+            console.log('Create Colony clicked');
+            // Handle specific action for Button 5
         },
         () => {
             hideModal();
@@ -49,26 +83,80 @@ const SocialModal = ({ isModalVisible, hideModal, setViewEvents, setCreateEvent,
             setCreateEvent(true);
             console.log('Create Event clicked');
             // Handle specific action for Button 3
-        },
-        () => {
-            console.log('Join Colony clicked');
-            // Handle specific action for Button 4
-        },
-        () => {
-            hideModal();
-            setCreateColony(true);
-            console.log('Create Colony clicked');
-            // Handle specific action for Button 5
-        },
+        }
     ];
 
+    const statusInputRef = useRef(null);
+    const joinColonyInputRef = useRef(null);
+
+    const handleUnfocus = () => {
+        if (statusInputRef.current) {
+            statusInputRef.current.blur();
+        }
+        if (joinColonyInputRef.current) {
+            joinColonyInputRef.current.blur();
+        }
+    }
+
     const renderButton = (text, index) => {
+        if (text === 'Set Status') {
+            return (
+                <View key={text}>
+                    <TextInput
+                        ref={statusInputRef}
+                        style={[styles.inputNormal, isStatusInputFocused ? styles.inputFocused : null]}
+                        placeholder={isStatusInputFocused ? '' : text}
+                        placeholderTextColor="#2C6765"
+                        value={statusInput}
+                        onChangeText={(text) => setStatusInput(text)}
+                        onFocus={handleStatusFocus}
+                        onBlur={handleStatusBlur}
+                    />
+                    {isStatusInputFocused && (
+                        <TouchableOpacity style={styles.imageContainer} onPress={() => {
+                            handleUnfocus();
+                            console.log('Changed status to: ' + statusInput);
+                            setStatusInput('');
+                        }}>
+                            <Image source={require('../assets/back-button-primary-color.png')} style={styles.image}/>
+                        </TouchableOpacity>
+                    )}
+                </View>
+            );
+        } else if (text === 'Join Colony') {
+            return (
+                <View key={text}>
+                    <TextInput
+                        ref={joinColonyInputRef}
+                        style={[styles.inputNormal, isJoinColonyInputFocused ? styles.inputFocused : null]}
+                        placeholder={isJoinColonyInputFocused ? '' : text}
+                        placeholderTextColor="#2C6765"
+                        value={joinColonyCode}
+                        onChangeText={(text) => setJoinColonyCode(text)}
+                        onFocus={handleJoinColonyFocus}
+                        onBlur={handleJoinColonyBlur}
+                    />
+                    {isJoinColonyInputFocused && (
+                        <TouchableOpacity style={styles.imageContainer} onPress={() => {
+                            handleUnfocus();
+                            setJoinColonyCode('');
+                            handleStatusBlur();
+                            console.log('Joined colony with code: ' + joinColonyCode);
+                        }}>
+                            <Image source={require('../assets/back-button-primary-color.png')} style={styles.image}/>
+                        </TouchableOpacity>
+                        
+                    )}
+                </View>
+            );
+        }
+    
         return (
-          <TouchableOpacity style={styles.modalButton} onPress={buttonActions[index]} key={text}>
-            <Text style={styles.buttonText}>{text}</Text>
-          </TouchableOpacity>
+            <TouchableOpacity style={styles.modalButton} onPress={buttonActions[index]} key={text}>
+                <Text style={styles.buttonText}>{text}</Text>
+            </TouchableOpacity>
         );
-      };
+    };
     
 
     return (
@@ -81,7 +169,12 @@ const SocialModal = ({ isModalVisible, hideModal, setViewEvents, setCreateEvent,
                 ]}
                 >
                     <Bar color={'#2C6765'}/>
-                    {buttonList.map((buttonText, index) => renderButton(buttonText, index))}
+                    <KeyboardAvoidingView
+                        style={{flex: 1}}
+                        behavior={Platform.OS === 'ios' ? 'padding' : 'height'} // Adjust this as needed
+                    >
+                        {buttonList.map((buttonText, index) => renderButton(buttonText, index))}
+                    </KeyboardAvoidingView>
                 </Animated.View>
             </View>
         </Modal>
@@ -124,6 +217,34 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontWeight: 'bold'
     },
+    inputNormal: {
+        padding: 10,
+        width: 350,
+        height: 50,
+        borderRadius: 10,
+        borderWidth: 1.5,
+        borderColor: '#ccc',
+        marginVertical: 5,
+        fontSize: 20, 
+        fontWeight: 'bold', 
+        textAlign: 'center',
+        color: '#2C6765'
+    },
+    inputFocused: {
+        backgroundColor: 'rgba(44, 103, 101, .2)'
+    },
+    imageContainer: {
+        width: 40, // Adjust the width as needed
+        height: 40, // Adjust the height as needed
+        position: 'absolute',
+        right: 10, // Adjust the position as needed
+        top: 10, // Adjust the position as needed
+        transform: [{rotate: '180deg'}]
+    },
+    image: {
+        width: 40,
+        height: 40,
+    }
 });
 
 export default SocialModal;
