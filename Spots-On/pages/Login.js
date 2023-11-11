@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Button, StyleSheet, Image, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, Button, StyleSheet, Image, TextInput, TouchableOpacity} from 'react-native';
 
 const Login = ({ navigation }) => {
 
@@ -22,9 +22,9 @@ const Login = ({ navigation }) => {
     <View style={styles.container}>
       <Image source={require('../assets/ladybugfixed.png')} style={styles.icon} />
       {/* <Button title="Login" onPress={handleLogin} /> */}
-      <TextInput
-        style={[styles.input, { marginTop: 50 }]}
-        keyboardType="numeric"
+      <TextInput  
+        style={[styles.input, {marginTop: 50}]}
+        keyboardType="numeric" 
         placeholder="Phone #"
         placeholderTextColor={"#E7EFCA"}
         value={phoneNumber}
@@ -87,14 +87,14 @@ const styles = StyleSheet.create({
     width: '50%',
     backgroundColor: "#305c5c",
     alignItems: 'center',
-  },
-  buttonText: {
-    fontSize: 16,
-    color: '#E7EFCA',
-    textAlign: 'center',
-    fontWeight: 'bold',
-    paddingVertical: 12,
-  },
+},
+buttonText: {
+  fontSize: 16,
+  color: '#E7EFCA',
+  textAlign: 'center',
+  fontWeight: 'bold',
+  paddingVertical: 12,
+},
 });
 
 export default Login;

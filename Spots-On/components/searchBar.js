@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Image, View, TextInput, TouchableOpacity } from 'react-native';
+import { StyleSheet, Image, View, TextInput } from 'react-native';
 
 export default function SearchBar({ imageSource, style, color }) {
     return (
@@ -12,15 +12,10 @@ export default function SearchBar({ imageSource, style, color }) {
                     // value={searchText}
                     // onChangeText={setSearchText}
                 />
-                <TouchableOpacity onPress={() => {
-                    console.log("Pressed search button");
-                }}>
-                    <Image 
-                        source={imageSource}
-                        style={styles.image}
-                    />
-                </TouchableOpacity>
-                
+                <Image 
+                    source={imageSource}
+                    style={styles.image}
+                />
             </View>
         </View>
     )
@@ -31,7 +26,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         height: 45,
-        width: 270,
+        width: 300,
         borderRadius: 50,
         paddingVertical: 14,
         paddingHorizontal: 10,
@@ -50,7 +45,7 @@ const styles = StyleSheet.create({
     image: {
         width: 30,
         height: 30,
-        right: 35
+        right: 5
     },
     shadow: {
         elevation: 20,
