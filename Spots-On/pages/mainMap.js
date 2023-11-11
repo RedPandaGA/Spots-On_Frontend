@@ -6,7 +6,6 @@ import SearchBar from "../components/searchBar";
 import ColonySlider from "../components/colonySlider";
 import SocialModal from "../components/socialModal";
 import FriendsModal from "../components/friendsModal";
-import ChatModal from "../components/chatModal";
 import ViewEventsModal from "../components/viewEventsModal";
 import CreateEventModal from "../components/createEventModal";
 import CreateColonyModal from "../components/createColonyModal";
@@ -40,10 +39,6 @@ export default function MainMap({ navigation }) {
 
     // Track friends button modal
     const [isFriendsModalVisible, setIsFriendsModalVisible] = useState(false);
-
-    // Track chat button modal
-    const [isChatModalVisible, setIsChatModalVisible] = useState(false);
-
     // Track view events modal
     const [isViewEventsModalVisible, setIsViewEventsModalVisible] = useState(false);
 
@@ -101,17 +96,6 @@ export default function MainMap({ navigation }) {
     const hideFriendsModal = () => {
         setIsFriendsModalVisible(false);
     };
-
-    const showChatModal = () => {
-        setIsChatModalVisible(true);
-    };
-
-    const hideChatModal = () => {
-        setIsChatModalVisible(false);
-    };
-    // const showViewEventsModal = () => {
-    //     setIsViewEventsModalVisible(true);
-    // };
 
     const hideViewEventsModal = () => {
         setIsViewEventsModalVisible(false);
@@ -307,12 +291,12 @@ export default function MainMap({ navigation }) {
 
                     {/* ------ MAIN NAV BUTTONS ------ */}
                     {/* Friends Button */}
-                    <MapButton 
-                        imageSource={require('../assets/people.png')}
-                        style={styles.friendsButton}
+                    <MapButton
+                        imageSource={require('../assets/people.png')} 
+                        style={styles.friendsButton} 
                         onPress={() => {
                             showFriendsModal();
-                            console.log("Pressed friends button");
+                            console.log("Pressed friends button")
                         }}
                         width={60}
                         height={60}
@@ -368,19 +352,12 @@ export default function MainMap({ navigation }) {
                     )}
                     {/* Chats Button */}
                     <MapButton 
-                        imageSource={require('../assets/speech-bubble.png')}
-                        style={styles.chatButton}
-                        onPress={() => {
-                            showChatModal();
-                            console.log("Pressed chat button");
-                        }}
+                        imageSource={require('../assets/speech-bubble.png')} 
+                        style={styles.chatButton} 
+                        onPress={() => console.log("Pressed chats button")}
                         width={60}
                         height={60}
                     />
-                    <ChatModal
-                        isModalVisible={isChatModalVisible}
-                        hideModal={hideChatModal}
-                    /> 
 
                     {/* ------ SEARCH BAR ------ */}
                     <SearchBar 
@@ -465,11 +442,11 @@ export default function MainMap({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-    // container: {
-    //     flex: 1,
-    //     justifyContent: 'center',
-    //     alignItems: 'center',
-    //   },
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
     map: {
         height: '100%',
         width: '100%',
@@ -547,4 +524,6 @@ const styles = StyleSheet.create({
         width: 50,
         borderRadius: 50,
     }
+
+
 });
