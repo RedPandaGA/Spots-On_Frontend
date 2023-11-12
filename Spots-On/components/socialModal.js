@@ -33,8 +33,9 @@ const SocialModal = ({ isModalVisible, hideModal, setViewEvents, setCreateEvent,
     const panResponder = PanResponder.create({
         onStartShouldSetPanResponder: (e, gestureState) => {
             // Calculate the threshold based on a percentage of the screen height
-            const threshold = screenHeight * percentageThreshold;
-            return e.nativeEvent.pageY > threshold && e.nativeEvent.pageY < screenHeight * (percentageThreshold + .1);
+            // const threshold = screenHeight * percentageThreshold;
+            // return e.nativeEvent.pageY > threshold && e.nativeEvent.pageY < screenHeight * (percentageThreshold + .1);
+            return true;
         },
         onPanResponderMove: (event, gestureState) => {
             if (gestureState.dy > 0) {
@@ -161,22 +162,22 @@ const SocialModal = ({ isModalVisible, hideModal, setViewEvents, setCreateEvent,
 
     return (
         <Modal animationType="slide" transparent visible={isModalVisible} onRequestClose={hideModal}>
-            <View style={styles.modalContainer} {...panResponder.panHandlers}>
-                <Animated.View
-                style={[
-                    styles.modalContent,
-                    { transform: [{ translateY: modalPosition }] },
-                ]}
-                >
-                    <Bar color={'#2C6765'}/>
-                    <KeyboardAvoidingView
-                        style={{flex: 1}}
-                        behavior={Platform.OS === 'ios' ? 'padding' : 'height'} // Adjust this as needed
+            <KeyboardAvoidingView
+                style={{flex: 1}}
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'} // Adjust this as needed
+            >
+                <View style={styles.modalContainer} {...panResponder.panHandlers}>
+                    <Animated.View
+                    style={[
+                        styles.modalContent,
+                        { transform: [{ translateY: modalPosition }] },
+                    ]}
                     >
-                        {buttonList.map((buttonText, index) => renderButton(buttonText, index))}
-                    </KeyboardAvoidingView>
-                </Animated.View>
-            </View>
+                        <Bar color={'#2C6765'}/>
+                            {buttonList.map((buttonText, index) => renderButton(buttonText, index))}
+                    </Animated.View>
+                </View>
+            </KeyboardAvoidingView>
         </Modal>
     );
 };
@@ -192,7 +193,7 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 50,
         borderTopRightRadius: 50,
         padding: 20,
-        height: '50%',
+        height: 400,
         alignItems: 'center',
         justifyContent: 'center'
     },

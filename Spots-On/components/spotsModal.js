@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, Dimensions, StyleSheet, View, Text, Image, Animated, PanResponder, TouchableOpacity, TouchableWithoutFeedback, TextInput, Keyboard, KeyboardAvoidingView } from 'react-native';
+import { Modal, Switch, StyleSheet, View, Text, Image, Animated, PanResponder, TouchableOpacity, TouchableWithoutFeedback, TextInput, Keyboard, KeyboardAvoidingView } from 'react-native';
 import Bar from './bar';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
@@ -9,11 +9,17 @@ const CreateSpotModal = ({ isModalVisible, hideModal, cancelCreateSpot, newSpot,
     const handleInputChange = (key, value) => {
         setNewSpot({ ...newSpot, [key]: value });
     };
-      
+
+    const toggleSafety = () => {
+        setNewSpot((prevSpot) => ({
+            ...prevSpot,
+            safe: !prevSpot.safe,
+        }));
+    };
 
     return (
         <Modal animationType="fade" transparent visible={isModalVisible} onRequestClose={hideModal}>
-            <KeyboardAvoidingView enabled={false} behavior='height' style={styles.modalContainer}>
+            <KeyboardAvoidingView behavior='height' style={styles.modalContainer}>
                 <View style={styles.modalContent}>
                     <View style={styles.header}>
                         <Text style={styles.modalTitle}>Create Spot</Text>
@@ -26,21 +32,23 @@ const CreateSpotModal = ({ isModalVisible, hideModal, cancelCreateSpot, newSpot,
                             value={newSpot.name}
                             onChangeText={(text) => handleInputChange('name', text)}
                         />
-                        {/* <TextInput
-                            style={styles.input}
-                            placeholder="Location"
-                            placeholderTextColor={'#E7EFCA'}
-                            value={spot.location}
-                            onChangeText={(text) => handleInputChange('eventLocation', text)}
-                        /> */}
                         <TextInput
                             style={styles.input}
                             placeholder="Colony Name"
                             placeholderTextColor={'#E7EFCA'}
-                            multiline
-                            numberOfLines={4}
                             value={newSpot.colonyName}
                             onChangeText={(text) => handleInputChange('colonyName', text)}
+                        />
+                    </View>
+                    <View style={styles.switchContainer}>
+                        {/* <Text style={styles.switchText}>{newSpot.safe ? 'Safe' : 'Unsafe'}</Text> */}
+                        <Text style={styles.switchText}>Safe</Text>
+                        <Switch
+                            trackColor={{false: '#767577', true: '#E7EFCA'}}
+                            thumbColor={newSpot.safe ? '#2C6765' : '#f4f3f4'}
+                            ios_backgroundColor="#3e3e3e"
+                            onValueChange={toggleSafety}
+                            value={newSpot.safe}
                         />
                     </View>
                     <View style={styles.buttonContainer}>
@@ -144,6 +152,18 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 16
     },
+    switchContainer: {
+        justifyContent: 'center',
+        alignContent: 'space-between',
+        flexDirection: 'row'
+    },
+    switchText: {
+        color: '#E7EFCA',
+        fontWeight: 'bold',
+        fontSize: 20,
+        marginRight: 20,
+        alignSelf: 'center'
+    }
 });
 
 export default CreateSpotModal;

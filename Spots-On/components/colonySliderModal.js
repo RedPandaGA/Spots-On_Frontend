@@ -26,7 +26,7 @@ export default function ColonySliderModal({ style }) {
                 showsHorizontalScrollIndicator={false}
                 renderItem={({ item }) => (
                     <TouchableOpacity onPress={() => onPress(item.name)} >
-                        <View style={styles.button}>
+                        <View style={[styles.button, styles.shadow]}>
                             <Text style={styles.text}>{item.name}</Text>
                         </View>
                     </TouchableOpacity>
@@ -48,14 +48,14 @@ const styles = StyleSheet.create({
         backgroundColor: '#E7EFCA',
         height: 45,
         width: 100,
-        shadowColor: 'rgb(0, 0, 0)',
-        shadowOffset: {
-            width: 5,
-            height: 5,
-        },
-        shadowOpacity: 0.5,
-        shadowRadius: 50,
+    },
+    shadow: {
         elevation: 2,
+        shadowColor: '#171717',
+        shadowOffset: {width: 0, height: 0},
+        shadowOpacity: .6,
+        shadowRadius: 3,
+        borderRadius: 50,
     },
     text: {
         textAlign: 'center',

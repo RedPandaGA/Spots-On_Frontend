@@ -1,5 +1,6 @@
 import React from 'react';
-import { Modal, Dimensions, StyleSheet, View, Text, Animated, PanResponder, FlatList, Image } from 'react-native';
+import { Dimensions, StyleSheet, View, Text, Animated, PanResponder, FlatList, Image } from 'react-native';
+import Modal from 'react-native-modal';
 import ColonySliderModal from "../components/colonySliderModal";
 import SearchBarModal from "../components/searchBarModal";
 import * as Animatable from 'react-native-animatable';
@@ -8,15 +9,15 @@ const FriendsModal = ({ isModalVisible, hideModal }) => {
     const screenWidth = Dimensions.get('window').width;
     const percentageThreshold = 0.2;
 
-    const panResponder = PanResponder.create({
-        onStartShouldSetPanResponder: (e, gestureState) => true,
-        onPanResponderMove: (event, gestureState) => {
-            if (gestureState.dx < -screenWidth * percentageThreshold) {
-                // Close the modal when swiped to the left
-                hideModal();
-            }
-        },
-    });
+    // const panResponder = PanResponder.create({
+    //     onStartShouldSetPanResponder: (e, gestureState) => true,
+    //     onPanResponderMove: (event, gestureState) => {
+    //         if (gestureState.dx < -screenWidth * percentageThreshold) {
+    //             // Close the modal when swiped to the left
+    //             hideModal();
+    //         }
+    //     },
+    // });
 
     const modalPosition = new Animated.Value(0);
 
@@ -58,11 +59,22 @@ const FriendsModal = ({ isModalVisible, hideModal }) => {
     );
 
     return (
-        <Modal transparent visible={isModalVisible} onRequestClose={hideModal}>
-            <View style={styles.modalContainer} {...panResponder.panHandlers}>
+        <Modal 
+            animationIn="slideInLeft" 
+            animationOut="slideOutRight" 
+            hasBackdrop={false} 
+            isVisible={isModalVisible} 
+            onRequestClose={hideModal}
+            deviceWidth={1}
+            onSwipeComplete={() => hideModal()}
+            swipeThreshold={150}
+            swipeDirection="left"
+            propagateSwipe
+        >
+            <View style={styles.modalContainer} >
                 <Animatable.View
-                    animation={isModalVisible ? "slideInLeft" : "slideOutLeft"}
-                    duration={200}
+                    // animation={isModalVisible ? "slideInLeft" : "slideOutLeft"}
+                    // duration={200}
                     style={[
                         styles.modalContent,
                         { transform: [{ translateX: modalPosition }],

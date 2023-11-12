@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, Dimensions, StyleSheet, View, Text, Image, Animated, PanResponder, TouchableOpacity, TextInput } from 'react-native';
+import { Modal, Dimensions, StyleSheet, View, Text, Image, Animated, PanResponder, TouchableOpacity, TextInput, KeyboardAvoidingView } from 'react-native';
 import Bar from './bar';
 
 const CreateColonyModal = ({ isModalVisible, hideModal, setSocialModal }) => {
@@ -40,69 +40,75 @@ const CreateColonyModal = ({ isModalVisible, hideModal, setSocialModal }) => {
 
     return (
         <Modal animationType="slide" transparent visible={isModalVisible} onRequestClose={hideModal}>
-            <View style={styles.modalContainer} {...panResponder.panHandlers}>
-                <Animated.View
-                style={[
-                    styles.modalContent,
-                    { transform: [{ translateY: modalPosition }] },
-                ]}
-                >
-                    <Bar color={'#2C6765'}/>
-                    <View style={styles.header}>
-                        <TouchableOpacity onPress={() => {
-                            hideModal();
-                            setSocialModal(true);
-                            console.log("Pressed back button to social");
-                        }}>
-                            <Image 
-                                source={require('../assets/back-button-primary-color.png')}
-                                style={styles.backButton}
+            <KeyboardAvoidingView 
+                style={{flex: 1}}
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'} // Adjust this as needed
+            > 
+                <View style={styles.modalContainer} {...panResponder.panHandlers}>
+                    <Animated.View
+                    style={[
+                        styles.modalContent,
+                        { transform: [{ translateY: modalPosition }] },
+                    ]}
+                    >
+                        <Bar color={'#2C6765'}/>
+                        <View style={styles.header}>
+                            <TouchableOpacity onPress={() => {
+                                hideModal();
+                                setSocialModal(true);
+                                console.log("Pressed back button to social");
+                            }}>
+                                <Image 
+                                    source={require('../assets/back-button-primary-color.png')}
+                                    style={styles.backButton}
+                                />
+                            </TouchableOpacity>
+                            <Text style={styles.modalTitle}>Create Colony</Text>
+                        </View>
+                        <View style={styles.buttonContainer}>
+                            <TouchableOpacity 
+                                style={isPrivateColony ? styles.buttonPressed : styles.buttonNormal}
+                                onPress={() => {
+                                    setIsPrivateColony(true);
+                                    setIsPublicColony(false);
+                                    console.log("Pressed Private");
+                                }}
+                            >
+                                <Text style={styles.buttonText}>Private</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity 
+                                style={isPublicColony ? styles.buttonPressed : styles.buttonNormal}
+                                onPress={() => {
+                                    setIsPrivateColony(false);
+                                    setIsPublicColony(true);
+                                    console.log("Pressed Public");
+                                }}
+                                >
+                                <Text style={styles.buttonText}>Public</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={{width: '100%'}}>
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Colony Name"
+                                placeholderTextColor={'#2C6765'}
+                                value={colonyName}
+                                onChangeText={(text) => setColonyName(text)}
                             />
-                        </TouchableOpacity>
-                        <Text style={styles.modalTitle}>Create Colony</Text>
-                    </View>
-                    <View style={styles.buttonContainer}>
+                        </View>
                         <TouchableOpacity 
-                            style={isPrivateColony ? styles.buttonPressed : styles.buttonNormal}
+                            style={[styles.buttonNormal, {alignSelf: 'center', marginTop: 10}]}
                             onPress={() => {
-                                setIsPrivateColony(true);
-                                setIsPublicColony(false);
-                                console.log("Pressed Private");
+                                console.log("Created Colony: " + colonyName);
+                                hideModal();
                             }}
                         >
-                            <Text style={styles.buttonText}>Private</Text>
+                            <Text style={styles.buttonText}>Create Colony</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity 
-                            style={isPublicColony ? styles.buttonPressed : styles.buttonNormal}
-                            onPress={() => {
-                                setIsPrivateColony(false);
-                                setIsPublicColony(true);
-                                console.log("Pressed Public");
-                            }}
-                            >
-                            <Text style={styles.buttonText}>Public</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={{width: '100%'}}>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Colony Name"
-                            placeholderTextColor={'#2C6765'}
-                            value={colonyName}
-                            onChangeText={(text) => setColonyName(text)}
-                        />
-                    </View>
-                    <TouchableOpacity 
-                        style={[styles.buttonNormal, {alignSelf: 'center', marginTop: 10}]}
-                        onPress={() => {
-                            console.log("Created Colony: " + colonyName);
-                        }}
-                    >
-                        <Text style={styles.buttonText}>Create Colony</Text>
-                    </TouchableOpacity>
-                    
-                </Animated.View>
-            </View>
+                        
+                    </Animated.View>
+                </View>
+            </KeyboardAvoidingView>
         </Modal>
     );
 };
@@ -118,25 +124,26 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 50,
         borderTopRightRadius: 50,
         padding: 20,
-        height: '50%',
+        height: 400,
         alignItems: 'center',
     },
     modalTitle: {
-        fontSize: 35,
+        fontSize: 36,
         fontWeight: 'bold',
         marginBottom: 10,
         color: '#2C6765',
         textAlign: 'center',
+        justifyContent: 'center'
     },
     buttonContainer: {
         flexDirection: 'row',
         width: '100%',
-        justifyContent: 'space-between',
+        justifyContent: 'space-around',
         marginVertical: 5
     },
     buttonNormal: {
         borderRadius: 30,
-        width: 170,
+        width: 160,
         borderWidth: 1.5,
         borderColor: '#ccc',
         marginVertical: 5,
@@ -144,7 +151,7 @@ const styles = StyleSheet.create({
     },
     buttonPressed: {
         borderRadius: 30,
-        width: 170,
+        width: 160,
         borderWidth: 1.5,
         borderColor: '#ccc',
         marginVertical: 5,
@@ -166,10 +173,10 @@ const styles = StyleSheet.create({
         alignContent: 'space-around',
     },
     backButton: {
-        height: 50,
-        width: 50,
+        height: 46,
+        width: 46,
         position: 'absolute',
-        left: -70,
+        left: -60,
     },
     input: {
         height: 60,

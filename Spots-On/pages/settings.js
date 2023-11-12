@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
       backgroundColor: '#2C6765',
     },
     header: {
-      marginTop: 40,
+      marginTop: 50,
     },
     title: {
       color: '#E7EFCA',
@@ -103,8 +103,8 @@ const styles = StyleSheet.create({
       alignSelf: 'center'
     }, 
     image: {
-      height: 55,
-      width: 55,
+      height: 50,
+      width: 50,
       position: 'absolute',
       left: 20,
     },

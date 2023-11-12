@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     modalTitle: {
-        fontSize: 45,
+        fontSize: 40,
         fontWeight: 'bold',
         marginBottom: 10,
         color: '#2C6765',
@@ -202,11 +202,11 @@ const styles = StyleSheet.create({
     buttonContainer: {
         flexDirection: 'row',
         width: '100%',
-        justifyContent: 'space-between',
+        justifyContent: 'space-around',
     },
     buttonNormal: {
         borderRadius: 30,
-        width: 170,
+        width: 160,
         borderWidth: 1.5,
         borderColor: '#ccc',
         marginVertical: 5,
@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
     },
     buttonPressed: {
         borderRadius: 30,
-        width: 170,
+        width: 160,
         borderWidth: 1.5,
         borderColor: '#ccc',
         marginVertical: 5,
@@ -236,8 +236,8 @@ const styles = StyleSheet.create({
         alignContent: 'space-around',
     },
     backButton: {
-        height: 55,
-        width: 55,
+        height: 50,
+        width: 50,
         position: 'absolute',
         left: -100,
     },
