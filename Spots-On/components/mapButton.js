@@ -2,9 +2,9 @@ import React from "react";
 import { StyleSheet, Image, View, TouchableOpacity } from 'react-native';
 
 export default function MapButton({ imageSource, onPress, style, width, height, active }) {
-    let backgroundColor = 'rgba(44, 103, 101, .8)';
+    let backgroundColor = 'rgba(44, 103, 101, 1)';
     if (active) {
-        backgroundColor = 'rgba(255, 85, 85, .8)'
+        backgroundColor = 'rgba(255, 85, 85, 1)'
     }
     
     return (
@@ -34,8 +34,11 @@ const styles = StyleSheet.create({
         height: 35,
     },
     shadow: {
-        elevation: 20,
-        shadowColor: '#000',
+        elevation: 2,
+        shadowColor: '#171717',
+        shadowOffset: {width: 0, height: 0},
+        shadowOpacity: .6,
+        shadowRadius: 10,
         borderRadius: 50,
-    }
+    },
 });

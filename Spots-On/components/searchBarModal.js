@@ -7,7 +7,7 @@ export default function SearchBarModal({ imageSource, style, color }) {
             <View style={styles.button}>
                 <TextInput
                     style={styles.input}
-                    placeholder="Search for groups"
+                    placeholder="Search for groups or people"
                     placeholderTextColor='#2C6765'
                     // value={searchText}
                     // onChangeText={setSearchText}
@@ -49,8 +49,11 @@ const styles = StyleSheet.create({
         tintColor: '#2C6765'
     },
     shadow: {
-        elevation: 20,
-        shadowColor: '#000',
+        elevation: 2,
+        shadowColor: '#171717',
+        shadowOffset: {width: 0, height: 0},
+        shadowOpacity: .6,
+        shadowRadius: 3,
         borderRadius: 50,
-    }
+    },
 });
