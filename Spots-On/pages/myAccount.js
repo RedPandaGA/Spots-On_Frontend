@@ -1,59 +1,58 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 
-export default function Settings({ navigation }) {
+export default function MyAccount({ navigation }) {
 
-  const colonyList = ["Notifications", "Colony Management", "Location Sharing"];
+  const personalList = ["My Account", "Privacy", "Notifications", "Display"];
 
   // Create an array of functions to handle button actions
-  const colonyButtonActions = [
+  const personalButtonActions = [
+    () => {
+        console.log('My Account clicked');
+    },
+    () => {
+        console.log('Privacy clicked');
+        // Handle specific action for Button 2
+        // You can customize this function for each button
+    },
     () => {
         console.log('Notifications clicked');
+        // Handle specific action for Button 3
     },
     () => {
-        console.log('Colony management clicked');
+        console.log('Display clicked');
+        // Handle specific action for Button 4
+    },
+  ];
+
+  const infoList = ["Accessibility", "Support", "Log Out"];
+
+  const infoButtonActions = [
+    () => {
+        console.log('Accessibility clicked');
+    },
+    () => {
+        console.log('Support clicked');
         // Handle specific action for Button 2
         // You can customize this function for each button
     },
     () => {
-        console.log('Location sharing clicked');
+        console.log('Log Out clicked');
         // Handle specific action for Button 3
-    },
+    }
   ];
 
-  const universalList = ["Account", "Privacy & Security", "About", "Log Out"];
-
-  const universalButtonActions = [
-    () => {
-        console.log('Account clicked');
-        navigation.navigate('MyAccount');
-    },
-    () => {
-        console.log('Privacy & Security clicked');
-        // Handle specific action for Button 2
-        // You can customize this function for each button
-    },
-    () => {
-        console.log('About clicked');
-        // Handle specific action for Button 3
-    },
-    () => {
-      console.log('Log out clicked');
-      // Handle specific action for Button 3
-  }
-  ];
-
-  const renderColonyButton = (text, index) => {
+  const renderPersonalButton = (text, index) => {
     return (
-      <TouchableOpacity style={styles.buttons} onPress={colonyButtonActions[index]} key={text}>
+      <TouchableOpacity style={styles.buttons} onPress={personalButtonActions[index]} key={text}>
         <Text style={styles.buttonText}>{text}</Text>
       </TouchableOpacity>
     );
   };
 
-  const renderUniversalButton = (text, index) => {
+  const renderInfoButton = (text, index) => {
     return (
-      <TouchableOpacity style={styles.buttons} onPress={universalButtonActions[index]} key={text}>
+      <TouchableOpacity style={styles.buttons} onPress={infoButtonActions[index]} key={text}>
         <Text style={styles.buttonText}>{text}</Text>
       </TouchableOpacity>
     );
@@ -73,14 +72,13 @@ export default function Settings({ navigation }) {
             />
           </View>
         </TouchableOpacity>
-        <Text style={styles.title}>Settings</Text>
-      </View>
-      <Text>colonyName Settings</Text>
-      <View style={styles.settingsItems}>
-        {colonyList.map((buttonText, index) => renderColonyButton(buttonText, index))}
+        <Text style={styles.title}>My Account</Text>
       </View>
       <View style={styles.settingsItems}>
-        {universalList.map((buttonText, index) => renderUniversalButton(buttonText, index))}
+        {personalList.map((buttonText, index) => renderPersonalButton(buttonText, index))}
+      </View>
+      <View style={styles.settingsItems}>
+        {infoList.map((buttonText, index) => renderInfoButton(buttonText, index))}
       </View>
       
     </View>
@@ -93,7 +91,7 @@ const styles = StyleSheet.create({
       backgroundColor: '#2C6765',
     },
     header: {
-      marginTop: 50,
+      marginTop: 40,
     },
     title: {
       color: '#E7EFCA',
@@ -105,8 +103,8 @@ const styles = StyleSheet.create({
       alignSelf: 'center'
     }, 
     image: {
-      height: 50,
-      width: 50,
+      height: 55,
+      width: 55,
       position: 'absolute',
       left: 20,
     },

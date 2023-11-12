@@ -7,6 +7,7 @@ import Settings from './pages/settings';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import LandingPage from './pages/landingPage';
+import MyAccount from './pages/myAccount';
 
 const Stack = createStackNavigator();
 
@@ -37,6 +38,11 @@ export default function App() {
         <Stack.Screen 
           name='Settings' 
           component={Settings} 
+          options={{ headerShown: false}}
+        />
+        <Stack.Screen 
+          name='MyAccount' 
+          component={MyAccount} 
           options={{ headerShown: false}}
         />
       </Stack.Navigator>
