@@ -20,7 +20,9 @@ const Login = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Image source={require('../assets/ladybugfixed.png')} style={styles.icon} />
+      <View style={styles.shadow}>
+        <Image source={require('../assets/ladybugfixed.png')} style={styles.icon} />
+      </View>      
       {/* <Button title="Login" onPress={handleLogin} /> */}
       <TextInput  
         style={[styles.input, {marginTop: 50}]}
@@ -67,7 +69,6 @@ const styles = StyleSheet.create({
     height: 150,
     // shadowColor: '#000',
   },
-
   input: {
     height: 50,
     width: '90%',
@@ -88,13 +89,21 @@ const styles = StyleSheet.create({
     backgroundColor: "#305c5c",
     alignItems: 'center',
 },
-buttonText: {
-  fontSize: 16,
-  color: '#E7EFCA',
-  textAlign: 'center',
-  fontWeight: 'bold',
-  paddingVertical: 12,
-},
+  buttonText: {
+    fontSize: 16,
+    color: '#E7EFCA',
+    textAlign: 'center',
+    fontWeight: 'bold',
+    paddingVertical: 12,
+  },
+  shadow: {
+    elevation: 2,
+    shadowColor: '#171717',
+    shadowOffset: {width: 0, height: 3},
+    shadowOpacity: .5,
+    shadowRadius: 1,
+    borderRadius: 50,
+  },
 });
 
 export default Login;

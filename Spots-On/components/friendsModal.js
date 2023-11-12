@@ -1,9 +1,10 @@
 import React from 'react';
-import { Dimensions, StyleSheet, View, Text, Animated, PanResponder, FlatList, Image } from 'react-native';
+import { ScrollView, Dimensions, StyleSheet, View, Text, Animated, TouchableOpacity, FlatList, Image } from 'react-native';
 import Modal from 'react-native-modal';
 import ColonySliderModal from "../components/colonySliderModal";
 import SearchBarModal from "../components/searchBarModal";
 import * as Animatable from 'react-native-animatable';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const FriendsModal = ({ isModalVisible, hideModal }) => {
     const screenWidth = Dimensions.get('window').width;
@@ -102,17 +103,16 @@ const FriendsModal = ({ isModalVisible, hideModal }) => {
         <Modal 
             animationIn="slideInLeft" 
             animationOut="slideOutRight" 
-            hasBackdrop={false} 
-            isVisible={isModalVisible} 
-            onRequestClose={hideModal}
+            isVisible={isModalVisible}
+            // onRequestClose={hideModal}
             deviceWidth={1}
-            onSwipeComplete={() => hideModal()}
-            swipeThreshold={150}
+            onSwipeComplete={hideModal}
+            swipeThreshold={125}
             swipeDirection="left"
             propagateSwipe
         >
             <View style={styles.modalContainer} >
-                <Animatable.View
+                {/* <Animatable.View
                     // animation={isModalVisible ? "slideInLeft" : "slideOutLeft"}
                     // duration={200}
                     style={[
@@ -120,33 +120,37 @@ const FriendsModal = ({ isModalVisible, hideModal }) => {
                         { transform: [{ translateX: modalPosition }],
                         }
                     ]}
-                >
-
-                {/* ------ SEARCH BAR ------ */}
-                <SearchBarModal
-                    imageSource={require('../assets/search.png')}
-                    style={styles.searchBar}
-                    onPress={() => console.log("Pressed search bar")}
-                />
-
-                {/* Colony Buttons Slider */}
-                <ColonySliderModal style={styles.colonySlider} />
-
-                 {/* Small Button */}
-                 <TouchableOpacity style={styles.plusButton}>
-                        <Text style={styles.plusText}>+</Text>
-                 </TouchableOpacity>
-
-                {/* Display the list of friends and statuses using FlatList */}
-                <View style={{marginTop: '50%', flex: 1, width: '100%'}}>
-                    <FlatList
-                        data={friendsList}
-                        renderItem={renderItem}
-                        keyExtractor={(item, index) => index.toString()}
-                        showsVerticalScrollIndicator={false}
+                > */}
+                <View style={styles.modalContent}>
+                    {/* ------ SEARCH BAR ------ */}
+                    <SearchBarModal
+                        imageSource={require('../assets/search.png')}
+                        style={styles.searchBar}
+                        onPress={() => console.log("Pressed search bar")}
                     />
+
+                    {/* Colony Buttons Slider */}
+                    <ColonySliderModal style={styles.colonySlider} />
+
+                    {/* Small Button */}
+                    <TouchableOpacity style={styles.plusButton}>
+                            <Text style={styles.plusText}>+</Text>
+                    </TouchableOpacity>
+
+                    {/* Display the list of friends and statuses using FlatList */}
+                    <View style={{flex: 1, marginTop: '50%', width: '100%', height: '50%'}}>
+                        <FlatList
+                                style={{flex: 1}}
+                                data={friendsList}
+                                renderItem={renderItem}
+                                keyExtractor={(item, index) => index.toString()}
+                                showsVerticalScrollIndicator={true}
+                        />         
+                    </View>
                 </View>
-                </Animatable.View>
+
+                    
+                {/* </Animatable.View> */}
             </View>
         </Modal>
     );
@@ -154,12 +158,11 @@ const FriendsModal = ({ isModalVisible, hideModal }) => {
 
 const styles = StyleSheet.create({
     modalContainer: {
-        position: 'absolute',
-        flex: 1,
+        // position: 'absolute',
         justifyContent: 'flex-end',
         backgroundColor: 'transparent',
         width: '90%',
-        height: '100%'
+        height: '100%',
     },
     modalContent: {
         backgroundColor: '#2C6765',
@@ -187,8 +190,8 @@ const styles = StyleSheet.create({
         alignContent: 'space-around',
     },
     friendItem: {
-        borderBottomWidth: 1,
-        borderColor: '#CCC',
+        // borderBottomWidth: 1,
+        // borderColor: '#CCC',
         padding: 10,
     },
     friendName: {
@@ -214,7 +217,7 @@ const styles = StyleSheet.create({
         padding: 10,
         width: 45,
         height: 45,
-        borderRadius: 100,
+        borderRadius: 50,
         position: 'absolute',
         top: '12.5%', // Adjust this to position the button as desired
         right: '3%', // Adjust this to position the button as desired
@@ -224,7 +227,8 @@ const styles = StyleSheet.create({
         color: '#2C6765',
         fontWeight: 'bold',
         textAlign: 'center',
-        marginTop: -16,
+        justifyContent: 'center',
+        marginTop: -15,
     },
 });
 

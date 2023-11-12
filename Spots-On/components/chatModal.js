@@ -1,20 +1,21 @@
 import React, { useState } from 'react';
-import { Modal, Dimensions, StyleSheet, View, Text, Animated, PanResponder, FlatList, Image, TouchableOpacity } from 'react-native';
+import { Dimensions, StyleSheet, View, Text, Animated, PanResponder, FlatList, Image, TouchableOpacity } from 'react-native';
 import SearchBarModal from "./searchBarModal";
 import * as Animatable from 'react-native-animatable';
+import Modal from "react-native-modal";
 
 const ChatModal = ({ isModalVisible, hideModal }) => {
     const screenWidth = Dimensions.get('window').width;
     const percentageThreshold = 0.2;
-    const panResponder = PanResponder.create({
-        onStartShouldSetPanResponder: (e, gestureState) => true,
-        onPanResponderMove: (event, gestureState) => {
-            if (gestureState.dx > screenWidth * percentageThreshold) {
-                // Close the modal when swiped to the right
-                hideModal();
-            }
-        },
-    });
+    // const panResponder = PanResponder.create({
+    //     onStartShouldSetPanResponder: (e, gestureState) => true,
+    //     onPanResponderMove: (event, gestureState) => {
+    //         if (gestureState.dx > screenWidth * percentageThreshold) {
+    //             // Close the modal when swiped to the right
+    //             hideModal();
+    //         }
+    //     },
+    // });
 
     const modalPosition = new Animated.Value(0);
 
@@ -59,12 +60,23 @@ const ChatModal = ({ isModalVisible, hideModal }) => {
     );
 
     return (
-        <Modal transparent visible={isModalVisible} onRequestClose={hideModal}>
-            <View style={styles.modalContainer} {...panResponder.panHandlers}>
+        <Modal 
+            animationIn="slideInRight" 
+            animationOut="slideOutRight" 
+            hasBackdrop={false} 
+            isVisible={isModalVisible} 
+            onRequestClose={hideModal}
+            deviceWidth={1}
+            onSwipeComplete={hideModal}
+            swipeThreshold={125}
+            swipeDirection="right"
+            propagateSwipe
+        >
+            <View style={styles.modalContainer} >
                 <Animatable.View
                     // milan => need to make this slide out to the right
-                    animation={isModalVisible ? "slideInRight" : "slideOutRight"}
-                    duration={200}
+                    // animation={isModalVisible ? "slideInRight" : "slideOutRight"}
+                    // duration={200}
                     style={[
                         styles.modalContent,
                         {
@@ -155,7 +167,7 @@ const styles = StyleSheet.create({
         alignContent: 'space-around',
     },
     chatItem: {
-        borderBottomWidth: 1,
+        // borderBottomWidth: 1,
         borderColor: '#CCC',
         padding: 10,
     },

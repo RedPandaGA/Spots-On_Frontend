@@ -10,6 +10,7 @@ import ChatModal from "../components/chatModal";
 import ViewEventsModal from "../components/viewEventsModal";
 import CreateEventModal from "../components/createEventModal";
 import CreateColonyModal from "../components/createColonyModal";
+import CreateSpotModal from "../components/spotsModal";
 import { StatusBar } from 'react-native';
 
 
@@ -50,6 +51,8 @@ export default function MainMap({ navigation }) {
 
     // Track create colony modal
     const [isCreateColonyModalVisible, setIsCreateColonyModalVisible] = useState(false);
+
+    const [isSpotsModalVisible, setIsSpotsModalVisible] = useState(false);
 
     // Track map type changes
     const [mapType, setMapType] = useState('standard');
@@ -122,6 +125,26 @@ export default function MainMap({ navigation }) {
             setMapType('standard');
         }
     };
+
+    const [spots, setSpots] = useState([]);
+    const [createSpot, setCreateSpot] = useState(false);
+
+    const handleCreateSpot = () => {
+        console.log("Pressed create spot button");
+        setCreateSpot(true);
+    };
+
+    const cancelCreateSpot = () => {
+        setCreateSpot(false);
+    }
+
+    const showSpotsModal = () => {
+        setIsSpotsModalVisible(true);
+    }
+
+    const hideSpotsModal = () => {
+        setIsSpotsModalVisible(false);
+    }
 
 
     const [newSpot, setNewSpot] = useState({
@@ -348,12 +371,16 @@ export default function MainMap({ navigation }) {
                     width={60}
                     height={60}
                 />
-                {isFriendsModalVisible && (
+                {/* {isFriendsModalVisible && (
                     <FriendsModal
                         isModalVisible={isFriendsModalVisible}
                         hideModal={hideFriendsModal}
                     />     
-                )}
+                )} */}
+                 <FriendsModal
+                        isModalVisible={isFriendsModalVisible}
+                        hideModal={hideFriendsModal}
+                />    
 
                 {/* Social Button */}
                 <TouchableOpacity onPress={() => {
@@ -519,6 +546,11 @@ const styles = StyleSheet.create({
     colonySlider: {
         position: 'absolute',
         top: '12%',
+    },
+    spotsButton: {
+        position: 'absolute',
+        bottom: '35%',
+        left: '85%',
     },
     incognitoButton: {
         position: 'absolute',
