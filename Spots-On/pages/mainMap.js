@@ -10,6 +10,7 @@ import ViewEventsModal from "../components/viewEventsModal";
 import CreateEventModal from "../components/createEventModal";
 import CreateColonyModal from "../components/createColonyModal";
 import CreateSpotModal from "../components/spotsModal";
+import ChatModal from "../components/chatModal";
 import { StatusBar } from 'react-native';
 
 
@@ -49,6 +50,8 @@ export default function MainMap({ navigation }) {
 
     const [isSpotsModalVisible, setIsSpotsModalVisible] = useState(false);
 
+    const [isChatModalVisible, setIsChatModalVisible] = useState(false);
+
     // Track map type changes
     const [mapType, setMapType] = useState('standard');
 
@@ -85,6 +88,14 @@ export default function MainMap({ navigation }) {
     const hideFriendsModal = () => {
         setIsFriendsModalVisible(false);
     };
+
+    const showChatModal = () => {
+        setIsChatModalVisible(true);
+    }
+
+    const hideChatModal = () => {
+        setIsChatModalVisible(false);
+    }
 
     const hideViewEventsModal = () => {
         setIsViewEventsModalVisible(false);
