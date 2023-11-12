@@ -1,253 +1,109 @@
-// import {
-//   View,
-//   Text,
-//   Image,
-//   Pressable,
-//   TextInput,
-//   TouchableOpacity,
-// } from "react-native";
-// import React, { useState } from "react";
-// import { SafeAreaView } from "react-native-safe-area-context";
-// import COLORS from "../components/colors";
-// import { Ionicons } from "@expo/vector-icons";
-// import Checkbox from "expo-checkbox";
-// import Button from "../components/button";
+import React, { useState } from 'react';
+import { View, Text, Button, StyleSheet, Image, TextInput, TouchableOpacity} from 'react-native';
 
-// const Login = ({ navigation }) => {
-//   const [isPasswordShown, setIsPasswordShown] = useState(false);
-//   const [isChecked, setIsChecked] = useState(false);
+const Login = ({ navigation }) => {
 
-//   return (
-//     <SafeAreaView style={{ flex: 1, backgroundColor: "#2C6765" }}>
-//       <View style={{ flex: 1, marginHorizontal: 22 }}>
-//         <View style={{ marginVertical: 22 }}>
-//           <Text
-//             style={{
-//               fontSize: 22,
-//               fontWeight: "bold",
-//               marginVertical: 12,
-//               color: COLORS.white,
-//             }}
-//           >
-//             Hi, Welcome Back! 👋
-//           </Text>
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [password, setPassword] = useState('');
 
-//           <Text
-//             style={{
-//               fontSize: 16,
-//               color: COLORS.white,
-//             }}
-//           >
-//             Hello again you have been missed!
-//           </Text>
-//         </View>
+  const handleLogin = () => {
+    // Navigate to the main app screen
+    console.log("Logged into account: " + phoneNumber + " with password: " + password);
+    navigation.navigate('Home');
+  };
 
-//         <View style={{ marginBottom: 12 }}>
-//           <Text
-//             style={{
-//               fontSize: 16,
-//               fontWeight: 400,
-//               marginVertical: 8,
-//               color: "white",
-//             }}
-//           >
-//             Email address
-//           </Text>
+  const handleSignup = () => {
+    // Navigate to the main app screen
+    console.log("Clicked Create Account");
+    navigation.navigate('Signup');
+  };
 
-//           <View
-//             style={{
-//               width: "100%",
-//               height: 48,
-//               borderColor: COLORS.white,
-//               backgroundColor: "#2C6765",
-//               borderWidth: 1,
-//               borderRadius: 8,
-//               alignItems: "center",
-//               justifyContent: "center",
-//               paddingLeft: 22,
-//             }}
-//           >
-//             <TextInput
-//               placeholder="Enter your email address"
-//               placeholderTextColor={COLORS.black}
-//               keyboardType="email-address"
-//               style={{
-//                 width: "100%",
-//               }}
-//             />
-//           </View>
-//         </View>
+  return (
+    <View style={styles.container}>
+      <View style={styles.shadow}>
+        <Image source={require('../assets/ladybugfixed.png')} style={styles.icon} />
+      </View>      
+      {/* <Button title="Login" onPress={handleLogin} /> */}
+      <TextInput  
+        style={[styles.input, {marginTop: 50}]}
+        keyboardType="numeric" 
+        placeholder="Phone #"
+        placeholderTextColor={"#E7EFCA"}
+        value={phoneNumber}
+        onChangeText={(text) => setPhoneNumber(text)}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Password"
+        placeholderTextColor={"#E7EFCA"}
+        value={password}
+        onChangeText={(text) => setPassword(text)}
+        secureTextEntry={true}
+      />
+      <TouchableOpacity
+        style={[styles.button, { alignSelf: 'center', marginTop: 30 }]}
+        onPress={handleLogin}
+      >
+        <Text style={styles.buttonText}>Login</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[styles.button, { alignSelf: 'center', marginTop: 20 }]}
+        onPress={handleSignup}
+      >
+        <Text style={styles.buttonText}>Create Account</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
 
-//         <View style={{ marginBottom: 12 }}>
-//           <Text
-//             style={{
-//               fontSize: 16,
-//               fontWeight: 400,
-//               marginVertical: 8,
-//               color: "white",
-//             }}
-//           >
-//             Password
-//           </Text>
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    // justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#2C6765',
+    paddingTop: '30%'
+  },
+  icon: {
+    width: 150,
+    height: 150,
+    // shadowColor: '#000',
+  },
+  input: {
+    height: 50,
+    width: '90%',
+    borderColor: '#305c5c',
+    borderWidth: 2,
+    margin: 10,
+    padding: 10,
+    borderRadius: 10,
+    color: "#E7EFCA",
+    fontWeight: 'bold',
+    fontSize: 16,
+    textAlign: 'center'
+  },
+  button: {
+    borderRadius: 30,
+    height: 48,
+    width: '50%',
+    backgroundColor: "#305c5c",
+    alignItems: 'center',
+},
+  buttonText: {
+    fontSize: 16,
+    color: '#E7EFCA',
+    textAlign: 'center',
+    fontWeight: 'bold',
+    paddingVertical: 12,
+  },
+  shadow: {
+    elevation: 2,
+    shadowColor: '#171717',
+    shadowOffset: {width: 0, height: 3},
+    shadowOpacity: .5,
+    shadowRadius: 1,
+    borderRadius: 50,
+  },
+});
 
-//           <View
-//             style={{
-//               width: "100%",
-//               height: 48,
-//               borderColor: COLORS.white,
-//               backgroundColor: "#2C6765",
-//               borderWidth: 1,
-//               borderRadius: 8,
-//               alignItems: "center",
-//               justifyContent: "center",
-//               paddingLeft: 22,
-//             }}
-//           >
-//             <TextInput
-//               placeholder="Enter your password"
-//               placeholderTextColor={COLORS.black}
-//               secureTextEntry={isPasswordShown}
-//               style={{
-//                 width: "100%",
-//               }}
-//             />
-
-//             <TouchableOpacity
-//               onPress={() => setIsPasswordShown(!isPasswordShown)}
-//               style={{
-//                 position: "absolute",
-//                 right: 12,
-//               }}
-//             >
-//               {isPasswordShown == true ? (
-//                 <Ionicons name="eye-off" size={24} color={COLORS.black} />
-//               ) : (
-//                 <Ionicons name="eye" size={24} color={COLORS.black} />
-//               )}
-//             </TouchableOpacity>
-//           </View>
-//         </View>
-
-//         <View
-//           style={{
-//             flexDirection: "row",
-//             marginVertical: 6,
-//           }}
-//         >
-//           <Checkbox
-//             style={{ marginRight: 8 }}
-//             value={isChecked}
-//             onValueChange={setIsChecked}
-//             color={isChecked ? COLORS.white : undefined}
-//           />
-
-//           <Text style={{ color: "white" }}>Remember Me</Text>
-//         </View>
-
-//         <Button
-//           title="Login"
-//           style={{
-//             marginTop: 18,
-//             marginBottom: 4,
-//             backgroundColor: "#2C6765",
-//             borderColor: "white",
-//           }}
-//           onPress={() => navigation.navigate("Home")}
-//         />
-
-//         <View
-//           style={{
-//             flexDirection: "row",
-//             alignItems: "center",
-//             marginVertical: 20,
-//           }}
-//         >
-//           <View
-//             style={{
-//               flex: 1,
-//               height: 1,
-//               backgroundColor: COLORS.grey,
-//               marginHorizontal: 10,
-//             }}
-//           />
-//           <Text style={{ fontSize: 14, color: "white" }}>Or Login with</Text>
-//           <View
-//             style={{
-//               flex: 1,
-//               height: 1,
-//               backgroundColor: COLORS.grey,
-//               marginHorizontal: 10,
-//             }}
-//           />
-//         </View>
-
-//         <View
-//           style={{
-//             flexDirection: "row",
-//             justifyContent: "center",
-//           }}
-//         >
-//           <TouchableOpacity
-//             onPress={() => console.log("Pressed")}
-//             style={{
-//               flex: 1,
-//               alignItems: "center",
-//               justifyContent: "center",
-//               flexDirection: "row",
-//               height: 52,
-//               borderWidth: 1,
-//               borderColor: COLORS.white,
-//               backgroundColor: '#2C6765',
-//               marginRight: 4,
-//               borderRadius: 10,
-//             }}
-//           >
-//           </TouchableOpacity>
-
-//           <TouchableOpacity
-//             onPress={() => console.log("Pressed")}
-//             style={{
-//               flex: 1,
-//               alignItems: "center",
-//               justifyContent: "center",
-//               flexDirection: "row",
-//               height: 52,
-//               borderWidth: 1,
-//               borderColor: COLORS.white,
-//               backgroundColor: '#2C6765',
-//               marginRight: 4,
-//               borderRadius: 10,
-//             }}
-//           >
-//             </TouchableOpacity>
-
-//         <View
-//           style={{
-//             flexDirection: "row",
-//             justifyContent: "center",
-//             marginVertical: 22,
-//           }}
-//         >
-//           <Text style={{ fontSize: 16, color: COLORS.white }}>
-//             Don't have an account?
-//           </Text>
-//           <Pressable onPress={() => navigation.navigate("Signup")}>
-//             <Text
-//               style={{
-//                 fontSize: 16,
-//                 color: COLORS.white,
-//                 fontWeight: "bold",
-//                 marginLeft: 6,
-//               }}
-//             >
-//               Register
-//             </Text>
-//           </Pressable>
-//         </View>
-//         </View>
-//       </View>
-//     </SafeAreaView>
-//   );
-// };
-
-// export default Login;
+export default Login;

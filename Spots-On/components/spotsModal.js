@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, Switch, StyleSheet, View, Text, Image, Animated, PanResponder, TouchableOpacity, TouchableWithoutFeedback, TextInput, Keyboard, KeyboardAvoidingView } from 'react-native';
-import Bar from './bar';
-import DateTimePicker from '@react-native-community/datetimepicker';
+// import Bar from './bar';
+// import DateTimePicker from '@react-native-community/datetimepicker';
 
 const CreateSpotModal = ({ isModalVisible, hideModal, cancelCreateSpot, newSpot, setNewSpot, resetNewSpot }) => {
     
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#2C6765',
         borderRadius: 50,
         padding: 20,
-        height: 325,
+        height: 340,
         width: '80%',
         alignItems: 'center',
     },

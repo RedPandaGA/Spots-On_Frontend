@@ -1,28 +1,30 @@
 import React, { useState, useRef } from 'react';
-import { Modal, Dimensions, StyleSheet, View, Text, TouchableOpacity, Animated, PanResponder, TextInput, KeyboardAvoidingView, Image } from 'react-native';
+import { KeyboardAvoidingView, Modal, Image, TextInput, Dimensions, StyleSheet, View, Text, TouchableOpacity, Animated, PanResponder } from 'react-native';
 import Bar from './bar';
 
 const SocialModal = ({ isModalVisible, hideModal, setViewEvents, setCreateEvent, setCreateColony }) => {
     
     const [joinColonyCode, setJoinColonyCode] = useState('');
+
     const [statusInput, setStatusInput] = useState('');
     
     const [isStatusInputFocused, setIsStatusInputFocused] = useState(false);
+    
     const [isJoinColonyInputFocused, setIsJoinColonyInputFocused] = useState(false);
-
+    
     const handleStatusFocus = () => {
         setIsStatusInputFocused(true);
     };
-
+    
     const handleStatusBlur = () => {
         setStatusInput('');
         setIsStatusInputFocused(false);
     };
-
+    
     const handleJoinColonyFocus = () => {
         setIsJoinColonyInputFocused(true);
     };
-
+    
     const handleJoinColonyBlur = () => {
         setIsJoinColonyInputFocused(false);
     };
@@ -52,6 +54,19 @@ const SocialModal = ({ isModalVisible, hideModal, setViewEvents, setCreateEvent,
             }
         },
     });
+
+    const statusInputRef = useRef(null);
+
+    const joinColonyInputRef = useRef(null);
+
+    const handleUnfocus = () => {
+        if (statusInputRef.current) {
+            statusInputRef.current.blur();
+        }
+        if (joinColonyInputRef.current) {
+            joinColonyInputRef.current.blur();
+        }
+    }
 
     const modalPosition = new Animated.Value(0);
 
@@ -84,20 +99,9 @@ const SocialModal = ({ isModalVisible, hideModal, setViewEvents, setCreateEvent,
             setCreateEvent(true);
             console.log('Create Event clicked');
             // Handle specific action for Button 3
-        }
+        },
+
     ];
-
-    const statusInputRef = useRef(null);
-    const joinColonyInputRef = useRef(null);
-
-    const handleUnfocus = () => {
-        if (statusInputRef.current) {
-            statusInputRef.current.blur();
-        }
-        if (joinColonyInputRef.current) {
-            joinColonyInputRef.current.blur();
-        }
-    }
 
     const renderButton = (text, index) => {
         if (text === 'Set Status') {
@@ -105,7 +109,7 @@ const SocialModal = ({ isModalVisible, hideModal, setViewEvents, setCreateEvent,
                 <View key={text}>
                     <TextInput
                         ref={statusInputRef}
-                        style={[styles.inputNormal, isStatusInputFocused ? styles.inputFocused : null]}
+                        style={[styles.modalButton, styles.inputNormal, isStatusInputFocused ? styles.inputFocused : null]}
                         placeholder={isStatusInputFocused ? '' : text}
                         placeholderTextColor="#2C6765"
                         value={statusInput}
@@ -129,7 +133,7 @@ const SocialModal = ({ isModalVisible, hideModal, setViewEvents, setCreateEvent,
                 <View key={text}>
                     <TextInput
                         ref={joinColonyInputRef}
-                        style={[styles.inputNormal, isJoinColonyInputFocused ? styles.inputFocused : null]}
+                        style={[styles.modalButton, styles.inputNormal, isJoinColonyInputFocused ? styles.inputFocused : null]}
                         placeholder={isJoinColonyInputFocused ? '' : text}
                         placeholderTextColor="#2C6765"
                         value={joinColonyCode}
@@ -150,14 +154,14 @@ const SocialModal = ({ isModalVisible, hideModal, setViewEvents, setCreateEvent,
                     )}
                 </View>
             );
-        }
-    
-        return (
-            <TouchableOpacity style={styles.modalButton} onPress={buttonActions[index]} key={text}>
-                <Text style={styles.buttonText}>{text}</Text>
-            </TouchableOpacity>
-        );
-    };
+            } else {
+                return (
+                    <TouchableOpacity style={styles.modalButton} onPress={buttonActions[index]} key={text}>
+                        <Text style={styles.buttonText}>{text}</Text>
+                    </TouchableOpacity>
+                );
+            }
+      };
     
 
     return (
@@ -222,14 +226,10 @@ const styles = StyleSheet.create({
         padding: 10,
         width: 350,
         height: 50,
-        borderRadius: 10,
-        borderWidth: 1.5,
-        borderColor: '#ccc',
-        marginVertical: 5,
-        fontSize: 20, 
         fontWeight: 'bold', 
         textAlign: 'center',
-        color: '#2C6765'
+        color: '#2C6765',
+        fontSize: 20
     },
     inputFocused: {
         backgroundColor: 'rgba(44, 103, 101, .2)'

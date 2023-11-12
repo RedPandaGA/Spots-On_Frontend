@@ -9,8 +9,8 @@ import FriendsModal from "../components/friendsModal";
 import ViewEventsModal from "../components/viewEventsModal";
 import CreateEventModal from "../components/createEventModal";
 import CreateColonyModal from "../components/createColonyModal";
-import { StatusBar } from 'react-native';
 import CreateSpotModal from "../components/spotsModal";
+import { StatusBar } from 'react-native';
 
 
 export default function MainMap({ navigation }) {
@@ -19,8 +19,8 @@ export default function MainMap({ navigation }) {
     const [mapRegion, setMapRegion] = useState({
         latitude: 30.4133,
         longitude: -91.1800,
-        latitudeDelta: 0.0522,
-        longitudeDelta: 0.00421,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
     });
 
     // Manage the location of the draggable Marker
@@ -32,7 +32,6 @@ export default function MainMap({ navigation }) {
     // Track incognito and status choices
     const [incognito, setIncognito] = useState(false);
     const [showStatus, setShowStatus] = useState(false);
-    const [createSpot, setCreateSpot] = useState(false);
 
     // Track social button modal
     const [isSocialModalVisible, setIsSocialModalVisible] = useState(false);
@@ -48,7 +47,6 @@ export default function MainMap({ navigation }) {
     // Track create colony modal
     const [isCreateColonyModalVisible, setIsCreateColonyModalVisible] = useState(false);
 
-    // Track create spots modal
     const [isSpotsModalVisible, setIsSpotsModalVisible] = useState(false);
 
     // Track map type changes
@@ -70,15 +68,6 @@ export default function MainMap({ navigation }) {
         } else {
             setShowStatus(true);
         }
-    };
-
-    const handleCreateSpot = () => {
-        console.log("Pressed create spot button");
-        setCreateSpot(true);
-    };
-
-    const cancelCreateSpot = () => {
-        setCreateSpot(false);
     }
 
     const showSocialModal = () => {
@@ -101,21 +90,17 @@ export default function MainMap({ navigation }) {
         setIsViewEventsModalVisible(false);
     };
 
+    // const showCreateEventModal = () => {
+    //     setIsCreateEventModalVisible(true);
+    // }
+
     const hideCreateEventModal = () => {
         setIsCreateEventModalVisible(false);
-    };
+    }
 
     const hideCreateColonyModal = () => {
         setIsCreateColonyModalVisible(false);
-    };
-
-    const showSpotsModal = () => {
-        setIsSpotsModalVisible(true);
-    };
-
-    const hideSpotsModal = () => {
-        setIsSpotsModalVisible(false);
-    };
+    }
 
     const handleMapType = () => {
         if(mapType == 'standard') {
@@ -126,6 +111,25 @@ export default function MainMap({ navigation }) {
     };
 
     const [spots, setSpots] = useState([]);
+    const [createSpot, setCreateSpot] = useState(false);
+
+    const handleCreateSpot = () => {
+        console.log("Pressed create spot button");
+        setCreateSpot(true);
+    };
+
+    const cancelCreateSpot = () => {
+        setCreateSpot(false);
+    }
+
+    const showSpotsModal = () => {
+        setIsSpotsModalVisible(true);
+    }
+
+    const hideSpotsModal = () => {
+        setIsSpotsModalVisible(false);
+    }
+
 
     const [newSpot, setNewSpot] = useState({
         name: '',
@@ -351,12 +355,16 @@ export default function MainMap({ navigation }) {
                     width={60}
                     height={60}
                 />
-                {isFriendsModalVisible && (
+                {/* {isFriendsModalVisible && (
                     <FriendsModal
                         isModalVisible={isFriendsModalVisible}
                         hideModal={hideFriendsModal}
                     />     
-                )}
+                )} */}
+                 <FriendsModal
+                        isModalVisible={isFriendsModalVisible}
+                        hideModal={hideFriendsModal}
+                />    
 
                 {/* Social Button */}
                 <TouchableOpacity onPress={() => {
@@ -402,12 +410,19 @@ export default function MainMap({ navigation }) {
                 )}
                 {/* Chats Button */}
                 <MapButton 
-                    imageSource={require('../assets/speech-bubble.png')} 
-                    style={styles.chatButton} 
-                    onPress={() => console.log("Pressed chats button")}
+                    imageSource={require('../assets/speech-bubble.png')}
+                    style={styles.chatButton}
+                    onPress={() => {
+                        showChatModal();
+                        console.log("Pressed chat button");
+                    }}
                     width={60}
                     height={60}
                 />
+                <ChatModal
+                    isModalVisible={isChatModalVisible}
+                    hideModal={hideChatModal}
+                /> 
 
                 {/* ------ SEARCH BAR ------ */}
                 <SearchBar 
@@ -499,12 +514,12 @@ const styles = StyleSheet.create({
     },
     friendsButton: {
         position: 'absolute',
-        bottom: '7%',
+        bottom: '5%',
         left: '15%',
     },
     chatButton: {
         position: 'absolute',
-        bottom: '7%',
+        bottom: '5%',
         left: '70%',
     },
     searchBar: {
@@ -548,7 +563,7 @@ const styles = StyleSheet.create({
     },
     socialButtonOnMap: {
         position: 'absolute',
-        bottom: '7%',
+        bottom: '5%',
         left: '40%',
         elevation: 2,
         shadowColor: '#171717',
