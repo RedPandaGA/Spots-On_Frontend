@@ -3,56 +3,57 @@ import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 
 export default function MyAccount({ navigation }) {
 
-  const personalList = ["My Account", "Privacy", "Notifications", "Display"];
+  const colonyList = ["Notifications", "Colony Management", "Location Sharing"];
 
   // Create an array of functions to handle button actions
-  const personalButtonActions = [
-    () => {
-        console.log('My Account clicked');
-    },
-    () => {
-        console.log('Privacy clicked');
-        // Handle specific action for Button 2
-        // You can customize this function for each button
-    },
+  const colonyButtonActions = [
     () => {
         console.log('Notifications clicked');
-        // Handle specific action for Button 3
     },
     () => {
-        console.log('Display clicked');
-        // Handle specific action for Button 4
-    },
-  ];
-
-  const infoList = ["Accessibility", "Support", "Log Out"];
-
-  const infoButtonActions = [
-    () => {
-        console.log('Accessibility clicked');
-    },
-    () => {
-        console.log('Support clicked');
+        console.log('Colony management clicked');
         // Handle specific action for Button 2
         // You can customize this function for each button
     },
     () => {
-        console.log('Log Out clicked');
+        console.log('Location sharing clicked');
         // Handle specific action for Button 3
-    }
+    },
   ];
 
-  const renderPersonalButton = (text, index) => {
+  const universalList = ["Account", "Privacy & Security", "About", "Log Out"];
+
+  const universalButtonActions = [
+    () => {
+        console.log('Account clicked');
+        navigation.navigate('MyAccount');
+    },
+    () => {
+        console.log('Privacy & Security clicked');
+        // Handle specific action for Button 2
+        // You can customize this function for each button
+    },
+    () => {
+        console.log('About clicked');
+        // Handle specific action for Button 3
+    },
+    () => {
+      console.log('Log out clicked');
+      // Handle specific action for Button 3
+  }
+  ];
+
+  const renderColonyButton = (text, index) => {
     return (
-      <TouchableOpacity style={styles.buttons} onPress={personalButtonActions[index]} key={text}>
+      <TouchableOpacity style={styles.buttons} onPress={colonyButtonActions[index]} key={text}>
         <Text style={styles.buttonText}>{text}</Text>
       </TouchableOpacity>
     );
   };
 
-  const renderInfoButton = (text, index) => {
+  const renderUniversalButton = (text, index) => {
     return (
-      <TouchableOpacity style={styles.buttons} onPress={infoButtonActions[index]} key={text}>
+      <TouchableOpacity style={styles.buttons} onPress={universalButtonActions[index]} key={text}>
         <Text style={styles.buttonText}>{text}</Text>
       </TouchableOpacity>
     );
@@ -62,7 +63,7 @@ export default function MyAccount({ navigation }) {
     <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => {
-          navigation.navigate('Home');
+          navigation.navigate('Settings');
           console.log("Pressed back button");
         }}>
           <View style={styles.backButton}>
@@ -72,13 +73,15 @@ export default function MyAccount({ navigation }) {
             />
           </View>
         </TouchableOpacity>
-        <Text style={styles.title}>My Account</Text>
+        <Text style={styles.title}>Account</Text>
       </View>
+      <Text style={styles.subtitle}>Account details</Text>
       <View style={styles.settingsItems}>
-        {personalList.map((buttonText, index) => renderPersonalButton(buttonText, index))}
+        {colonyList.map((buttonText, index) => renderColonyButton(buttonText, index))}
       </View>
+      <Text style={styles.subtitle}>Account management</Text>
       <View style={styles.settingsItems}>
-        {infoList.map((buttonText, index) => renderInfoButton(buttonText, index))}
+        {universalList.map((buttonText, index) => renderUniversalButton(buttonText, index))}
       </View>
       
     </View>
@@ -91,7 +94,7 @@ const styles = StyleSheet.create({
       backgroundColor: '#2C6765',
     },
     header: {
-      marginTop: 40,
+      marginTop: 50,
     },
     title: {
       color: '#E7EFCA',
@@ -102,9 +105,18 @@ const styles = StyleSheet.create({
       width: '50%',
       alignSelf: 'center'
     }, 
+    subtitle: {
+      color: '#D5B747',
+      fontSize: 20,
+      fontWeight: 'bold',
+      marginLeft: 20,
+      marginBottom: -15,
+      paddingTop: 20,
+      opacity: .9
+    }, 
     image: {
-      height: 55,
-      width: 55,
+      height: 50,
+      width: 50,
       position: 'absolute',
       left: 20,
     },
@@ -119,6 +131,7 @@ const styles = StyleSheet.create({
       alignSelf: 'center',
       justifyContent: 'center',
       marginVertical: 20,
+      
     },
     buttonText: {
       textAlign: 'center',

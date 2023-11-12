@@ -75,10 +75,11 @@ export default function Settings({ navigation }) {
         </TouchableOpacity>
         <Text style={styles.title}>Settings</Text>
       </View>
-      <Text>colonyName Settings</Text>
+      <Text style={styles.subtitle}>ColonyName settings</Text>
       <View style={styles.settingsItems}>
         {colonyList.map((buttonText, index) => renderColonyButton(buttonText, index))}
       </View>
+      <Text style={styles.subtitle}>Universal settings</Text>
       <View style={styles.settingsItems}>
         {universalList.map((buttonText, index) => renderUniversalButton(buttonText, index))}
       </View>
@@ -104,6 +105,15 @@ const styles = StyleSheet.create({
       width: '50%',
       alignSelf: 'center'
     }, 
+    subtitle: {
+      color: '#D5B747',
+      fontSize: 20,
+      fontWeight: 'bold',
+      marginLeft: 20,
+      marginBottom: -15,
+      paddingTop: 20,
+      opacity: .9
+    }, 
     image: {
       height: 50,
       width: 50,
@@ -121,6 +131,7 @@ const styles = StyleSheet.create({
       alignSelf: 'center',
       justifyContent: 'center',
       marginVertical: 20,
+      
     },
     buttonText: {
       textAlign: 'center',
