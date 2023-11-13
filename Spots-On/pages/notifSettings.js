@@ -5,7 +5,7 @@ export default function Notifications({ navigation }) {
 
     const statusList = ["friend1", "friend2", "friend3"];
 
-    const locationList = ["friend1", "friend2", "friend3"];
+    const locationList = ["friend1l", "friend2l", "friend3lr"];
 
     const [statusSwitches, setStatusSwitches] = useState({
         friend1: false,
@@ -37,26 +37,20 @@ export default function Notifications({ navigation }) {
 
     const spotsList = ["Edit your Spots notifications on the Main Map page"];
 
-    const spotsToggleActions = [
-        () => {
-            console.log('Main Map redirection clicked');
-            navigation.navigate('Home');
-        }];
-
     const renderStatusToggleBox = (text, index) => {
         return (
-            <View>
+            <View  key={`status_${index}`}>
                 <Text style={styles.toggleText}>{text}</Text>
                 <Switch
-                style={styles.toggleSwitch}
+                    style={styles.toggleSwitch}
                     value={statusSwitches[text]}
                     onValueChange={() =>
                         handleStatusToggle(text)}
-                        trackColor={{
-                            false: '#305c5c', // color when switch is off
-                            true: '#D5B747',  // color when switch is on
-                          }}
-                          thumbColor={statusSwitches[text] ? '#E7EFCA' : '#2C6765'}
+                    trackColor={{
+                        false: '#305c5c', // color when switch is off
+                        true: '#D5B747',  // color when switch is on
+                    }}
+                    thumbColor={statusSwitches[text] ? '#E7EFCA' : '#2C6765'}
                 />
             </View>
         );
@@ -64,18 +58,18 @@ export default function Notifications({ navigation }) {
 
     const renderLocationToggleBox = (text, index) => {
         return (
-            <View>
+            <View  key={`location_${index}`}>
                 <Text style={styles.toggleText}>{text}</Text>
                 <Switch
                     style={styles.toggleSwitch}
                     value={locationSwitches[text]}
                     onValueChange={() =>
                         handleLocationToggle(text)}
-                        trackColor={{
-                            false: '#305c5c', // color when switch is off
-                            true: '#D5B747',  // color when switch is on
-                          }}
-                          thumbColor={locationSwitches[text] ? '#E7EFCA' : '#2C6765'}
+                    trackColor={{
+                        false: '#305c5c', // color when switch is off
+                        true: '#D5B747',  // color when switch is on
+                    }}
+                    thumbColor={locationSwitches[text] ? '#E7EFCA' : '#2C6765'}
                 />
             </View>
         );
@@ -83,7 +77,10 @@ export default function Notifications({ navigation }) {
 
     const renderSpotsToggleBox = (text, index) => {
         return (
-            <TouchableOpacity style={styles.toggle} onPress={spotsToggleActions[index]} key={text}>
+            <TouchableOpacity style={styles.toggle} onPress={() => {
+                console.log('Main Map redirection clicked');
+                navigation.navigate('Home');
+            } } key={`spots_${index}`}>
                 <Text style={styles.specialText}>{text}</Text>
             </TouchableOpacity>
         );
