@@ -3,11 +3,12 @@ import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import MainMap from './pages/mainMap';
-import Settings from './pages/settings';
-import Login from './pages/Login';
-import Signup from './pages/Signup';
+import Login from './pages/login';
+import Signup from './pages/signup';
 import LandingPage from './pages/landingPage';
-import MyAccount from './pages/myAccount';
+import Settings from './pages/settings';
+import Notifications from './pages/notifSettings';
+import Account from './pages/accSettings';
 
 const Stack = createStackNavigator();
 
@@ -41,8 +42,13 @@ export default function App() {
           options={{ headerShown: false}}
         />
         <Stack.Screen 
-          name='MyAccount' 
-          component={MyAccount} 
+          name='Notifications' 
+          component={Notifications} 
+          options={{ headerShown: false}}
+        />
+        <Stack.Screen 
+          name='Account' 
+          component={Account} 
           options={{ headerShown: false}}
         />
       </Stack.Navigator>

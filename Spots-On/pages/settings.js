@@ -9,6 +9,7 @@ export default function Settings({ navigation }) {
   const colonyButtonActions = [
     () => {
         console.log('Notifications clicked');
+        navigation.navigate('Notifications');
     },
     () => {
         console.log('Colony management clicked');
@@ -26,7 +27,7 @@ export default function Settings({ navigation }) {
   const universalButtonActions = [
     () => {
         console.log('Account clicked');
-        navigation.navigate('MyAccount');
+        navigation.navigate('Account');
     },
     () => {
         console.log('Privacy & Security clicked');

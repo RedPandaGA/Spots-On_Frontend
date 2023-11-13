@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 
-export default function MyAccount({ navigation }) {
+export default function Account({ navigation }) {
 
   const colonyList = ["Notifications", "Colony Management", "Location Sharing"];
 
@@ -26,7 +26,7 @@ export default function MyAccount({ navigation }) {
   const universalButtonActions = [
     () => {
         console.log('Account clicked');
-        navigation.navigate('MyAccount');
+        navigation.navigate('Account');
     },
     () => {
         console.log('Privacy & Security clicked');
