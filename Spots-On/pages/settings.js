@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 
 export default function Settings({ navigation }) {
 
-  const colonyList = ["Notifications", "Colony Management", "Location Sharing"];
+  const colonyList = ["Notifications", "Colony Management", "Location/Status Sharing"];
 
   // Create an array of functions to handle button actions
   const colonyButtonActions = [
@@ -17,7 +17,7 @@ export default function Settings({ navigation }) {
     },
     () => {
         console.log('Location sharing clicked');
-        // Handle specific action for Button 3
+        navigation.navigate('LocationSharing');
     },
   ];
 

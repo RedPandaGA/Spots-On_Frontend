@@ -8,8 +8,10 @@ import Signup from './pages/signup';
 import LandingPage from './pages/landingPage';
 import Settings from './pages/settings';
 import Notifications from './pages/notifSettings';
-import Account from './pages/accSettings';
 import ColonyManagement from './pages/colonymngmntSettings';
+import LocationSharing from './pages/locationSettings';
+import Account from './pages/accSettings';
+
 
 const Stack = createStackNavigator();
 
@@ -50,6 +52,11 @@ export default function App() {
         <Stack.Screen 
           name='ColonyManagement' 
           component={ColonyManagement} 
+          options={{ headerShown: false}}
+        />
+        <Stack.Screen 
+          name='LocationSharing' 
+          component={LocationSharing} 
           options={{ headerShown: false}}
         />
         <Stack.Screen 
