@@ -1,59 +1,52 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 
-export default function Settings({ navigation }) {
+export default function ColonyManagement({ navigation }) {
 
-  const colonyList = ["Notifications", "Colony Management", "Location/Status Sharing"];
+  const detailList = ["Edit Colony Name"];
 
   // Create an array of functions to handle button actions
-  const colonyButtonActions = [
+  const detailButtonActions = [
     () => {
-        console.log('Notifications clicked');
-        navigation.navigate('Notifications');
-    },
-    () => {
-        console.log('Colony management clicked');
-        navigation.navigate('ColonyManagement');
-    },
-    () => {
-        console.log('Location sharing clicked');
-        navigation.navigate('LocationSharing');
+        console.log('editing colony name');
     },
   ];
 
-  const universalList = ["Account", "Privacy & Security", "About", "Log Out"];
+  //gotta change admin to a real role
+  const mngmntList = ["My Role: " + "admin", "Change Admin Status", "Add Colony Members", "Delete Colony Members", "Set Spot access", "Leave Colony"];
 
-  const universalButtonActions = [
+  const mngmntButtonActions = [
     () => {
-        console.log('Account clicked');
-        navigation.navigate('Account');
+        console.log('my role clicked');
     },
     () => {
-        console.log('Privacy & Security clicked');
-        // Handle specific action for Button 2
-        // You can customize this function for each button
+        console.log('change admin status clicked');
     },
     () => {
-        console.log('About clicked');
-        // Handle specific action for Button 3
+        console.log('add colony members clicked');
     },
     () => {
-      console.log('Log out clicked');
-      // Handle specific action for Button 3
-  }
+      console.log('delete colony members clicked');
+  },
+  () => {
+    console.log('set bubble access clicked');
+},
+() => {
+  console.log('leave colony clicked');
+},
   ];
 
-  const renderColonyButton = (text, index) => {
+  const renderDetailButton = (text, index) => {
     return (
-      <TouchableOpacity style={styles.buttons} onPress={colonyButtonActions[index]} key={text}>
+      <TouchableOpacity style={styles.buttons} onPress={detailButtonActions[index]} key={text}>
         <Text style={styles.buttonText}>{text}</Text>
       </TouchableOpacity>
     );
   };
 
-  const renderUniversalButton = (text, index) => {
+  const renderMngmntButton = (text, index) => {
     return (
-      <TouchableOpacity style={styles.buttons} onPress={universalButtonActions[index]} key={text}>
+      <TouchableOpacity style={styles.buttons} onPress={mngmntButtonActions[index]} key={text}>
         <Text style={styles.buttonText}>{text}</Text>
       </TouchableOpacity>
     );
@@ -63,7 +56,7 @@ export default function Settings({ navigation }) {
     <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => {
-          navigation.navigate('Home');
+          navigation.navigate('Settings');
           console.log("Pressed back button");
         }}>
           <View style={styles.backButton}>
@@ -73,15 +66,15 @@ export default function Settings({ navigation }) {
             />
           </View>
         </TouchableOpacity>
-        <Text style={styles.title}>Settings</Text>
+        <Text style={styles.title}>ColonyName</Text>
       </View>
-      <Text style={styles.subtitle}>ColonyName settings</Text>
+      <Text style={styles.subtitle}>Colony details</Text>
       <View style={styles.settingsItems}>
-        {colonyList.map((buttonText, index) => renderColonyButton(buttonText, index))}
+        {detailList.map((buttonText, index) => renderDetailButton(buttonText, index))}
       </View>
-      <Text style={styles.subtitle}>Universal settings</Text>
+      <Text style={styles.subtitle}>Colony Management</Text>
       <View style={styles.settingsItems}>
-        {universalList.map((buttonText, index) => renderUniversalButton(buttonText, index))}
+        {mngmntList.map((buttonText, index) => renderMngmntButton(buttonText, index))}
       </View>
       
     </View>
@@ -101,8 +94,8 @@ const styles = StyleSheet.create({
       fontSize: 40,
       textAlign: 'center',
       fontWeight: 'bold',
-      letterSpacing: 1,
-      width: '50%',
+      width: '80%',
+      marginLeft: '10%',
       alignSelf: 'center'
     }, 
     subtitle: {
