@@ -176,13 +176,13 @@ const styles = StyleSheet.create({
     colonySlider: {
         position: 'absolute',
         top: '12%',
-        left: '4%',
-        width: '82%'
+        left: '1%',
+        width: '83%'
     },
     searchBar: {
         position: 'absolute',
         top: '5%',
-        left: '5%',
+        right: '5%',
     },
     infoContainer: {
         flexDirection: 'row',
@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         position: 'absolute',
         top: '12.5%', // Adjust this to position the button as desired
-        right: '3%', // Adjust this to position the button as desired
+        right: '5%', // Adjust this to position the button as desired
     },
     plusText: {
         fontSize: 40, // Adjust the font size as needed
@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         textAlign: 'center',
         justifyContent: 'center',
-        marginTop: -15,
+        marginTop: -16,
     },
 });
 
