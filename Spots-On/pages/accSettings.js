@@ -3,57 +3,43 @@ import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 
 export default function Account({ navigation }) {
 
-  const colonyList = ["Notifications", "Colony Management", "Location Sharing"];
+  const detailList = ["Edit Phone Number", "Edit Email Address", "Change Password"];
 
   // Create an array of functions to handle button actions
-  const colonyButtonActions = [
+  const detailButtonActions = [
     () => {
-        console.log('Notifications clicked');
+        console.log('edit phone number clicked');
     },
     () => {
-        console.log('Colony management clicked');
-        // Handle specific action for Button 2
-        // You can customize this function for each button
+        console.log('edit email address clicked');
     },
     () => {
-        console.log('Location sharing clicked');
-        // Handle specific action for Button 3
+        console.log('change password clicked');
     },
   ];
 
-  const universalList = ["Account", "Privacy & Security", "About", "Log Out"];
+  const otherList = ["Go Premium", "Delete Account"];
 
-  const universalButtonActions = [
+  const otherButtonActions = [
     () => {
-        console.log('Account clicked');
-        navigation.navigate('Account');
+        console.log('go premium clicked');
     },
     () => {
-        console.log('Privacy & Security clicked');
-        // Handle specific action for Button 2
-        // You can customize this function for each button
-    },
-    () => {
-        console.log('About clicked');
-        // Handle specific action for Button 3
-    },
-    () => {
-      console.log('Log out clicked');
-      // Handle specific action for Button 3
-  }
+        console.log('delete account clicked');
+    }
   ];
 
-  const renderColonyButton = (text, index) => {
+  const renderDetailButton = (text, index) => {
     return (
-      <TouchableOpacity style={styles.buttons} onPress={colonyButtonActions[index]} key={text}>
+      <TouchableOpacity style={styles.buttons} onPress={detailButtonActions[index]} key={text}>
         <Text style={styles.buttonText}>{text}</Text>
       </TouchableOpacity>
     );
   };
 
-  const renderUniversalButton = (text, index) => {
+  const renderOtherButton = (text, index) => {
     return (
-      <TouchableOpacity style={styles.buttons} onPress={universalButtonActions[index]} key={text}>
+      <TouchableOpacity style={styles.buttons} onPress={otherButtonActions[index]} key={text}>
         <Text style={styles.buttonText}>{text}</Text>
       </TouchableOpacity>
     );
@@ -75,13 +61,17 @@ export default function Account({ navigation }) {
         </TouchableOpacity>
         <Text style={styles.title}>Account</Text>
       </View>
-      <Text style={styles.subtitle}>Account details</Text>
-      <View style={styles.settingsItems}>
-        {colonyList.map((buttonText, index) => renderColonyButton(buttonText, index))}
+      <Image source={require('../assets/profilePicture.png')} style={styles.profilePicture} />
+      <Image source={require('../assets/editIcon.png')} style={styles.editIcon1} />
+      <View>
+      <Text style={styles.nameText}>Faris Khattak</Text>
+      <Image source={require('../assets/editIcon.png')} style={styles.editIcon2} />
       </View>
-      <Text style={styles.subtitle}>Account management</Text>
       <View style={styles.settingsItems}>
-        {universalList.map((buttonText, index) => renderUniversalButton(buttonText, index))}
+        {detailList.map((buttonText, index) => renderDetailButton(buttonText, index))}
+      </View>
+      <View style={styles.settingsItems}>
+        {otherList.map((buttonText, index) => renderOtherButton(buttonText, index))}
       </View>
       
     </View>
@@ -105,14 +95,12 @@ const styles = StyleSheet.create({
       width: '50%',
       alignSelf: 'center'
     }, 
-    subtitle: {
-      color: '#D5B747',
-      fontSize: 20,
+    nameText: {
+      color: '#E7EFCA',
+      fontSize: 30,
+      textAlign: 'center',
       fontWeight: 'bold',
-      marginLeft: 20,
-      marginBottom: -15,
-      paddingTop: 20,
-      opacity: .9
+      alignSelf: 'center'
     }, 
     image: {
       height: 50,
@@ -138,7 +126,29 @@ const styles = StyleSheet.create({
       fontSize: 20,
       color: '#2C6765',
       fontWeight: 'bold',
-
+    },
+    profilePicture: {
+      height: "30%",
+      width: "70%",
+      borderRadius: 360,
+      marginLeft: '15%',
+      marginVertical: 10
+    },
+    editIcon1: {
+      height: 40,
+      width: 40,
+      tintColor: "#D5B747",
+      position: 'absolute',
+    bottom: '58%',
+    right: '18%',
+    },
+    editIcon2: {
+      height: 30,
+      width: 30,
+      tintColor: "#D5B747",
+      position: 'absolute',
+      right: '5%',
+      bottom: '10%'
     }
 
 })
