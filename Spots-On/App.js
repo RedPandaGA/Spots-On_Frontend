@@ -9,6 +9,7 @@ import LandingPage from './pages/landingPage';
 import Settings from './pages/settings';
 import Notifications from './pages/notifSettings';
 import Account from './pages/accSettings';
+import ColonyManagement from './pages/colonymngmntSettings';
 
 const Stack = createStackNavigator();
 
@@ -44,6 +45,11 @@ export default function App() {
         <Stack.Screen 
           name='Notifications' 
           component={Notifications} 
+          options={{ headerShown: false}}
+        />
+        <Stack.Screen 
+          name='ColonyManagement' 
+          component={ColonyManagement} 
           options={{ headerShown: false}}
         />
         <Stack.Screen 
