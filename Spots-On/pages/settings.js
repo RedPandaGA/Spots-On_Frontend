@@ -30,8 +30,7 @@ export default function Settings({ navigation }) {
     },
     () => {
         console.log('Privacy & Security clicked');
-        // Handle specific action for Button 2
-        // You can customize this function for each button
+        navigation.navigate('ColonyChat'); //temp delete later
     },
     () => {
         console.log('About clicked');

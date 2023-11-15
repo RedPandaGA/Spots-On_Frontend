@@ -11,6 +11,7 @@ import Notifications from "./pages/notifSettings";
 import ColonyManagement from "./pages/colonymngmntSettings";
 import LocationSharing from "./pages/locationSettings";
 import Account from "./pages/accSettings";
+import ColonyChat from './pages/colonyChat';
 
 const Stack = createStackNavigator();
 
@@ -63,6 +64,12 @@ export default function App() {
           component={Account}
           options={{ headerShown: false }}
         />
+        <Stack.Screen
+          name='ColonyChat'
+          component={ColonyChat}
+          options={{ headerShown: false }}
+        />
+
       </Stack.Navigator>
     </NavigationContainer>
   );
