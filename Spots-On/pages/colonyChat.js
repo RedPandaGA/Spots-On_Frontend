@@ -1,7 +1,37 @@
 import React, { useState } from 'react';
-import { GiftedChat, Bubble } from 'react-native-gifted-chat';
 import { View, StyleSheet, Image, TouchableOpacity, TextInput, Text } from 'react-native';
+import { GiftedChat, Bubble } from 'react-native-gifted-chat';
 import COLORS from '../components/colors';
+
+// Custom Bubble component
+const CustomBubble = (props) => {
+  return (
+    <Bubble
+      {...props}
+      wrapperStyle={{
+        left: {
+          backgroundColor: COLORS.secondary,
+        },
+        right: {
+          backgroundColor: COLORS.darkblackgreen,
+        },
+      }}
+    >
+      <Text
+        style={{
+          left: {
+            color: COLORS.primary,
+          },
+          right: {
+            color: COLORS.secondary,
+          },
+        }}
+      >
+        {props.text}
+      </Text>
+    </Bubble>
+  );
+};
 
 export default function ColonyChat({ navigation }) {
   const [messages, setMessages] = useState([]);
@@ -27,38 +57,6 @@ export default function ColonyChat({ navigation }) {
 
     setMessages((previousMessages) => GiftedChat.append(previousMessages, newMessages));
     setInputText('');
-  };
-
-  const renderBubble = (props) => {
-    return (
-      <Bubble
-        {...props}
-        wrapperStyle={{
-          left: {
-            backgroundColor: COLORS.secondary, // Change this to the color you want for received messages
-          },
-          right: {
-            backgroundColor: COLORS.darkblackgreen, // Change this to the color you want for sent messages
-          },
-        }}
-      />
-    );
-  };
-
-  const renderMessageText = (props) => {
-    return (
-      <Text
-        {...props}
-        style={{
-          left: {
-            color: COLORS.primary,
-          },
-          right: {
-            color: COLORS.secondary,
-          },
-        }}
-      />
-    );
   };
 
   return (
@@ -93,7 +91,6 @@ export default function ColonyChat({ navigation }) {
         onSend={(newMessages) => onSend(newMessages)}
         user={{ _id: 1 }}
         renderInputToolbar={(props) => {
-          // Optional: Customize the input toolbar
           return (
             <View style={styles.inputToolbarContainer}>
               <TextInput
@@ -109,12 +106,11 @@ export default function ColonyChat({ navigation }) {
             </View>
           );
         }}
-        renderBubble={renderBubble} // Add this line to customize the message bubbles
-        />
+        renderBubble={(props) => <CustomBubble {...props} />} // Use the custom Bubble component
+      />
     </View>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
@@ -152,15 +148,15 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 10,
     backgroundColor: COLORS.primary,
+    marginTop: -3
   },
-  input: { //input text
+  input: {
     flex: 1,
     height: 40,
     borderRadius: 20,
     paddingHorizontal: 10,
     color: COLORS.secondary,
     fontSize: 17,
-    // fontWeight: 'bold',
     backgroundColor: COLORS.darkblackgreen,
   },
   sendButton: {
