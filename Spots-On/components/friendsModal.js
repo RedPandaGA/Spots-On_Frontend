@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     justifyContent: "center",
-    marginTop: -15,
+    marginTop: -16,
   },
   infoContainer: {
     flexDirection: "row",
