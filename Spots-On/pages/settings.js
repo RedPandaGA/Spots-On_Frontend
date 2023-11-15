@@ -96,10 +96,8 @@ const styles = StyleSheet.create({
   title: {
     color: COLORS.secondary,
     fontSize: 40,
-    textAlign: "center",
     fontWeight: "bold",
     letterSpacing: 1,
-    width: "50%",
     alignSelf: "center",
   },
   subtitle: {
