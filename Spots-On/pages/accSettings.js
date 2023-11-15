@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     width: 40,
     tintColor: COLORS.gold,
     position: "absolute",
-    bottom: 545,
+    top: 265,
     left: 240,
   },
   editIcon2: {
