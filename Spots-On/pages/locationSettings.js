@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, Switch, ScrollView } from 'react-native';
+import React, { useState } from "react";
+import { View, Text, TouchableOpacity, StyleSheet, Image, Switch, ScrollView } from "react-native";
+import COLORS from "../components/colors";
 
 export default function LocationSharing({ navigation }) {
 
     const hibernationList = ["Location sharing", "Status sharing"];
-
     const locationList = ["friend1", "friend2", "friend3"];
-
     const statusList = ["friend1", "friend2", "friend3"];
 
     const [hibernationSwitches, setHibernationSwitches] = useState({
@@ -52,7 +51,7 @@ export default function LocationSharing({ navigation }) {
 
     const renderHibernationToggleBox = (text, index) => {
         return (
-            <View  key={`status_${index}`}>
+            <View key={`status_${index}`}>
                 <Text style={styles.toggleText}>{text}</Text>
                 <Switch
                     style={styles.toggleSwitch}
@@ -60,10 +59,10 @@ export default function LocationSharing({ navigation }) {
                     onValueChange={() =>
                         handleHibernationToggle(text)}
                     trackColor={{
-                        false: '#305c5c', // color when switch is off
-                        true: '#D5B747',  // color when switch is on
+                        false: COLORS.darkblackgreen, // color when switch is off
+                        true: COLORS.gold,  // color when switch is on
                     }}
-                    thumbColor={hibernationSwitches[text] ? '#E7EFCA' : '#2C6765'}
+                    thumbColor={hibernationSwitches[text] ? COLORS.white : COLORS.lightwhitegreen}
                 />
             </View>
         );
@@ -71,7 +70,7 @@ export default function LocationSharing({ navigation }) {
 
     const renderStatusToggleBox = (text, index) => {
         return (
-            <View  key={`location_${index}`}>
+            <View key={`location_${index}`}>
                 <Text style={styles.toggleText}>{text}</Text>
                 <Switch
                     style={styles.toggleSwitch}
@@ -79,10 +78,10 @@ export default function LocationSharing({ navigation }) {
                     onValueChange={() =>
                         handleStatusToggle(text)}
                     trackColor={{
-                        false: '#305c5c', // color when switch is off
-                        true: '#D5B747',  // color when switch is on
+                        false: COLORS.darkblackgreen, // color when switch is off
+                        true: COLORS.gold,  // color when switch is on
                     }}
-                    thumbColor={statusSwitches[text] ? '#E7EFCA' : '#2C6765'}
+                    thumbColor={statusSwitches[text] ? COLORS.white : COLORS.lightwhitegreen}
                 />
             </View>
         );
@@ -90,7 +89,7 @@ export default function LocationSharing({ navigation }) {
 
     const renderLocationToggleBox = (text, index) => {
         return (
-            <View  key={`location_${index}`}>
+            <View key={`location_${index}`}>
                 <Text style={styles.toggleText}>{text}</Text>
                 <Switch
                     style={styles.toggleSwitch}
@@ -98,10 +97,10 @@ export default function LocationSharing({ navigation }) {
                     onValueChange={() =>
                         handleLocationToggle(text)}
                     trackColor={{
-                        false: '#305c5c', // color when switch is off
-                        true: '#D5B747',  // color when switch is on
+                        false: COLORS.darkblackgreen, // color when switch is off
+                        true: COLORS.gold,  // color when switch is on
                     }}
-                    thumbColor={locationSwitches[text] ? '#E7EFCA' : '#2C6765'}
+                    thumbColor={locationSwitches[text] ? COLORS.white : COLORS.lightwhitegreen}
                 />
             </View>
         );
@@ -109,35 +108,34 @@ export default function LocationSharing({ navigation }) {
 
     return (
         <ScrollView style={styles.container}>
-        <View style={styles.container}>
-            <View style={styles.header}>
-                <TouchableOpacity onPress={() => {
-                    console.log("Pressed back button");
-                    navigation.navigate('Settings');
-                }}>
-                    <View style={styles.backButton}>
-                        <Image
-                            source={require('../assets/back-button-secondary-color.png')}
-                            style={styles.image}
-                        />
-                    </View>
-                </TouchableOpacity>
-                <Text style={styles.title}>Sharing</Text>
+            <View>
+                <View style={styles.header}>
+                    <TouchableOpacity onPress={() => {
+                        console.log("Pressed back button");
+                        navigation.navigate("Settings");
+                    }}>
+                        <View style={styles.backButton}>
+                            <Image
+                                source={require("../assets/back-button-secondary-color.png")}
+                                style={styles.image}
+                            />
+                        </View>
+                    </TouchableOpacity>
+                    <Text style={styles.title}>Sharing</Text>
+                </View>
+                <Text style={styles.subtitle}>Hibernation mode</Text>
+                <View style={styles.settingsItems}>
+                    {hibernationList.map((buttonText, index) => renderHibernationToggleBox(buttonText, index))}
+                </View>
+                <Text style={styles.subtitle}>Share my location to...</Text>
+                <View style={styles.settingsItems}>
+                    {locationList.map((buttonText, index) => renderStatusToggleBox(buttonText, index))}
+                </View>
+                <Text style={styles.subtitle}>Share my status to...</Text>
+                <View style={styles.settingsItems}>
+                    {statusList.map((buttonText, index) => renderLocationToggleBox(buttonText, index))}
+                </View>
             </View>
-            <Text style={styles.subtitle}>Hibernation mode</Text>
-            <View style={styles.settingsItems}>
-                {hibernationList.map((buttonText, index) => renderHibernationToggleBox(buttonText, index))}
-            </View>
-            <Text style={styles.subtitle}>Share my location to...</Text>
-            <View style={styles.settingsItems}>
-                {locationList.map((buttonText, index) => renderStatusToggleBox(buttonText, index))}
-            </View>
-            <Text style={styles.subtitle}>Share my status to...</Text>
-            <View style={styles.settingsItems}>
-                {statusList.map((buttonText, index) => renderLocationToggleBox(buttonText, index))}
-            </View>
-
-        </View>
         </ScrollView>
     );
 }
@@ -145,25 +143,22 @@ export default function LocationSharing({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#2C6765',
+        backgroundColor: COLORS.primary,
         paddingBottom: 30
     },
     header: {
         marginTop: 50,
     },
     title: {
-        color: '#E7EFCA',
+        color: COLORS.secondary,
         fontSize: 40,
-        textAlign: 'center',
-        fontWeight: 'bold',
-        width: '100%',
-        paddingLeft: '10%',
-        alignSelf: 'center',
+        fontWeight: "bold",
+        alignSelf: "center",
     },
     subtitle: {
-        color: '#D5B747',
+        color: COLORS.gold,
         fontSize: 20,
-        fontWeight: 'bold',
+        fontWeight: "bold",
         marginLeft: 20,
         marginBottom: -15,
         paddingTop: 20,
@@ -172,35 +167,32 @@ const styles = StyleSheet.create({
     image: {
         height: 50,
         width: 50,
-        position: 'absolute',
+        position: "absolute",
         left: 20,
     },
     settingsItems: {
         marginTop: 20,
-        backgroundColor: '#E7EFCA',
-        width: '90%',
-        alignSelf: 'center',
+        backgroundColor: COLORS.secondary,
+        width: "90%",
+        alignSelf: "center",
         borderRadius: 15,
     },
     toggle: {
-        alignSelf: 'center',
-        justifyContent: 'center',
-        marginVertical: 20,
-
+        justifyContent: "center",
+        paddingVertical: 20,
     },
     toggleText: {
-        marginBottom: '-7%',
-        paddingTop: '7%',
-        paddingLeft: "10%",
+        marginBottom: -20,
+        paddingTop: 20,
+        paddingLeft: 30,
         fontSize: 20,
-        color: '#2C6765',
-        fontWeight: 'bold',
+        color: COLORS.primary,
+        fontWeight: "bold",
     },
     toggleSwitch: {
-        paddingBottom: '8%',
-        marginTop: '-8%',
-        marginRight: '5%',
+        paddingBottom: 20,
+        marginTop: -28,
+        marginRight: 15,
     }
-
 })
 
