@@ -158,7 +158,7 @@ const ViewEventsModal = ({ isModalVisible, hideModal, setSocialModal }) => {
                                 data={eventsToday}
                                 renderItem={renderItem}
                                 keyExtractor={(item, index) => index.toString()}
-                                showsVerticalScrollIndicator={false}
+                                // showsVerticalScrollIndicator={false}
                             />
                         }
                         {isUpcomingPressed && 
@@ -166,7 +166,7 @@ const ViewEventsModal = ({ isModalVisible, hideModal, setSocialModal }) => {
                                 data={eventsUpcoming}
                                 renderItem={renderItem}
                                 keyExtractor={(item, index) => index.toString()}
-                                showsVerticalScrollIndicator={false}
+                                // showsVerticalScrollIndicator={false}
                             />
                         }
                     </View>
