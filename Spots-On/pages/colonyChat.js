@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Image, TouchableOpacity, TextInput, Text } from 'react-native';
-import { GiftedChat, Bubble } from 'react-native-gifted-chat';
+import { GiftedChat, Bubble, Day } from 'react-native-gifted-chat';
 import COLORS from '../components/colors';
 
 // Custom Bubble component
@@ -32,6 +32,17 @@ const CustomBubble = (props) => {
     </Bubble>
   );
 };
+
+const CustomDay = (props) => {
+    return (
+      <Day
+        {...props}
+        textStyle={{
+          color: COLORS.gray, // Change this to the color you want for the date and year
+        }}
+      />
+    );
+  };
 
 export default function ColonyChat({ navigation }) {
   const [messages, setMessages] = useState([]);
@@ -109,7 +120,8 @@ export default function ColonyChat({ navigation }) {
             </View>
           );
         }}
-        renderBubble={(props) => <CustomBubble {...props} />} // Use the custom Bubble component
+        renderBubble={(props) => <CustomBubble {...props} />}
+        renderDay={(props) => <CustomDay {...props} />} 
       />
     </View>
   );
