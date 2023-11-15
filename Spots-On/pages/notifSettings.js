@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Image, Switch } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Image, Switch, ScrollView } from "react-native";
 import COLORS from "../components/colors";
 
 export default function Notifications({ navigation }) {
@@ -40,7 +40,7 @@ export default function Notifications({ navigation }) {
 
     const renderStatusToggleBox = (text, index) => {
         return (
-            <View  key={`status_${index}`}>
+            <View key={`status_${index}`}>
                 <Text style={styles.toggleText}>{text}</Text>
                 <Switch
                     style={styles.toggleSwitch}
@@ -59,18 +59,18 @@ export default function Notifications({ navigation }) {
 
     const renderLocationToggleBox = (text, index) => {
         return (
-            <View  key={`location_${index}`}>
+            <View key={`location_${index}`}>
                 <Text style={styles.toggleText}>{text}</Text>
                 <Switch
                     style={styles.toggleSwitch}
                     value={locationSwitches[text]}
                     onValueChange={() =>
                         handleLocationToggle(text)}
-                        trackColor={{
-                            false: COLORS.darkblackgreen, // color when switch is off
-                            true: COLORS.gold,  // color when switch is on
-                        }}
-                        thumbColor={locationSwitches[text] ? COLORS.white : COLORS.lightwhitegreen}
+                    trackColor={{
+                        false: COLORS.darkblackgreen, // color when switch is off
+                        true: COLORS.gold,  // color when switch is on
+                    }}
+                    thumbColor={locationSwitches[text] ? COLORS.white : COLORS.lightwhitegreen}
                 />
             </View>
         );
@@ -81,42 +81,44 @@ export default function Notifications({ navigation }) {
             <TouchableOpacity style={styles.toggle} onPress={() => {
                 console.log("Main Map redirection clicked");
                 navigation.navigate("Home");
-            } } key={`spots_${index}`}>
+            }} key={`spots_${index}`}>
                 <Text style={styles.specialText}>{text}</Text>
             </TouchableOpacity>
         );
     };
 
     return (
-        <View style={styles.container}>
-            <View style={styles.header}>
-                <TouchableOpacity onPress={() => {
-                    console.log("Pressed back button");
-                    navigation.navigate("Settings");
-                }}>
-                    <View style={styles.backButton}>
-                        <Image
-                            source={require("../assets/back-button-secondary-color.png")}
-                            style={styles.image}
-                        />
-                    </View>
-                </TouchableOpacity>
-                <Text style={styles.title}>Notifications</Text>
-            </View>
-            <Text style={styles.subtitle}>Status notifications</Text>
-            <View style={styles.settingsItems}>
-                {statusList.map((buttonText, index) => renderStatusToggleBox(buttonText, index))}
-            </View>
-            <Text style={styles.subtitle}>Location notifications</Text>
-            <View style={styles.settingsItems}>
-                {locationList.map((buttonText, index) => renderLocationToggleBox(buttonText, index))}
-            </View>
-            <Text style={styles.subtitle}>Spots notifications</Text>
-            <View style={styles.settingsItems}>
-                {spotsList.map((buttonText, index) => renderSpotsToggleBox(buttonText, index))}
-            </View>
+        <ScrollView style={styles.container}>
+            <View>
+                <View style={styles.header}>
+                    <TouchableOpacity onPress={() => {
+                        console.log("Pressed back button");
+                        navigation.navigate("Settings");
+                    }}>
+                        <View style={styles.backButton}>
+                            <Image
+                                source={require("../assets/back-button-secondary-color.png")}
+                                style={styles.image}
+                            />
+                        </View>
+                    </TouchableOpacity>
+                    <Text style={styles.title}>Notifications</Text>
+                </View>
+                <Text style={styles.subtitle}>Status notifications</Text>
+                <View style={styles.settingsItems}>
+                    {statusList.map((buttonText, index) => renderStatusToggleBox(buttonText, index))}
+                </View>
+                <Text style={styles.subtitle}>Location notifications</Text>
+                <View style={styles.settingsItems}>
+                    {locationList.map((buttonText, index) => renderLocationToggleBox(buttonText, index))}
+                </View>
+                <Text style={styles.subtitle}>Spots notifications</Text>
+                <View style={styles.settingsItems}>
+                    {spotsList.map((buttonText, index) => renderSpotsToggleBox(buttonText, index))}
+                </View>
 
-        </View>
+            </View>
+        </ScrollView>
     );
 }
 
@@ -132,7 +134,7 @@ const styles = StyleSheet.create({
         color: COLORS.secondary,
         fontSize: 40,
         fontWeight: "bold",
-        paddingLeft: 50,
+        marginLeft: 50,
         alignSelf: "center",
     },
     subtitle: {
@@ -166,10 +168,8 @@ const styles = StyleSheet.create({
         borderRadius: 15,
     },
     toggle: {
-        alignSelf: "center",
         justifyContent: "center",
-        marginVertical: 20,
-
+        paddingVertical: 20,
     },
     toggleText: {
         marginBottom: -20,

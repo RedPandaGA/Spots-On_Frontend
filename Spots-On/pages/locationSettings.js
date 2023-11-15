@@ -108,7 +108,7 @@ export default function LocationSharing({ navigation }) {
     };
 
     return (
-        <ScrollView style={styles.container}>
+        <ScrollView>
         <View style={styles.container}>
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => {
