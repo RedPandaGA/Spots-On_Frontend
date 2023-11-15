@@ -25,6 +25,7 @@ import CreateColonyModal from "../components/createColonyModal";
 import CreateSpotModal from "../components/spotsModal";
 import ChatModal from "../components/chatModal";
 import { StatusBar } from "react-native";
+import COLORS from "../components/colors";
 
 export default function MainMap({ navigation }) {
   // Manage the location of the map
@@ -705,7 +706,7 @@ const styles = StyleSheet.create({
   spotName: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "#2C6765",
+    color: COLORS.primary,
   },
   colonyName: {
     fontSize: 14,
@@ -718,12 +719,12 @@ const styles = StyleSheet.create({
   editImage: {
     width: 25,
     height: 25,
-    tintColor: "#2C6765",
+    tintColor: COLORS.primary,
     marginBottom: 10,
   },
   infoImage: {
     width: 30,
     height: 30,
-    tintColor: "#2C6765",
+    tintColor: COLORS.primary,
   },
 });

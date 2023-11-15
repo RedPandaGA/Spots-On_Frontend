@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import Swiper from "react-native-swiper";
+import COLORS from "../components/colors";
 
 const LandingPage = ({ navigation }) => {
   const handleGetStarted = () => {
@@ -53,10 +54,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#2C6765",
+    backgroundColor: COLORS.primary,
   },
   text: {
-    color: "#fff",
+    color: COLORS.white,
     fontSize: 40,
     fontWeight: "bold",
   },
@@ -69,7 +70,7 @@ const styles = StyleSheet.create({
     width: 200,
   },
   createAccountButtonText: {
-    color: "#E7EFCA",
+    color: COLORS.secondary,
     fontSize: 20,
     fontWeight: "bold",
     textAlign: "center",
@@ -82,7 +83,7 @@ const styles = StyleSheet.create({
     margin: 3,
   },
   activePaginationDot: {
-    backgroundColor: "#E7EFCA", // Change the color of active dot
+    backgroundColor: COLORS.secondary, // Change the color of active dot
     width: 8,
     height: 8,
     borderRadius: 4,
