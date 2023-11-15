@@ -12,10 +12,11 @@ const COLORS = {
   darkgreen: "#2C6765",
   gold: "#D5B747",
   darkblackgreen: "#305c5c",
-  primary: "#2C6765",
-  secondary: "#E7EFCA",
-  status: "#D5B747",
-  gray: "#ccc",
+  
+  primary: "#2C6765", // dark green
+  secondary: "#E7EFCA", // light green
+  status: "#D5B747", // gold
+  gray: "#ccc", // gray
 };
 
 export default COLORS;

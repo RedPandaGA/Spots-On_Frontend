@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { GiftedChat } from 'react-native-gifted-chat';
+import { GiftedChat, Bubble } from 'react-native-gifted-chat';
 import { View, StyleSheet, Image, TouchableOpacity, TextInput, Text } from 'react-native';
+import COLORS from '../components/colors';
 
 export default function ColonyChat({ navigation }) {
   const [messages, setMessages] = useState([]);
@@ -26,6 +27,38 @@ export default function ColonyChat({ navigation }) {
 
     setMessages((previousMessages) => GiftedChat.append(previousMessages, newMessages));
     setInputText('');
+  };
+
+  const renderBubble = (props) => {
+    return (
+      <Bubble
+        {...props}
+        wrapperStyle={{
+          left: {
+            backgroundColor: COLORS.secondary, // Change this to the color you want for received messages
+          },
+          right: {
+            backgroundColor: COLORS.darkblackgreen, // Change this to the color you want for sent messages
+          },
+        }}
+      />
+    );
+  };
+
+  const renderMessageText = (props) => {
+    return (
+      <Text
+        {...props}
+        style={{
+          left: {
+            color: COLORS.primary,
+          },
+          right: {
+            color: COLORS.secondary,
+          },
+        }}
+      />
+    );
   };
 
   return (
@@ -66,7 +99,7 @@ export default function ColonyChat({ navigation }) {
               <TextInput
                 style={styles.input}
                 placeholder="Type your message..."
-                placeholderTextColor="#E7EFCA"
+                placeholderTextColor={COLORS.secondary}
                 value={inputText}
                 onChangeText={(text) => setInputText(text)}
               />
@@ -76,7 +109,8 @@ export default function ColonyChat({ navigation }) {
             </View>
           );
         }}
-      />
+        renderBubble={renderBubble} // Add this line to customize the message bubbles
+        />
     </View>
   );
 }
@@ -117,15 +151,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 10,
-    backgroundColor: '#305c5c',
+    backgroundColor: COLORS.primary,
   },
-  input: {
+  input: { //input text
     flex: 1,
     height: 40,
     borderRadius: 20,
     paddingHorizontal: 10,
-    color: '#E7EFCA',
-    backgroundColor: '#305c5c',
+    color: COLORS.secondary,
+    fontSize: 17,
+    // fontWeight: 'bold',
+    backgroundColor: COLORS.darkblackgreen,
   },
   sendButton: {
     marginLeft: 10,
