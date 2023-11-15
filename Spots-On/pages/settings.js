@@ -1,5 +1,6 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import React from "react";
+import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
+import COLORS from "../components/colors";
 
 export default function Settings({ navigation }) {
 
@@ -8,16 +9,16 @@ export default function Settings({ navigation }) {
   // Create an array of functions to handle button actions
   const colonyButtonActions = [
     () => {
-        console.log('Notifications clicked');
-        navigation.navigate('Notifications');
+        console.log("Notifications clicked");
+        navigation.navigate("Notifications");
     },
     () => {
-        console.log('Colony management clicked');
-        navigation.navigate('ColonyManagement');
+        console.log("Colony management clicked");
+        navigation.navigate("ColonyManagement");
     },
     () => {
-        console.log('Location sharing clicked');
-        navigation.navigate('LocationSharing');
+        console.log("Location sharing clicked");
+        navigation.navigate("LocationSharing");
     },
   ];
 
@@ -25,21 +26,17 @@ export default function Settings({ navigation }) {
 
   const universalButtonActions = [
     () => {
-        console.log('Account clicked');
-        navigation.navigate('Account');
+        console.log("Account clicked");
+        navigation.navigate("Account");
     },
     () => {
-        console.log('Privacy & Security clicked');
-        // Handle specific action for Button 2
-        // You can customize this function for each button
+        console.log("Privacy & Security clicked");
     },
     () => {
-        console.log('About clicked');
-        // Handle specific action for Button 3
+        console.log("About clicked");
     },
     () => {
-      console.log('Log out clicked');
-      // Handle specific action for Button 3
+      console.log("Log out clicked");
   }
   ];
 
@@ -63,12 +60,12 @@ export default function Settings({ navigation }) {
     <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => {
-          navigation.navigate('Home');
+          navigation.navigate("Home");
           console.log("Pressed back button");
         }}>
           <View style={styles.backButton}>
             <Image 
-              source={require('../assets/back-button-secondary-color.png')}
+              source={require("../assets/back-button-secondary-color.png")}
               style={styles.image}
             />
           </View>
@@ -91,24 +88,24 @@ export default function Settings({ navigation }) {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#2C6765',
+      backgroundColor: COLORS.primary,
     },
     header: {
       marginTop: 50,
     },
     title: {
-      color: '#E7EFCA',
+      color: COLORS.secondary,
       fontSize: 40,
-      textAlign: 'center',
-      fontWeight: 'bold',
+      textAlign: "center",
+      fontWeight: "bold",
       letterSpacing: 1,
-      width: '50%',
-      alignSelf: 'center'
+      width: "50%",
+      alignSelf: "center"
     }, 
     subtitle: {
-      color: '#D5B747',
+      color: COLORS.gold,
       fontSize: 20,
-      fontWeight: 'bold',
+      fontWeight: "bold",
       marginLeft: 20,
       marginBottom: -15,
       paddingTop: 20,
@@ -117,29 +114,27 @@ const styles = StyleSheet.create({
     image: {
       height: 50,
       width: 50,
-      position: 'absolute',
+      position: "absolute",
       left: 20,
     },
     settingsItems: {
       marginTop: 20,
-      backgroundColor: '#E7EFCA',
-      width: '90%',
-      alignSelf: 'center',
+      backgroundColor: COLORS.secondary,
+      width: "90%",
+      alignSelf: "center",
       borderRadius: 15,
     },
     buttons: {
-      alignSelf: 'center',
-      justifyContent: 'center',
+      alignSelf: "center",
+      justifyContent: "center",
       marginVertical: 20,
       
     },
     buttonText: {
-      textAlign: 'center',
+      textAlign: "center",
       fontSize: 20,
-      color: '#2C6765',
-      fontWeight: 'bold',
-
+      color: COLORS.primary,
+      fontWeight: "bold",
     }
-
 })
 

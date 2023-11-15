@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
         borderRadius: 30,
         width: 140,
         borderWidth: 2,
-        borderColor: '#507c74',
+        borderColor: COLORS.lightwhitegreen,
         marginVertical: 5,
         alignItems: 'center',
         marginHorizontal: 5
@@ -171,10 +171,10 @@ const styles = StyleSheet.create({
         borderRadius: 30,
         width: 140,
         borderWidth: 1.5,
-        borderColor: '#507c74',
+        borderColor: COLORS.lightwhitegreen,
         marginVertical: 5,
         alignItems: 'center',
-        backgroundColor: '#507c74',
+        backgroundColor: COLORS.lightwhitegreen,
         marginHorizontal: 5
     },
     buttonText: {

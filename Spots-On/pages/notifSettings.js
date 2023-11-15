@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, Switch } from 'react-native';
+import COLORS from '../components/colors';
 
 export default function Notifications({ navigation }) {
 
     const statusList = ["friend1", "friend2", "friend3"];
 
-    const locationList = ["friend1l", "friend2l", "friend3lr"];
+    const locationList = ["friend1", "friend2", "friend3"];
 
     const [statusSwitches, setStatusSwitches] = useState({
         friend1: false,
@@ -47,10 +48,10 @@ export default function Notifications({ navigation }) {
                     onValueChange={() =>
                         handleStatusToggle(text)}
                     trackColor={{
-                        false: '#305c5c', // color when switch is off
-                        true: '#D5B747',  // color when switch is on
+                        false: COLORS.darkblackgreen, // color when switch is off
+                        true: COLORS.gold,  // color when switch is on
                     }}
-                    thumbColor={statusSwitches[text] ? '#E7EFCA' : '#2C6765'}
+                    thumbColor={statusSwitches[text] ? COLORS.primary : '#2C6765'}
                 />
             </View>
         );
@@ -130,9 +131,8 @@ const styles = StyleSheet.create({
     title: {
         color: '#E7EFCA',
         fontSize: 40,
-        textAlign: 'center',
         fontWeight: 'bold',
-        width: '100%',
+        // width: '70%',
         paddingLeft: '10%',
         alignSelf: 'center',
     },
