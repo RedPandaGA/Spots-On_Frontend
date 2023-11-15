@@ -101,7 +101,10 @@ export default function ColonyChat({ navigation }) {
                 onChangeText={(text) => setInputText(text)}
               />
               <TouchableOpacity onPress={() => onSend()} style={styles.sendButton}>
-                <Text style={styles.sendButtonText}>Send</Text>
+                <Image
+                  source={require('../assets/sendIcon.png')}
+                  style={styles.sendIcon}
+                />
               </TouchableOpacity>
             </View>
           );
@@ -162,8 +165,10 @@ const styles = StyleSheet.create({
   sendButton: {
     marginLeft: 10,
   },
-  sendButtonText: {
-    color: '#E7EFCA',
-    fontWeight: 'bold',
+  sendIcon: {
+    width: 25,
+    height: 25,
+    resizeMode: 'contain', // Adjust the resizeMode as needed
+    tintColor: COLORS.secondary,
   },
 });
