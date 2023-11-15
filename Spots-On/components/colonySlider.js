@@ -1,16 +1,17 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, FlatList } from 'react-native';
+import COLORS from "./colors";
 
 export default function ColonySlider({ style }) {
     const [colony, setColony] = useState([
-        { name: 'SASE', key: 1 },
-        { name: 'lsu engineering', key: 2 },
-        { name: 'swim friends', key: 3 },
-        { name: 'ood group', key: 4 },
-        { name: 'best friends', key: 5 },
-        { name: 'volleyball', key: 6 },
-        { name: 'oopah', key: 7 },
-        { name: 'vsa', key: 8 },
+        { name: 'SASE', selected: false },
+        { name: 'lsu engineering', selected: false },
+        { name: 'swim friends', selected: false },
+        { name: 'ood group', selected: false },
+        { name: 'best friends', selected: false },
+        { name: 'volleyball', selected: false },
+        { name: 'oopah', selected: false },
+        { name: 'vsa', selected: false }
     ]);
 
     const onPress = (name) => {
@@ -23,12 +24,11 @@ export default function ColonySlider({ style }) {
                 style={styles.list}
                 horizontal
                 data={colony}
+                keyExtractor={(item, index) => index.toString()}
                 showsHorizontalScrollIndicator={false}
                 renderItem={({ item }) => (
                     <TouchableOpacity style={[styles.button, styles.shadow]} onPress={() => onPress(item.name)} >
-                        {/* <View style={styles.button}> */}
                             <Text style={styles.text}>{item.name}</Text>
-                        {/* </View> */}
                     </TouchableOpacity>
                 )}
             />
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 5,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: 'rgba(44, 103, 101, 1)',
+        backgroundColor: COLORS.primary,
         borderRadius: 50,
         paddingVertical: 11,
         paddingHorizontal: 10,
