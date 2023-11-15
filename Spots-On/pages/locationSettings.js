@@ -51,7 +51,7 @@ export default function LocationSharing({ navigation }) {
 
     const renderHibernationToggleBox = (text, index) => {
         return (
-            <View  key={`status_${index}`}>
+            <View key={`status_${index}`}>
                 <Text style={styles.toggleText}>{text}</Text>
                 <Switch
                     style={styles.toggleSwitch}
@@ -70,7 +70,7 @@ export default function LocationSharing({ navigation }) {
 
     const renderStatusToggleBox = (text, index) => {
         return (
-            <View  key={`location_${index}`}>
+            <View key={`location_${index}`}>
                 <Text style={styles.toggleText}>{text}</Text>
                 <Switch
                     style={styles.toggleSwitch}
@@ -89,7 +89,7 @@ export default function LocationSharing({ navigation }) {
 
     const renderLocationToggleBox = (text, index) => {
         return (
-            <View  key={`location_${index}`}>
+            <View key={`location_${index}`}>
                 <Text style={styles.toggleText}>{text}</Text>
                 <Switch
                     style={styles.toggleSwitch}
@@ -107,36 +107,35 @@ export default function LocationSharing({ navigation }) {
     };
 
     return (
-        <ScrollView  style={styles.container}>
-        <View>
-            <View style={styles.header}>
-                <TouchableOpacity onPress={() => {
-                    console.log("Pressed back button");
-                    navigation.navigate("Settings");
-                }}>
-                    <View style={styles.backButton}>
-                        <Image
-                            source={require("../assets/back-button-secondary-color.png")}
-                            style={styles.image}
-                        />
-                    </View>
-                </TouchableOpacity>
-                <Text style={styles.title}>Sharing</Text>
+        <ScrollView style={styles.container}>
+            <View>
+                <View style={styles.header}>
+                    <TouchableOpacity onPress={() => {
+                        console.log("Pressed back button");
+                        navigation.navigate("Settings");
+                    }}>
+                        <View style={styles.backButton}>
+                            <Image
+                                source={require("../assets/back-button-secondary-color.png")}
+                                style={styles.image}
+                            />
+                        </View>
+                    </TouchableOpacity>
+                    <Text style={styles.title}>Sharing</Text>
+                </View>
+                <Text style={styles.subtitle}>Hibernation mode</Text>
+                <View style={styles.settingsItems}>
+                    {hibernationList.map((buttonText, index) => renderHibernationToggleBox(buttonText, index))}
+                </View>
+                <Text style={styles.subtitle}>Share my location to...</Text>
+                <View style={styles.settingsItems}>
+                    {locationList.map((buttonText, index) => renderStatusToggleBox(buttonText, index))}
+                </View>
+                <Text style={styles.subtitle}>Share my status to...</Text>
+                <View style={styles.settingsItems}>
+                    {statusList.map((buttonText, index) => renderLocationToggleBox(buttonText, index))}
+                </View>
             </View>
-            <Text style={styles.subtitle}>Hibernation mode</Text>
-            <View style={styles.settingsItems}>
-                {hibernationList.map((buttonText, index) => renderHibernationToggleBox(buttonText, index))}
-            </View>
-            <Text style={styles.subtitle}>Share my location to...</Text>
-            <View style={styles.settingsItems}>
-                {locationList.map((buttonText, index) => renderStatusToggleBox(buttonText, index))}
-            </View>
-            <Text style={styles.subtitle}>Share my status to...</Text>
-            <View style={styles.settingsItems}>
-                {statusList.map((buttonText, index) => renderLocationToggleBox(buttonText, index))}
-            </View>
-
-        </View>
         </ScrollView>
     );
 }
