@@ -6,7 +6,6 @@ export default function Settings({ navigation }) {
 
   const colonyList = ["Notifications", "Colony Management", "Location/Status Sharing"];
 
-  // Create an array of functions to handle button actions
   const colonyButtonActions = [
     () => {
       console.log("Notifications clicked");
@@ -81,7 +80,6 @@ export default function Settings({ navigation }) {
         <View style={styles.settingsItems}>
           {universalList.map((buttonText, index) => renderUniversalButton(buttonText, index))}
         </View>
-
       </View>
     </ScrollView>
   );

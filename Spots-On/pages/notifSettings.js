@@ -116,7 +116,6 @@ export default function Notifications({ navigation }) {
                 <View style={styles.settingsItems}>
                     {spotsList.map((buttonText, index) => renderSpotsToggleBox(buttonText, index))}
                 </View>
-
             </View>
         </ScrollView>
     );
@@ -184,6 +183,5 @@ const styles = StyleSheet.create({
         marginTop: -28,
         marginRight: 15,
     }
-
 })
 
