@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     letterSpacing: 1,
     width: "50%",
-    alignSelf: "center"
+    alignSelf: "center",
   },
   subtitle: {
     color: COLORS.gold,
