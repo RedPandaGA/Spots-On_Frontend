@@ -20,7 +20,7 @@ import Bar from "./bar";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import COLORS from "./colors";
 
-const CreateEventModal = ({ isModalVisible, hideModal, setSocialModal }) => {
+const CreateEventModal = ({ isModalVisible, hideModal, showModal }) => {
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
   const [dateText, setDateText] = useState("Date");
@@ -131,7 +131,7 @@ const CreateEventModal = ({ isModalVisible, hideModal, setSocialModal }) => {
               <TouchableOpacity
                 onPress={() => {
                   hideModal();
-                  setSocialModal(true);
+                  showModal("social");
                   console.log("Pressed back button to social");
                 }}
               >

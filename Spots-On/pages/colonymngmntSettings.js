@@ -1,9 +1,15 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  ScrollView,
+} from "react-native";
 import COLORS from "../components/colors";
 
 export default function ColonyManagement({ navigation }) {
-
   const detailList = ["Edit Colony Name"];
 
   const detailButtonActions = [
@@ -13,7 +19,14 @@ export default function ColonyManagement({ navigation }) {
   ];
 
   //gotta change admin to a real role
-  const mngmntList = ["My Role: " + "admin", "Change Admin Status", "Add Colony Members", "Delete Colony Members", "Set Spot access", "Leave Colony"];
+  const mngmntList = [
+    "My Role: " + "admin",
+    "Change Admin Status",
+    "Add Colony Members",
+    "Delete Colony Members",
+    "Set Spot access",
+    "Leave Colony",
+  ];
 
   const mngmntButtonActions = [
     () => {
@@ -38,7 +51,11 @@ export default function ColonyManagement({ navigation }) {
 
   const renderDetailButton = (text, index) => {
     return (
-      <TouchableOpacity style={styles.buttons} onPress={detailButtonActions[index]} key={text}>
+      <TouchableOpacity
+        style={styles.buttons}
+        onPress={detailButtonActions[index]}
+        key={text}
+      >
         <Text style={styles.buttonText}>{text}</Text>
       </TouchableOpacity>
     );
@@ -46,7 +63,11 @@ export default function ColonyManagement({ navigation }) {
 
   const renderMngmntButton = (text, index) => {
     return (
-      <TouchableOpacity style={styles.buttons} onPress={mngmntButtonActions[index]} key={text}>
+      <TouchableOpacity
+        style={styles.buttons}
+        onPress={mngmntButtonActions[index]}
+        key={text}
+      >
         <Text style={styles.buttonText}>{text}</Text>
       </TouchableOpacity>
     );
@@ -56,10 +77,12 @@ export default function ColonyManagement({ navigation }) {
     <ScrollView style={styles.container}>
       <View>
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => {
-            navigation.navigate("Settings");
-            console.log("Pressed back button");
-          }}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Settings");
+              console.log("Pressed back button");
+            }}
+          >
             <View style={styles.backButton}>
               <Image
                 source={require("../assets/backButton.png")}
@@ -71,11 +94,15 @@ export default function ColonyManagement({ navigation }) {
         </View>
         <Text style={styles.subtitle}>Colony details</Text>
         <View style={styles.settingsItems}>
-          {detailList.map((buttonText, index) => renderDetailButton(buttonText, index))}
+          {detailList.map((buttonText, index) =>
+            renderDetailButton(buttonText, index)
+          )}
         </View>
         <Text style={styles.subtitle}>Colony Management</Text>
         <View style={styles.settingsItems}>
-          {mngmntList.map((buttonText, index) => renderMngmntButton(buttonText, index))}
+          {mngmntList.map((buttonText, index) =>
+            renderMngmntButton(buttonText, index)
+          )}
         </View>
       </View>
     </ScrollView>
@@ -94,7 +121,7 @@ const styles = StyleSheet.create({
     color: COLORS.secondary,
     fontSize: 40,
     fontWeight: "bold",
-    marginLeft: 40,
+    marginLeft: 20,
     alignSelf: "center",
   },
   subtitle: {
@@ -104,7 +131,7 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginBottom: -15,
     paddingTop: 20,
-    opacity: .9
+    opacity: 0.9,
   },
   image: {
     height: 50,
@@ -129,6 +156,5 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: COLORS.primary,
     fontWeight: "bold",
-  }
-})
-
+  },
+});

@@ -15,7 +15,7 @@ import {
 import Bar from "./bar";
 import COLORS from "./colors";
 
-const CreateColonyModal = ({ isModalVisible, hideModal, setSocialModal }) => {
+const CreateColonyModal = ({ isModalVisible, hideModal, showModal }) => {
   const [isPrivateColony, setIsPrivateColony] = useState(true);
   const [isPublicColony, setIsPublicColony] = useState(false);
 
@@ -66,12 +66,12 @@ const CreateColonyModal = ({ isModalVisible, hideModal, setSocialModal }) => {
               { transform: [{ translateY: modalPosition }] },
             ]}
           >
-            <Bar color={"#2C6765"} />
+            <Bar color={COLORS.primary} />
             <View style={styles.header}>
               <TouchableOpacity
                 onPress={() => {
                   hideModal();
-                  setSocialModal(true);
+                  showModal("social");
                   console.log("Pressed back button to social");
                 }}
               >
@@ -112,7 +112,7 @@ const CreateColonyModal = ({ isModalVisible, hideModal, setSocialModal }) => {
               <TextInput
                 style={styles.input}
                 placeholder="Colony Name"
-                placeholderTextColor={"#2C6765"}
+                placeholderTextColor={COLORS.primary}
                 value={colonyName}
                 onChangeText={(text) => setColonyName(text)}
               />
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     width: 160,
     borderWidth: 1.5,
-    borderColor: "#ccc",
+    borderColor: COLORS.gray,
     marginVertical: 5,
     alignItems: "center",
   },
@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     width: 160,
     borderWidth: 1.5,
-    borderColor: "#ccc",
+    borderColor: COLORS.gray,
     marginVertical: 5,
     alignItems: "center",
     backgroundColor: "rgba(44, 103, 101, .2)",
@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 60,
-    borderColor: "#ccc",
+    borderColor: COLORS.gray,
     borderWidth: 2,
     margin: 10,
     padding: 10,
