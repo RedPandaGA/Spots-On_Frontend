@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: COLORS.secondary,
-    fontSize: 40,
+    fontSize: 35,
     fontWeight: "bold",
     alignSelf: "center",
   },
@@ -149,11 +149,10 @@ const styles = StyleSheet.create({
     tintColor: COLORS.secondary
   },
   threeDots: {
-    height: 40,
-    width: 40,
-    position: "absolute",
-    top: -20,
-    right: 10,
+    height: 30,
+    width: 30,
+    top: -18,
+    left: 150,
     tintColor: COLORS.secondary
   },
   inputToolbarContainer: {
