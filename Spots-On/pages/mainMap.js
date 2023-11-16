@@ -437,8 +437,14 @@ export default function MainMap({ navigation }) {
                 title="Your Location"
               >
                 <Image
-                  source={require("../assets/marker.png")}
-                  style={{ width: 30, height: 30 }}
+                  source={require("../assets/profilePicture.png")}
+                  style={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: 100,
+                    borderWidth: 2,
+                    borderColor: COLORS.primary,
+                  }}
                 />
               </Marker>
             )}
