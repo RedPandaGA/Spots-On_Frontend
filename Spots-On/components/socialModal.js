@@ -15,13 +15,7 @@ import {
 import Bar from "./bar";
 import COLORS from "./colors";
 
-const SocialModal = ({
-  isModalVisible,
-  hideModal,
-  setViewEvents,
-  setCreateEvent,
-  setCreateColony,
-}) => {
+const SocialModal = ({ isModalVisible, hideModal, showModal }) => {
   const [joinColonyCode, setJoinColonyCode] = useState("");
 
   const [statusInput, setStatusInput] = useState("");
@@ -108,20 +102,20 @@ const SocialModal = ({
     },
     () => {
       hideModal();
-      setCreateColony(true);
+      showModal("createColony");
       console.log("Create Colony clicked");
       // Handle specific action for Button 5
     },
     () => {
       hideModal();
-      setViewEvents(true);
+      showModal("viewEvents");
       console.log("View Events clicked");
       // Handle specific action for Button 2
       // You can customize this function for each button
     },
     () => {
       hideModal();
-      setCreateEvent(true);
+      showModal("createEvent");
       console.log("Create Event clicked");
       // Handle specific action for Button 3
     },

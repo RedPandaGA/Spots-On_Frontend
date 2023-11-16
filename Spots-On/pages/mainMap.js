@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import {
   StyleSheet,
-  Text,
   View,
   TouchableOpacity,
   Keyboard,
@@ -9,12 +8,7 @@ import {
   KeyboardAvoidingView,
   StatusBar,
 } from "react-native";
-import MapView, {
-  Callout,
-  CalloutSubview,
-  Circle,
-  Marker,
-} from "react-native-maps";
+import MapView, { Circle, Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import MapButton from "../components/mapButton";
 import SearchBar from "../components/searchBar";
@@ -27,6 +21,8 @@ import CreateColonyModal from "../components/createColonyModal";
 import CreateSpotModal from "../components/spotsModal";
 import ChatModal from "../components/chatModal";
 import COLORS from "../components/colors";
+import Spot from "../components/spot";
+import Splash from "./splash";
 
 export default function MainMap({ navigation }) {
   // Manage the location of the map
@@ -95,46 +91,20 @@ export default function MainMap({ navigation }) {
     }
   };
 
-  //   const defaultRegion = {
-  //     latitude: 30.413879856613153,
-  //     latitudeDelta: 0.04086512053074287,
-  //     longitude: -91.17771545364813,
-  //     longitudeDelta: 0.024220807363050767,
-  //   };
+  // Track map type changes
+  const [mapType, setMapType] = useState("standard");
 
-  //   // Manage the location of the draggable Marker
-  //   const [draggableMarkerCoord, setDraggableMarkerCoord] = useState({
-  //     latitude: 30.41,
-  //     longitude: -91.18,
-  //   });
+  const handleMapType = () => {
+    if (mapType == "standard") {
+      setMapType("satellite");
+    } else {
+      setMapType("standard");
+    }
+  };
 
   // Track incognito and status choices
   const [incognito, setIncognito] = useState(false);
   const [showStatus, setShowStatus] = useState(false);
-
-  // Track social button modal
-  const [isSocialModalVisible, setIsSocialModalVisible] = useState(false);
-
-  // Track friends button modal
-  const [isFriendsModalVisible, setIsFriendsModalVisible] = useState(false);
-  // Track view events modal
-  const [isViewEventsModalVisible, setIsViewEventsModalVisible] =
-    useState(false);
-
-  // Track create event modal
-  const [isCreateEventModalVisible, setIsCreateEventModalVisible] =
-    useState(false);
-
-  // Track create colony modal
-  const [isCreateColonyModalVisible, setIsCreateColonyModalVisible] =
-    useState(false);
-
-  const [isSpotsModalVisible, setIsSpotsModalVisible] = useState(false);
-
-  const [isChatModalVisible, setIsChatModalVisible] = useState(false);
-
-  // Track map type changes
-  const [mapType, setMapType] = useState("standard");
 
   const handleIncognito = () => {
     console.log("Pressed incognito button");
@@ -154,48 +124,31 @@ export default function MainMap({ navigation }) {
     }
   };
 
-  const showSocialModal = () => {
-    setIsSocialModalVisible(true);
+  // Create a state variable to control the visibility of all modals
+  const [modals, setModals] = useState({
+    social: false,
+    friends: false,
+    viewEvents: false,
+    createEvent: false,
+    createColony: false,
+    spots: false,
+    chat: false,
+  });
+
+  // Function to show a specific modal
+  const showModal = (modalKey) => {
+    setModals((prevModals) => ({
+      ...prevModals,
+      [modalKey]: true,
+    }));
   };
 
-  const hideSocialModal = () => {
-    setIsSocialModalVisible(false);
-  };
-
-  const showFriendsModal = () => {
-    setIsFriendsModalVisible(true);
-  };
-
-  const hideFriendsModal = () => {
-    setIsFriendsModalVisible(false);
-  };
-
-  const showChatModal = () => {
-    setIsChatModalVisible(true);
-  };
-
-  const hideChatModal = () => {
-    setIsChatModalVisible(false);
-  };
-
-  const hideViewEventsModal = () => {
-    setIsViewEventsModalVisible(false);
-  };
-
-  const hideCreateEventModal = () => {
-    setIsCreateEventModalVisible(false);
-  };
-
-  const hideCreateColonyModal = () => {
-    setIsCreateColonyModalVisible(false);
-  };
-
-  const handleMapType = () => {
-    if (mapType == "standard") {
-      setMapType("satellite");
-    } else {
-      setMapType("standard");
-    }
+  // Function to hide a specific modal
+  const hideModal = (modalKey) => {
+    setModals((prevModals) => ({
+      ...prevModals,
+      [modalKey]: false,
+    }));
   };
 
   const [spots, setSpots] = useState([]);
@@ -208,14 +161,6 @@ export default function MainMap({ navigation }) {
 
   const cancelCreateSpot = () => {
     setCreateSpot(false);
-  };
-
-  const showSpotsModal = () => {
-    setIsSpotsModalVisible(true);
-  };
-
-  const hideSpotsModal = () => {
-    setIsSpotsModalVisible(false);
   };
 
   const [newSpot, setNewSpot] = useState({
@@ -266,14 +211,6 @@ export default function MainMap({ navigation }) {
       return spot;
     });
     setSpots(updatedSpots);
-  };
-
-  const handleMarkerCalloutPress = (spotId) => {
-    // Handle the press of the callout button
-    // You can implement your logic to open an edit screen or perform any other action
-    console.log(`Edit button pressed for spot with id ${spotId}`);
-
-    // Here, you might want to navigate to an edit screen or perform other actions
   };
 
   const handleMarkerDragEnd = (event, spotId) => {
@@ -343,8 +280,13 @@ export default function MainMap({ navigation }) {
 
   // const modalPosition = new Animated.Value(0);
 
+  if (initialRegion === null || currentRegion == null) {
+    return <Splash />;
+  }
+
   return (
-    <KeyboardAvoidingView behavior="height" enabled={false}>
+    // <KeyboardAvoidingView behavior="height" enabled={false}>
+    <View>
       {initialRegion && currentRegion && (
         <View>
           <StatusBar />
@@ -374,59 +316,16 @@ export default function MainMap({ navigation }) {
                                   title='draggable marker'
                               /> */}
             {spots.map((spot) => (
-              <View key={spot.id}>
-                <Marker
-                  draggable
-                  coordinate={spot.coordinate}
-                  title={spot.name}
-                  description={spot.colonyName}
-                  onDrag={(e) => handleMarkerDrag(e, spot.id)}
-                  onDragEnd={(e) => handleMarkerDragEnd(e, spot.id)}
-                  // onDragEnd={(e) => handleMarkerDragEnd(e, spot.id)}
-                >
-                  <Image
-                    source={require("../assets/marker.png")}
-                    style={{ width: 30, height: 30 }}
-                  />
-                  <Callout style={styles.callout}>
-                    <View style={styles.calloutTextContainer}>
-                      <Text style={styles.spotName}>{spot.name}</Text>
-                      <Text style={styles.colonyName}>{spot.colonyName}</Text>
-                    </View>
-                    <View style={styles.calloutImageContainer}>
-                      <CalloutSubview
-                        onPress={() => console.log("Clicked edit spot")}
-                      >
-                        <Image
-                          source={require("../assets/pencil.png")}
-                          style={styles.editImage}
-                        />
-                      </CalloutSubview>
-                      <CalloutSubview
-                        onPress={() =>
-                          console.log("Clicked description/spot info")
-                        }
-                      >
-                        <Image
-                          source={require("../assets/info.png")}
-                          style={styles.infoImage}
-                        />
-                      </CalloutSubview>
-                    </View>
-                  </Callout>
-                </Marker>
-                <Circle
-                  center={spot.coordinate}
-                  radius={spot.radius}
-                  strokeWidth={1}
-                  strokeColor={spot.safe ? "#2C6765" : "#FF5555"}
-                  fillColor={
-                    spot.safe
-                      ? "rgba(44, 103, 101, .3)"
-                      : "rgba(255, 85, 85, .3)"
-                  }
-                />
-              </View>
+              <Spot
+                key={spot.id}
+                coordinate={spot.coordinate}
+                spotName={spot.name}
+                colonyName={spot.colonyName}
+                spotRadius={spot.radius}
+                isSafe={spot.safe}
+                onDrag={(e) => handleMarkerDrag(e, spot.id)}
+                onDragEnd={(e) => handleMarkerDragEnd(e, spot.id)}
+              />
             ))}
             {currentLocation && (
               <Marker
@@ -486,27 +385,21 @@ export default function MainMap({ navigation }) {
             imageSource={require("../assets/people.png")}
             style={styles.friendsButton}
             onPress={() => {
-              showFriendsModal();
+              showModal("friends");
               console.log("Pressed friends button");
             }}
             width={60}
             height={60}
           />
-          {/* {isFriendsModalVisible && (
-                              <FriendsModal
-                                  isModalVisible={isFriendsModalVisible}
-                                  hideModal={hideFriendsModal}
-                              />     
-                          )} */}
           <FriendsModal
-            isModalVisible={isFriendsModalVisible}
-            hideModal={hideFriendsModal}
+            isModalVisible={modals.friends}
+            hideModal={() => hideModal("friends")}
           />
 
           {/* Social Button */}
           <TouchableOpacity
             onPress={() => {
-              showSocialModal();
+              showModal("social");
               console.log("Pressed social button");
             }}
             style={styles.socialButtonOnMap}
@@ -518,34 +411,35 @@ export default function MainMap({ navigation }) {
               />
             </View>
           </TouchableOpacity>
-          {isSocialModalVisible && (
+          {modals.social && (
             <SocialModal
-              isModalVisible={isSocialModalVisible}
-              hideModal={hideSocialModal}
-              setViewEvents={setIsViewEventsModalVisible}
-              setCreateEvent={setIsCreateEventModalVisible}
-              setCreateColony={setIsCreateColonyModalVisible}
+              isModalVisible={modals.social}
+              hideModal={() => hideModal("social")}
+              showModal={showModal}
+              // setViewEvents={setIsViewEventsModalVisible}
+              // setCreateEvent={setIsCreateEventModalVisible}
+              // setCreateColony={setIsCreateColonyModalVisible}
             />
           )}
-          {isViewEventsModalVisible && (
+          {modals.viewEvents && (
             <ViewEventsModal
-              isModalVisible={isViewEventsModalVisible}
-              hideModal={hideViewEventsModal}
-              setSocialModal={setIsSocialModalVisible}
+              isModalVisible={modals.viewEvents}
+              hideModal={() => hideModal("viewEvents")}
+              showModal={showModal}
             />
           )}
-          {isCreateEventModalVisible && (
+          {modals.createEvent && (
             <CreateEventModal
-              isModalVisible={isCreateEventModalVisible}
-              hideModal={hideCreateEventModal}
-              setSocialModal={setIsSocialModalVisible}
+              isModalVisible={modals.createEvent}
+              hideModal={() => hideModal("createEvent")}
+              showModal={showModal}
             />
           )}
-          {isCreateColonyModalVisible && (
+          {modals.createColony && (
             <CreateColonyModal
-              isModalVisible={isCreateColonyModalVisible}
-              hideModal={hideCreateColonyModal}
-              setSocialModal={setIsSocialModalVisible}
+              isModalVisible={modals.createColony}
+              hideModal={() => hideModal("createColony")}
+              showModal={showModal}
             />
           )}
           {/* Chats Button */}
@@ -553,15 +447,15 @@ export default function MainMap({ navigation }) {
             imageSource={require("../assets/speech-bubble.png")}
             style={styles.chatButton}
             onPress={() => {
-              showChatModal();
+              showModal("chat");
               console.log("Pressed chat button");
             }}
             width={60}
             height={60}
           />
           <ChatModal
-            isModalVisible={isChatModalVisible}
-            hideModal={hideChatModal}
+            isModalVisible={modals.chat}
+            hideModal={() => hideModal("chat")}
           />
 
           {/* ------ SEARCH BAR ------ */}
@@ -620,16 +514,16 @@ export default function MainMap({ navigation }) {
             style={styles.spotsButton}
             active={createSpot}
             onPress={() => {
-              showSpotsModal();
+              showModal("spots");
               handleCreateSpot();
             }}
             width={45}
             height={45}
           />
-          {isSpotsModalVisible && (
+          {modals.spots && (
             <CreateSpotModal
-              isModalVisible={isSpotsModalVisible}
-              hideModal={hideSpotsModal}
+              isModalVisible={modals.spot}
+              hideModal={() => hideModal("spots")}
               cancelCreateSpot={cancelCreateSpot}
               newSpot={newSpot}
               setNewSpot={setNewSpot}
@@ -649,7 +543,9 @@ export default function MainMap({ navigation }) {
           />
         </View>
       )}
-    </KeyboardAvoidingView>
+    </View>
+
+    // </KeyboardAvoidingView>
   );
 }
 

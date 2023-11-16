@@ -15,7 +15,7 @@ import {
 import Bar from "./bar";
 import COLORS from "./colors";
 
-const CreateColonyModal = ({ isModalVisible, hideModal, setSocialModal }) => {
+const CreateColonyModal = ({ isModalVisible, hideModal, showModal }) => {
   const [isPrivateColony, setIsPrivateColony] = useState(true);
   const [isPublicColony, setIsPublicColony] = useState(false);
 
@@ -71,7 +71,7 @@ const CreateColonyModal = ({ isModalVisible, hideModal, setSocialModal }) => {
               <TouchableOpacity
                 onPress={() => {
                   hideModal();
-                  setSocialModal(true);
+                  showModal("social");
                   console.log("Pressed back button to social");
                 }}
               >

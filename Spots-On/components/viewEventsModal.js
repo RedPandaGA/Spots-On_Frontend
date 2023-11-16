@@ -14,7 +14,7 @@ import {
 import Bar from "./bar";
 import COLORS from "./colors";
 
-const ViewEventsModal = ({ isModalVisible, hideModal, setSocialModal }) => {
+const ViewEventsModal = ({ isModalVisible, hideModal, showModal }) => {
   const [isTodayPressed, setIsTodayPressed] = useState(true);
   const [isUpcomingPressed, setIsUpcomingPressed] = useState(false);
 
@@ -137,7 +137,7 @@ const ViewEventsModal = ({ isModalVisible, hideModal, setSocialModal }) => {
             <TouchableOpacity
               onPress={() => {
                 hideModal();
-                setSocialModal(true);
+                showModal("social");
                 console.log("Pressed back button to social");
               }}
             >
