@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontWeight: "bold",
     width: "60%",
-    marginLeft: 20,
+    // marginLeft: 20,
     alignSelf: "center",
   },
   subtitle: {

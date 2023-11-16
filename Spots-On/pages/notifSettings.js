@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
     fontSize: 40,
     textAlign: "center",
     fontWeight: "bold",
-    width: "80%",
+    width: "75%",
     marginLeft: 20,
     alignSelf: "center",
   },

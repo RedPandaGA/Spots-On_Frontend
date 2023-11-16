@@ -1,15 +1,11 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView } from "react-native";
 import COLORS from "../components/colors";
 
 export default function Settings({ navigation }) {
-  const colonyList = [
-    "Notifications",
-    "Colony Management",
-    "Location/Status Sharing",
-  ];
 
-  // Create an array of functions to handle button actions
+  const colonyList = ["Notifications", "Colony Management", "Location/Status Sharing"];
+
   const colonyButtonActions = [
     () => {
       console.log("Notifications clicked");
@@ -34,26 +30,18 @@ export default function Settings({ navigation }) {
     },
     () => {
       console.log("Privacy & Security clicked");
-      // Handle specific action for Button 2
-      // You can customize this function for each button
     },
     () => {
       console.log("About clicked");
-      // Handle specific action for Button 3
     },
     () => {
       console.log("Log out clicked");
-      // Handle specific action for Button 3
-    },
+    }
   ];
 
   const renderColonyButton = (text, index) => {
     return (
-      <TouchableOpacity
-        style={styles.buttons}
-        onPress={colonyButtonActions[index]}
-        key={text}
-      >
+      <TouchableOpacity style={styles.buttons} onPress={colonyButtonActions[index]} key={text}>
         <Text style={styles.buttonText}>{text}</Text>
       </TouchableOpacity>
     );
@@ -61,75 +49,65 @@ export default function Settings({ navigation }) {
 
   const renderUniversalButton = (text, index) => {
     return (
-      <TouchableOpacity
-        style={styles.buttons}
-        onPress={universalButtonActions[index]}
-        key={text}
-      >
+      <TouchableOpacity style={styles.buttons} onPress={universalButtonActions[index]} key={text}>
         <Text style={styles.buttonText}>{text}</Text>
       </TouchableOpacity>
     );
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity
-          onPress={() => {
+    <ScrollView style={styles.container}>
+      <View >
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => {
             navigation.navigate("Home");
             console.log("Pressed back button");
-          }}
-        >
-          <View style={styles.backButton}>
-            <Image
-              source={require("../assets/back-button-secondary-color.png")}
-              style={styles.image}
-            />
-          </View>
-        </TouchableOpacity>
-        <Text style={styles.title}>Settings</Text>
+          }}>
+            <View style={styles.backButton}>
+              <Image
+                source={require("../assets/back-button-secondary-color.png")}
+                style={styles.image}
+              />
+            </View>
+          </TouchableOpacity>
+          <Text style={styles.title}>Settings</Text>
+        </View>
+        <Text style={styles.subtitle}>ColonyName settings</Text>
+        <View style={styles.settingsItems}>
+          {colonyList.map((buttonText, index) => renderColonyButton(buttonText, index))}
+        </View>
+        <Text style={styles.subtitle}>Universal settings</Text>
+        <View style={styles.settingsItems}>
+          {universalList.map((buttonText, index) => renderUniversalButton(buttonText, index))}
+        </View>
       </View>
-      <Text style={styles.subtitle}>ColonyName settings</Text>
-      <View style={styles.settingsItems}>
-        {colonyList.map((buttonText, index) =>
-          renderColonyButton(buttonText, index)
-        )}
-      </View>
-      <Text style={styles.subtitle}>Universal settings</Text>
-      <View style={styles.settingsItems}>
-        {universalList.map((buttonText, index) =>
-          renderUniversalButton(buttonText, index)
-        )}
-      </View>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#2C6765",
+    backgroundColor: COLORS.primary,
   },
   header: {
     marginTop: 50,
   },
   title: {
-    color: "#E7EFCA",
+    color: COLORS.secondary,
     fontSize: 40,
-    textAlign: "center",
     fontWeight: "bold",
     letterSpacing: 1,
-    width: "50%",
     alignSelf: "center",
   },
   subtitle: {
-    color: "#D5B747",
+    color: COLORS.gold,
     fontSize: 20,
     fontWeight: "bold",
     marginLeft: 20,
     marginBottom: -15,
     paddingTop: 20,
-    opacity: 0.9,
+    opacity: .9
   },
   image: {
     height: 50,
@@ -139,20 +117,20 @@ const styles = StyleSheet.create({
   },
   settingsItems: {
     marginTop: 20,
-    backgroundColor: "#E7EFCA",
+    backgroundColor: COLORS.secondary,
     width: "90%",
     alignSelf: "center",
     borderRadius: 15,
   },
   buttons: {
-    alignSelf: "center",
     justifyContent: "center",
-    marginVertical: 20,
+    paddingVertical: 20,
   },
   buttonText: {
     textAlign: "center",
     fontSize: 20,
-    color: "#2C6765",
+    color: COLORS.primary,
     fontWeight: "bold",
-  },
-});
+  }
+})
+
