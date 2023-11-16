@@ -19,18 +19,29 @@ const ThreeDotsModal = ({ isModalVisible, hideModal, setSocialModal }) => {
   const [isMute, setIsMute] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
 
-  const screenHeight = Dimensions.get("window").height;
-  const percentageThreshold = 0.6;
+  const toggleMute = () => {
+    setIsMute((prevState) => !prevState);
+    console.log("pressed mute")
+  };
 
-  const panResponder = PanResponder.create({
+  const modalHeight = -510;
+  const screenHeight = Dimensions.get("window").height;
+  const panThreshold = modalHeight * 0.6;
+
+    const panResponder = PanResponder.create({
     onStartShouldSetPanResponder: (e, gestureState) => {
-      // Calculate the threshold based on a percentage of the screen height
-      const threshold = screenHeight * percentageThreshold;
-      return e.nativeEvent.pageY < threshold;
+      const withinModal =
+        e.nativeEvent.locationY < panThreshold && gestureState.dy > 0;
+      return withinModal;
+    },
+    onMoveShouldSetPanResponder: (e, gestureState) => {
+      const withinModal =
+        e.nativeEvent.locationY < panThreshold && gestureState.dy > 0;
+      return withinModal;
     },
     onPanResponderMove: (event, gestureState) => {
       if (gestureState.dy > 0) {
-        if (gestureState.dy < screenHeight * percentageThreshold) {
+        if (gestureState.dy < panThreshold) {
           modalPosition.setValue(gestureState.dy);
         }
       }
@@ -39,12 +50,16 @@ const ThreeDotsModal = ({ isModalVisible, hideModal, setSocialModal }) => {
       if (gestureState.dy > 200) {
         hideModal();
       } else {
-        modalPosition.setValue(0);
+        Animated.spring(modalPosition, {
+          toValue: 0,
+          useNativeDriver: true,
+        }).start();
       }
     },
   });
 
-  const modalPosition = new Animated.Value(-510);
+
+  const modalPosition = new Animated.Value(modalHeight);
 
   return (
     <Modal
@@ -55,7 +70,7 @@ const ThreeDotsModal = ({ isModalVisible, hideModal, setSocialModal }) => {
     >
       <KeyboardAvoidingView
         style={{ flex: 1 }}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        behavior={Platform.OS === "ios" ? "padding" : null}
       >
         <View style={styles.modalContainer} {...panResponder.panHandlers}>
           <Animated.View
@@ -65,15 +80,10 @@ const ThreeDotsModal = ({ isModalVisible, hideModal, setSocialModal }) => {
             ]}
           >
             <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                style={
-                  isMute ? styles.buttonPressed : styles.buttonNormal
-                }
-                onPress={() => {
-                  setIsMute(true);
-                  console.log("Pressed mute");
-                }}
-              >
+            <TouchableOpacity
+          style={isMute ? styles.buttonPressed : styles.buttonNormal}
+          onPress={toggleMute} // Use toggleMute function
+        >
                 <Text style={styles.buttonText}>Mute</Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -104,7 +114,7 @@ const ThreeDotsModal = ({ isModalVisible, hideModal, setSocialModal }) => {
                 keyboardType="numeric"
               />
             </View>
-            <Bar color={COLORS.primary}/>
+            <Bar color={COLORS.primary} />
           </Animated.View>
         </View>
       </KeyboardAvoidingView>
