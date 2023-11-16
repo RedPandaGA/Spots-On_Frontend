@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
-  Modal,
   Dimensions,
   StyleSheet,
   View,
@@ -14,6 +13,7 @@ import {
 } from "react-native";
 import Bar from "./bar";
 import COLORS from "./colors";
+import Modal from "react-native-modal";
 
 const ThreeDotsModal = ({ isModalVisible, hideModal, setSocialModal }) => {
   const [isMute, setIsMute] = useState(false);
@@ -24,55 +24,23 @@ const ThreeDotsModal = ({ isModalVisible, hideModal, setSocialModal }) => {
     console.log("pressed mute")
   };
 
-  const modalHeight = -510;
-  const screenHeight = Dimensions.get("window").height;
-  const panThreshold = modalHeight * 0.6;
-
-    const panResponder = PanResponder.create({
-    onStartShouldSetPanResponder: (e, gestureState) => {
-      const withinModal =
-        e.nativeEvent.locationY < panThreshold && gestureState.dy > 0;
-      return withinModal;
-    },
-    onMoveShouldSetPanResponder: (e, gestureState) => {
-      const withinModal =
-        e.nativeEvent.locationY < panThreshold && gestureState.dy > 0;
-      return withinModal;
-    },
-    onPanResponderMove: (event, gestureState) => {
-      if (gestureState.dy > 0) {
-        if (gestureState.dy < panThreshold) {
-          modalPosition.setValue(gestureState.dy);
-        }
-      }
-    },
-    onPanResponderRelease: (event, gestureState) => {
-      if (gestureState.dy > 200) {
-        hideModal();
-      } else {
-        Animated.spring(modalPosition, {
-          toValue: 0,
-          useNativeDriver: true,
-        }).start();
-      }
-    },
-  });
-
-
-  const modalPosition = new Animated.Value(modalHeight);
+  const modalPosition = -490;
 
   return (
     <Modal
-      animationType="slide"
+      animationIn="slideInDown"
+      animationOut="slideOutUp"
+      onSwipeComplete={hideModal}
+      backdropOpacity={0}
+      swipeDirection="up"
       transparent
       visible={isModalVisible}
-      onRequestClose={hideModal}
     >
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : null}
       >
-        <View style={styles.modalContainer} {...panResponder.panHandlers}>
+        <View style={styles.modalContainer}>
           <Animated.View
             style={[
               styles.modalContent,
@@ -80,10 +48,10 @@ const ThreeDotsModal = ({ isModalVisible, hideModal, setSocialModal }) => {
             ]}
           >
             <View style={styles.buttonContainer}>
-            <TouchableOpacity
-          style={isMute ? styles.buttonPressed : styles.buttonNormal}
-          onPress={toggleMute} // Use toggleMute function
-        >
+              <TouchableOpacity
+                style={isMute ? styles.buttonPressed : styles.buttonNormal}
+                onPress={toggleMute} // Use toggleMute function
+              >
                 <Text style={styles.buttonText}>Mute</Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -133,7 +101,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     padding: 20,
     height: 225,
-    width: "95%",
+    width: "103%",
     alignSelf: "center",
     alignItems: "center",
   },
