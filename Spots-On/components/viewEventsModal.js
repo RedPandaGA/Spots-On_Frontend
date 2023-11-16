@@ -142,7 +142,7 @@ const ViewEventsModal = ({ isModalVisible, hideModal, setSocialModal }) => {
               }}
             >
               <Image
-                source={require("../assets/back-button-primary-color.png")}
+                source={require("../assets/backButton.png")}
                 style={styles.backButton}
               />
             </TouchableOpacity>
@@ -261,6 +261,7 @@ const styles = StyleSheet.create({
     width: 50,
     position: "absolute",
     left: -100,
+    tintColor: COLORS.primary,
   },
   infoContainer: {
     flexDirection: "row",

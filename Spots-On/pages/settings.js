@@ -66,7 +66,7 @@ export default function Settings({ navigation }) {
           }}>
             <View style={styles.backButton}>
               <Image
-                source={require("../assets/back-button-secondary-color.png")}
+                source={require("../assets/backButton.png")}
                 style={styles.image}
               />
             </View>
@@ -115,6 +115,7 @@ const styles = StyleSheet.create({
     width: 50,
     position: "absolute",
     left: 20,
+    tintColor: COLORS.secondary
   },
   settingsItems: {
     marginTop: 20,

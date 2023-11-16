@@ -155,7 +155,7 @@ const SocialModal = ({
               }}
             >
               <Image
-                source={require("../assets/back-button-primary-color.png")}
+                source={require("../assets/backButton.png")}
                 style={styles.image}
               />
             </TouchableOpacity>
@@ -190,7 +190,7 @@ const SocialModal = ({
               }}
             >
               <Image
-                source={require("../assets/back-button-primary-color.png")}
+                source={require("../assets/backButton.png")}
                 style={styles.image}
               />
             </TouchableOpacity>
@@ -298,6 +298,7 @@ const styles = StyleSheet.create({
   image: {
     width: 40,
     height: 40,
+    tintColor: COLORS.primary,
   },
 });
 

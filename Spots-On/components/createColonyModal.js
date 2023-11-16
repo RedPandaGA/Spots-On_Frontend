@@ -76,7 +76,7 @@ const CreateColonyModal = ({ isModalVisible, hideModal, setSocialModal }) => {
                 }}
               >
                 <Image
-                  source={require("../assets/back-button-primary-color.png")}
+                  source={require("../assets/backButton.png")}
                   style={styles.backButton}
                 />
               </TouchableOpacity>
@@ -200,6 +200,7 @@ const styles = StyleSheet.create({
     width: 46,
     position: "absolute",
     left: -60,
+    tintColor: COLORS.primary
   },
   input: {
     height: 60,

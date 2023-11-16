@@ -79,7 +79,7 @@ export default function ColonyChat({ navigation }) {
         }}>
           <View>
             <Image 
-              source={require('../assets/back-button-secondary-color.png')}
+              source={require('../assets/backButton.png')}
               style={styles.image}
             />
           </View>
@@ -91,7 +91,7 @@ export default function ColonyChat({ navigation }) {
         }}>
           <View style={styles.threeDots}>
             <Image 
-              source={require('../assets/back-button-secondary-color.png')}
+              source={require('../assets/threeDots.png')}
               style={styles.threeDots}
             />
           </View>
@@ -149,6 +149,7 @@ const styles = StyleSheet.create({
     width: 50,
     position: 'absolute',
     left: 20,
+    tintColor: COLORS.secondary
   },
   threeDots: {
     height: 40,
@@ -156,6 +157,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: -20,
     right: 10,
+    tintColor: COLORS.secondary
   },
   inputToolbarContainer: {
     flexDirection: 'row',
