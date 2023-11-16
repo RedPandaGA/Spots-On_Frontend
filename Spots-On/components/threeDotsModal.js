@@ -44,7 +44,7 @@ const ThreeDotsModal = ({ isModalVisible, hideModal, setSocialModal }) => {
     },
   });
 
-  const modalPosition = new Animated.Value(0);
+  const modalPosition = new Animated.Value(-510);
 
   return (
     <Modal
@@ -104,7 +104,7 @@ const ThreeDotsModal = ({ isModalVisible, hideModal, setSocialModal }) => {
                 keyboardType="numeric"
               />
             </View>
-            <Bar color={COLORS.primary} />
+            <Bar color={COLORS.primary}/>
           </Animated.View>
         </View>
       </KeyboardAvoidingView>
@@ -120,10 +120,11 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     backgroundColor: COLORS.secondary,
-    borderTopLeftRadius: 50,
-    borderTopRightRadius: 50,
+    borderRadius: 50,
     padding: 20,
-    height: 400,
+    height: 225,
+    width: "95%",
+    alignSelf: "center",
     alignItems: "center",
   },
   buttonContainer: {
@@ -133,14 +134,14 @@ const styles = StyleSheet.create({
   },
   buttonNormal: {
     borderRadius: 30,
-    width: 100,
+    width: 93,
     borderWidth: 2,
     borderColor: COLORS.darkersecondary,
     alignItems: "center",
   },
   buttonPressed: {
     borderRadius: 30,
-    width: 100,
+    width: 93,
     borderWidth: 2,
     borderColor: COLORS.darkersecondary,
     alignItems: "center",
@@ -163,9 +164,10 @@ const styles = StyleSheet.create({
     color: COLORS.primary,
     fontWeight: "bold",
     fontSize: 18,
+    marginBottom: 12,
   },
   code: {
-    fontSize: 45,
+    fontSize: 42,
     fontWeight: "bold",
     color: COLORS.primary,
     paddingVertical: 5,
