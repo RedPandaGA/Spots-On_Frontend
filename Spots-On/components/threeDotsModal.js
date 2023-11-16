@@ -12,19 +12,36 @@ import {
   TextInput,
   KeyboardAvoidingView,
 } from "react-native";
-import Bar from "./bar"; // Import any necessary components and styles
+import Bar from "./bar";
 import COLORS from "./colors";
 
 const ThreeDotsModal = ({ isModalVisible, hideModal, setSocialModal }) => {
-  const [isPrivateColony, setIsPrivateColony] = useState(true);
-  const [isPublicColony, setIsPublicColony] = useState(false);
-  const [colonyName, setColonyName] = useState("");
+  const [isMute, setIsMute] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState("");
 
   const screenHeight = Dimensions.get("window").height;
   const percentageThreshold = 0.6;
 
   const panResponder = PanResponder.create({
-    // ...PanResponder logic remains the same
+    onStartShouldSetPanResponder: (e, gestureState) => {
+      // Calculate the threshold based on a percentage of the screen height
+      const threshold = screenHeight * percentageThreshold;
+      return e.nativeEvent.pageY < threshold;
+    },
+    onPanResponderMove: (event, gestureState) => {
+      if (gestureState.dy > 0) {
+        if (gestureState.dy < screenHeight * percentageThreshold) {
+          modalPosition.setValue(gestureState.dy);
+        }
+      }
+    },
+    onPanResponderRelease: (event, gestureState) => {
+      if (gestureState.dy > 200) {
+        hideModal();
+      } else {
+        modalPosition.setValue(0);
+      }
+    },
   });
 
   const modalPosition = new Animated.Value(0);
@@ -47,23 +64,47 @@ const ThreeDotsModal = ({ isModalVisible, hideModal, setSocialModal }) => {
               { transform: [{ translateY: modalPosition }] },
             ]}
           >
-            <Bar color={"#2C6765"} />
-            <View style={styles.header}>
+            <View style={styles.buttonContainer}>
               <TouchableOpacity
+                style={
+                  isMute ? styles.buttonPressed : styles.buttonNormal
+                }
                 onPress={() => {
-                  hideModal();
-                  setSocialModal(true);
-                  console.log("Pressed back button to social");
+                  setIsMute(true);
+                  console.log("Pressed mute");
                 }}
               >
-                <Image
-                  source={require("../assets/backButton.png")}
-                  style={styles.backButton}
-                />
+                <Text style={styles.buttonText}>Mute</Text>
               </TouchableOpacity>
-              <Text style={styles.modalTitle}>Create Colony</Text>
+              <TouchableOpacity
+                style={styles.buttonNormal}
+                onPress={() => {
+                  console.log("Pressed share");
+                }}
+              >
+                <Text style={styles.buttonText}>Share</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.buttonNormal}
+                onPress={() => {
+                  console.log("Pressed Leave");
+                }}
+              >
+                <Text style={styles.buttonText}>Leave</Text>
+              </TouchableOpacity>
             </View>
-            {/* Rest of the content remains the same */}
+            <Text style={styles.code}>M1L4N1SC00L</Text>
+            <View style={{ width: "100%" }}>
+              <TextInput
+                style={styles.input}
+                placeholder="Phone #"
+                placeholderTextColor={COLORS.primary}
+                value={phoneNumber}
+                onChangeText={(text) => setPhoneNumber(text)}
+                keyboardType="numeric"
+              />
+            </View>
+            <Bar color={COLORS.primary} />
           </Animated.View>
         </View>
       </KeyboardAvoidingView>
@@ -85,39 +126,28 @@ const styles = StyleSheet.create({
     height: 400,
     alignItems: "center",
   },
-  modalTitle: {
-    fontSize: 36,
-    fontWeight: "bold",
-    marginBottom: 10,
-    color: COLORS.primary,
-    textAlign: "center",
-    justifyContent: "center",
-  },
   buttonContainer: {
     flexDirection: "row",
     width: "100%",
     justifyContent: "space-around",
-    marginVertical: 5,
   },
   buttonNormal: {
     borderRadius: 30,
-    width: 160,
-    borderWidth: 1.5,
-    borderColor: "#ccc",
-    marginVertical: 5,
+    width: 100,
+    borderWidth: 2,
+    borderColor: COLORS.darkersecondary,
     alignItems: "center",
   },
   buttonPressed: {
     borderRadius: 30,
-    width: 160,
-    borderWidth: 1.5,
-    borderColor: "#ccc",
-    marginVertical: 5,
+    width: 100,
+    borderWidth: 2,
+    borderColor: COLORS.darkersecondary,
     alignItems: "center",
-    backgroundColor: "rgba(44, 103, 101, .2)",
+    backgroundColor: COLORS.darkersecondary,
   },
   buttonText: {
-    fontSize: 20,
+    fontSize: 18,
     color: COLORS.primary,
     textAlign: "center",
     fontWeight: "bold",
@@ -125,28 +155,20 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     alignSelf: "center",
   },
-  header: {
-    flexDirection: "row",
-    display: "flex",
-    alignContent: "space-around",
-  },
-  backButton: {
-    height: 46,
-    width: 46,
-    position: "absolute",
-    left: -60,
-    tintColor: COLORS.primary
-  },
   input: {
     height: 60,
-    borderColor: "#ccc",
-    borderWidth: 2,
-    margin: 10,
+    backgroundColor: COLORS.darkersecondary,
     padding: 10,
-    borderRadius: 10,
+    borderRadius: 15,
     color: COLORS.primary,
     fontWeight: "bold",
     fontSize: 18,
+  },
+  code: {
+    fontSize: 45,
+    fontWeight: "bold",
+    color: COLORS.primary,
+    paddingVertical: 5,
   },
 });
 

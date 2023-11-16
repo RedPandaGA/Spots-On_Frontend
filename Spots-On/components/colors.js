@@ -11,8 +11,9 @@ const COLORS = {
 
   gold: "#D5B747",
 
-  darkblackgreen: "#305c5c",
-  lightwhitegreen: "#507c74",
+  darkerprimary: "#305c5c",
+  lighterprimary: "#507c74",
+  darkersecondary: "#d0dcbc",
   primary: "#2C6765",
   secondary: "#E7EFCA",
   status: "#D5B747",

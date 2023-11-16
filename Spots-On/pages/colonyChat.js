@@ -14,7 +14,7 @@ const CustomBubble = (props) => {
           backgroundColor: COLORS.secondary,
         },
         right: {
-          backgroundColor: COLORS.darkblackgreen,
+          backgroundColor: COLORS.darkerprimary,
         },
       }}
     >
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     color: COLORS.secondary,
     fontSize: 17,
-    backgroundColor: COLORS.darkblackgreen,
+    backgroundColor: COLORS.darkerprimary,
   },
   sendButton: {
     marginLeft: 10,

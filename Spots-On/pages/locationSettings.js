@@ -59,10 +59,10 @@ export default function LocationSharing({ navigation }) {
                     onValueChange={() =>
                         handleHibernationToggle(text)}
                     trackColor={{
-                        false: COLORS.darkblackgreen, // color when switch is off
+                        false: COLORS.darkerprimary, // color when switch is off
                         true: COLORS.gold,  // color when switch is on
                     }}
-                    thumbColor={hibernationSwitches[text] ? COLORS.white : COLORS.lightwhitegreen}
+                    thumbColor={hibernationSwitches[text] ? COLORS.white : COLORS.lighterprimary}
                 />
             </View>
         );
@@ -78,10 +78,10 @@ export default function LocationSharing({ navigation }) {
                     onValueChange={() =>
                         handleStatusToggle(text)}
                     trackColor={{
-                        false: COLORS.darkblackgreen, // color when switch is off
+                        false: COLORS.darkerprimary, // color when switch is off
                         true: COLORS.gold,  // color when switch is on
                     }}
-                    thumbColor={statusSwitches[text] ? COLORS.white : COLORS.lightwhitegreen}
+                    thumbColor={statusSwitches[text] ? COLORS.white : COLORS.lighterprimary}
                 />
             </View>
         );
@@ -97,10 +97,10 @@ export default function LocationSharing({ navigation }) {
                     onValueChange={() =>
                         handleLocationToggle(text)}
                     trackColor={{
-                        false: COLORS.darkblackgreen, // color when switch is off
+                        false: COLORS.darkerprimary, // color when switch is off
                         true: COLORS.gold,  // color when switch is on
                     }}
-                    thumbColor={locationSwitches[text] ? COLORS.white : COLORS.lightwhitegreen}
+                    thumbColor={locationSwitches[text] ? COLORS.white : COLORS.lighterprimary}
                 />
             </View>
         );

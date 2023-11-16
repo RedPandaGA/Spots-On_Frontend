@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
         borderRadius: 30,
         width: 140,
         borderWidth: 2,
-        borderColor: COLORS.lightwhitegreen,
+        borderColor: COLORS.lighterprimary,
         marginVertical: 5,
         alignItems: 'center',
         marginHorizontal: 5
@@ -171,10 +171,10 @@ const styles = StyleSheet.create({
         borderRadius: 30,
         width: 140,
         borderWidth: 1.5,
-        borderColor: COLORS.lightwhitegreen,
+        borderColor: COLORS.lighterprimary,
         marginVertical: 5,
         alignItems: 'center',
-        backgroundColor: COLORS.lightwhitegreen,
+        backgroundColor: COLORS.lighterprimary,
         marginHorizontal: 5
     },
     buttonText: {
