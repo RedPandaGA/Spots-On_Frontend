@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, StyleSheet, Image, TouchableOpacity, TextInput, Text, Modal, Animated } from "react-native";
 import { GiftedChat, Bubble, Day } from "react-native-gifted-chat";
 import COLORS from "../components/colors";
+import ThreeDotsModal from "../components/threeDotsModal.js";
 
 // Custom Bubble component
 const CustomBubble = (props) => {
@@ -99,43 +100,10 @@ export default function ColonyChat({ navigation }) {
           </View>
         </TouchableOpacity>
       </View>
-      <Modal
-        animationType="slide"
-        transparent
-        visible={isModalVisible}
-        onRequestClose={toggleModal}
-      >
-        <View style={styles.modalContainer}>
-          <Animated.View style={styles.modalContent}>
-            {/* Your modal content */}
-            <Text>This is your modal content</Text>
-            {/* Add your buttons, text, and text input here */}
-            <TextInput
-              style={styles.modalInput}
-              placeholder="Your input..."
-              placeholderTextColor={COLORS.secondary}
-              value={inputText}
-              onChangeText={(text) => setInputText(text)}
-            />
-            {/* Your buttons */}
-            {/* Example: */}
-            <TouchableOpacity style={styles.button}>
-              <Text>Button 1</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.button}>
-              <Text>Button 2</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.button}>
-              <Text>Button 3</Text>
-            </TouchableOpacity>
-
-            {/* Close modal button */}
-            <TouchableOpacity onPress={toggleModal} style={styles.closeButton}>
-              <Text>Close</Text>
-            </TouchableOpacity>
-          </Animated.View>
-        </View>
-      </Modal>
+      <ThreeDotsModal
+        isModalVisible={isModalVisible}
+        hideModal={toggleModal}
+      />
       <GiftedChat
         messages={messages}
         onSend={(newMessages) => onSend(newMessages)}
@@ -219,39 +187,5 @@ const styles = StyleSheet.create({
     height: 25,
     resizeMode: "contain", // Adjust the resizeMode as needed
     tintColor: COLORS.secondary,
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: "flex-start",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-  },
-  modalContent: {
-    marginTop: 100, // Adjust this value as needed to position the modal under the header
-    backgroundColor: "#fff",
-    padding: 20,
-    borderRadius: 10,
-    width: "80%",
-  },
-  modalInput: {
-    height: 40,
-    borderColor: COLORS.secondary,
-    borderWidth: 1,
-    borderRadius: 5,
-    marginBottom: 10,
-    paddingHorizontal: 10,
-  },
-  button: {
-    backgroundColor: COLORS.primary,
-    padding: 10,
-    borderRadius: 5,
-    marginBottom: 10,
-    alignItems: "center",
-  },
-  closeButton: {
-    backgroundColor: COLORS.secondary,
-    padding: 10,
-    borderRadius: 5,
-    alignItems: "center",
   },
 });
