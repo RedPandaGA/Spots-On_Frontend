@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import {
   View,
   Text,
+  Button,
   StyleSheet,
   Image,
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import COLORS from "../components/colors";
 
 const Login = ({ navigation }) => {
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -40,14 +40,14 @@ const Login = ({ navigation }) => {
         style={[styles.input, { marginTop: 50 }]}
         keyboardType="numeric"
         placeholder="Phone #"
-        placeholderTextColor={COLORS.secondary}
+        placeholderTextColor={"#E7EFCA"}
         value={phoneNumber}
         onChangeText={(text) => setPhoneNumber(text)}
       />
       <TextInput
         style={styles.input}
         placeholder="Password"
-        placeholderTextColor={COLORS.secondary}
+        placeholderTextColor={"#E7EFCA"}
         value={password}
         onChangeText={(text) => setPassword(text)}
         secureTextEntry={true}
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     flex: 1,
     // justifyContent: 'center',
     alignItems: "center",
-    backgroundColor: COLORS.primary,
+    backgroundColor: "#2C6765",
     paddingTop: "30%",
   },
   icon: {
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
     margin: 10,
     padding: 10,
     borderRadius: 10,
-    color: COLORS.secondary,
+    color: "#E7EFCA",
     fontWeight: "bold",
     fontSize: 16,
     textAlign: "center",
@@ -103,18 +103,18 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 16,
-    color: COLORS.secondary,
+    color: "#E7EFCA",
     textAlign: "center",
     fontWeight: "bold",
     paddingVertical: 12,
   },
   shadow: {
-    elevation: 2,
+    elevation: 20,
     shadowColor: "#171717",
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.5,
     shadowRadius: 1,
-    borderRadius: 50,
+    borderRadius: 100,
   },
 });
 

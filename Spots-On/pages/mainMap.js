@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -7,6 +7,7 @@ import {
   Keyboard,
   Image,
   KeyboardAvoidingView,
+  StatusBar,
 } from "react-native";
 import MapView, {
   Callout,
@@ -14,6 +15,7 @@ import MapView, {
   Circle,
   Marker,
 } from "react-native-maps";
+import * as Location from "expo-location";
 import MapButton from "../components/mapButton";
 import SearchBar from "../components/searchBar";
 import ColonySlider from "../components/colonySlider";
@@ -24,7 +26,6 @@ import CreateEventModal from "../components/createEventModal";
 import CreateColonyModal from "../components/createColonyModal";
 import CreateSpotModal from "../components/spotsModal";
 import ChatModal from "../components/chatModal";
-import { StatusBar } from "react-native";
 import COLORS from "../components/colors";
 
 export default function MainMap({ navigation }) {
@@ -36,22 +37,42 @@ export default function MainMap({ navigation }) {
   //     longitudeDelta: 0.0421,
   //   });
 
-  const defaultRegion = {
-    latitude: 30.413879856613153,
-    latitudeDelta: 0.04086512053074287,
-    longitude: -91.17771545364813,
-    longitudeDelta: 0.024220807363050767,
-  };
+  const [currentLocation, setCurrentLocation] = useState(null);
+  const [initialRegion, setInitialRegion] = useState(null);
+  const [currentRegion, setCurrentRegion] = useState(initialRegion);
+  const [showResetButton, setShowResetButton] = useState(false);
+
+  useEffect(() => {
+    const getLocation = async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        console.log("Permission to access location was denied");
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setCurrentLocation(location.coords);
+
+      const initialRegion = {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        latitudeDelta: 0.005,
+        longitudeDelta: 0.005,
+      };
+
+      setInitialRegion(initialRegion);
+      setCurrentRegion(initialRegion);
+    };
+
+    getLocation();
+  }, []);
 
   const mapRef = useRef(null);
-
-  const [currentRegion, setCurrentRegion] = useState(defaultRegion);
-  const [showResetButton, setShowResetButton] = useState(false);
 
   const handleRegionChange = (region) => {
     const threshold = 0.009;
     // console.log(region);
-
+    // console.log("Calling region change function");
     if (
       Math.abs(currentRegion.latitude - region.latitude) > threshold ||
       Math.abs(currentRegion.longitude - region.longitude) > threshold ||
@@ -67,12 +88,19 @@ export default function MainMap({ navigation }) {
 
   const handleResetMap = () => {
     setShowResetButton(false);
-    setCurrentRegion(defaultRegion);
+    setCurrentRegion(initialRegion);
 
     if (mapRef.current) {
-      mapRef.current.animateToRegion(defaultRegion, 500);
+      mapRef.current.animateToRegion(initialRegion, 1000);
     }
   };
+
+  //   const defaultRegion = {
+  //     latitude: 30.413879856613153,
+  //     latitudeDelta: 0.04086512053074287,
+  //     longitude: -91.17771545364813,
+  //     longitudeDelta: 0.024220807363050767,
+  //   };
 
   //   // Manage the location of the draggable Marker
   //   const [draggableMarkerCoord, setDraggableMarkerCoord] = useState({
@@ -153,10 +181,6 @@ export default function MainMap({ navigation }) {
   const hideViewEventsModal = () => {
     setIsViewEventsModalVisible(false);
   };
-
-  // const showCreateEventModal = () => {
-  //     setIsCreateEventModalVisible(true);
-  // }
 
   const hideCreateEventModal = () => {
     setIsCreateEventModalVisible(false);
@@ -321,285 +345,310 @@ export default function MainMap({ navigation }) {
 
   return (
     <KeyboardAvoidingView behavior="height" enabled={false}>
-      <View>
-        <StatusBar />
-        {/* Main Map */}
-        <MapView
-          style={styles.map}
-          //   initialRegion={defaultRegion}
-          ref={mapRef}
-          region={currentRegion}
-          //   onRegionChange={(newRegion) => setMapRegion(newRegion)}
-          onRegionChange={handleRegionChange}
-          mapType={mapType}
-          onPress={addSpot}
-        >
-          {/* {showLocationsOfInterest()}
-                    <Marker 
-                        draggable
-                        pinColor={'#0000ff'}
-                        coordinate={draggableMarkerCoord}
-                        onDragEnd={(e) => {
-                            setDraggableMarkerCoord(e.nativeEvent.coordinate);
-                            console.log("New coordinates for marker:");
-                            console.log(e.nativeEvent.coordinate)
-                        }}
-                        description="This is a draggable marker"
-                        title='draggable marker'
-                    /> */}
-          {spots.map((spot) => (
-            <View key={spot.id}>
+      {initialRegion && currentRegion && (
+        <View>
+          <StatusBar />
+          {/* Main Map */}
+          <MapView
+            style={styles.map}
+            //   initialRegion={defaultRegion}
+            ref={mapRef}
+            initialRegion={initialRegion}
+            region={currentRegion}
+            //   onRegionChange={(newRegion) => setMapRegion(newRegion)}
+            onRegionChange={handleRegionChange}
+            mapType={mapType}
+            onPress={addSpot}
+          >
+            {/* {showLocationsOfInterest()}
+                              <Marker 
+                                  draggable
+                                  pinColor={'#0000ff'}
+                                  coordinate={draggableMarkerCoord}
+                                  onDragEnd={(e) => {
+                                      setDraggableMarkerCoord(e.nativeEvent.coordinate);
+                                      console.log("New coordinates for marker:");
+                                      console.log(e.nativeEvent.coordinate)
+                                  }}
+                                  description="This is a draggable marker"
+                                  title='draggable marker'
+                              /> */}
+            {spots.map((spot) => (
+              <View key={spot.id}>
+                <Marker
+                  draggable
+                  coordinate={spot.coordinate}
+                  title={spot.name}
+                  description={spot.colonyName}
+                  onDrag={(e) => handleMarkerDrag(e, spot.id)}
+                  onDragEnd={(e) => handleMarkerDragEnd(e, spot.id)}
+                  // onDragEnd={(e) => handleMarkerDragEnd(e, spot.id)}
+                >
+                  <Image
+                    source={require("../assets/marker.png")}
+                    style={{ width: 30, height: 30 }}
+                  />
+                  <Callout style={styles.callout}>
+                    <View style={styles.calloutTextContainer}>
+                      <Text style={styles.spotName}>{spot.name}</Text>
+                      <Text style={styles.colonyName}>{spot.colonyName}</Text>
+                    </View>
+                    <View style={styles.calloutImageContainer}>
+                      <CalloutSubview
+                        onPress={() => console.log("Clicked edit spot")}
+                      >
+                        <Image
+                          source={require("../assets/pencil.png")}
+                          style={styles.editImage}
+                        />
+                      </CalloutSubview>
+                      <CalloutSubview
+                        onPress={() =>
+                          console.log("Clicked description/spot info")
+                        }
+                      >
+                        <Image
+                          source={require("../assets/info.png")}
+                          style={styles.infoImage}
+                        />
+                      </CalloutSubview>
+                    </View>
+                  </Callout>
+                </Marker>
+                <Circle
+                  center={spot.coordinate}
+                  radius={spot.radius}
+                  strokeWidth={1}
+                  strokeColor={spot.safe ? "#2C6765" : "#FF5555"}
+                  fillColor={
+                    spot.safe
+                      ? "rgba(44, 103, 101, .3)"
+                      : "rgba(255, 85, 85, .3)"
+                  }
+                />
+              </View>
+            ))}
+            {currentLocation && (
               <Marker
-                draggable
-                coordinate={spot.coordinate}
-                title={spot.name}
-                description={spot.colonyName}
-                onDrag={(e) => handleMarkerDrag(e, spot.id)}
-                onDragEnd={(e) => handleMarkerDragEnd(e, spot.id)}
-                // onDragEnd={(e) => handleMarkerDragEnd(e, spot.id)}
+                coordinate={{
+                  latitude: currentLocation.latitude,
+                  longitude: currentLocation.longitude,
+                }}
+                title="Your Location"
               >
                 <Image
-                  source={require("../assets/marker.png")}
-                  style={{ width: 30, height: 30 }}
+                  source={require("../assets/profilePicture.png")}
+                  style={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: 100,
+                    borderWidth: 2,
+                    borderColor: COLORS.primary,
+                  }}
                 />
-                <Callout style={styles.callout}>
-                  <View style={styles.calloutTextContainer}>
-                    <Text style={styles.spotName}>{spot.name}</Text>
-                    <Text style={styles.colonyName}>{spot.colonyName}</Text>
-                  </View>
-                  <View style={styles.calloutImageContainer}>
-                    <CalloutSubview
-                      onPress={() => console.log("Clicked edit spot")}
-                    >
-                      <Image
-                        source={require("../assets/pencil.png")}
-                        style={styles.editImage}
-                      />
-                    </CalloutSubview>
-                    <CalloutSubview
-                      onPress={() =>
-                        console.log("Clicked description/spot info")
-                      }
-                    >
-                      <Image
-                        source={require("../assets/info.png")}
-                        style={styles.infoImage}
-                      />
-                    </CalloutSubview>
-                  </View>
-                </Callout>
               </Marker>
-              <Circle
-                center={spot.coordinate}
-                radius={spot.radius}
-                strokeWidth={1}
-                strokeColor={spot.safe ? "#2C6765" : "#FF5555"}
-                fillColor={
-                  spot.safe ? "rgba(44, 103, 101, .3)" : "rgba(255, 85, 85, .3)"
-                }
+            )}
+            <Circle
+              center={{
+                latitude: 30.41699914895536,
+                longitude: -91.17555990815163,
+              }}
+              radius={1000}
+              strokeWidth={1}
+              strokeColor="#2C6765"
+              fillColor="rgba(44, 103, 101, .3)"
+            />
+            <Circle
+              center={{
+                latitude: 30.39950609050538,
+                longitude: -91.18346974253654,
+              }}
+              radius={400}
+              strokeWidth={1}
+              strokeColor="#2C6765"
+              fillColor="rgba(44, 103, 101, .3)"
+            />
+            <Circle
+              center={{
+                latitude: 30.39446465572983,
+                longitude: -91.17913294583559,
+              }}
+              radius={200}
+              strokeWidth={1}
+              strokeColor="#rgba(255, 85, 85, 1)"
+              fillColor="rgba(255, 85, 85, .3)"
+            />
+          </MapView>
+
+          {/* ------ MAIN NAV BUTTONS ------ */}
+          {/* Friends Button */}
+          <MapButton
+            imageSource={require("../assets/people.png")}
+            style={styles.friendsButton}
+            onPress={() => {
+              showFriendsModal();
+              console.log("Pressed friends button");
+            }}
+            width={60}
+            height={60}
+          />
+          {/* {isFriendsModalVisible && (
+                              <FriendsModal
+                                  isModalVisible={isFriendsModalVisible}
+                                  hideModal={hideFriendsModal}
+                              />     
+                          )} */}
+          <FriendsModal
+            isModalVisible={isFriendsModalVisible}
+            hideModal={hideFriendsModal}
+          />
+
+          {/* Social Button */}
+          <TouchableOpacity
+            onPress={() => {
+              showSocialModal();
+              console.log("Pressed social button");
+            }}
+            style={styles.socialButtonOnMap}
+          >
+            <View style={styles.socialButton}>
+              <Image
+                source={require("../assets/ladybugfixed.png")}
+                style={styles.socialImage}
               />
             </View>
-          ))}
-          <Circle
-            center={{
-              latitude: 30.41699914895536,
-              longitude: -91.17555990815163,
-            }}
-            radius={1000}
-            strokeWidth={1}
-            strokeColor="#2C6765"
-            fillColor="rgba(44, 103, 101, .3)"
-          />
-          <Circle
-            center={{
-              latitude: 30.39950609050538,
-              longitude: -91.18346974253654,
-            }}
-            radius={400}
-            strokeWidth={1}
-            strokeColor="#2C6765"
-            fillColor="rgba(44, 103, 101, .3)"
-          />
-          <Circle
-            center={{
-              latitude: 30.39446465572983,
-              longitude: -91.17913294583559,
-            }}
-            radius={200}
-            strokeWidth={1}
-            strokeColor="#rgba(255, 85, 85, 1)"
-            fillColor="rgba(255, 85, 85, .3)"
-          />
-        </MapView>
-
-        {/* ------ MAIN NAV BUTTONS ------ */}
-        {/* Friends Button */}
-        <MapButton
-          imageSource={require("../assets/people.png")}
-          style={styles.friendsButton}
-          onPress={() => {
-            showFriendsModal();
-            console.log("Pressed friends button");
-          }}
-          width={60}
-          height={60}
-        />
-        {/* {isFriendsModalVisible && (
-                    <FriendsModal
-                        isModalVisible={isFriendsModalVisible}
-                        hideModal={hideFriendsModal}
-                    />     
-                )} */}
-        <FriendsModal
-          isModalVisible={isFriendsModalVisible}
-          hideModal={hideFriendsModal}
-        />
-
-        {/* Social Button */}
-        <TouchableOpacity
-          onPress={() => {
-            showSocialModal();
-            console.log("Pressed social button");
-          }}
-          style={styles.socialButtonOnMap}
-        >
-          <View style={styles.socialButton}>
-            <Image
-              source={require("../assets/ladybugfixed.png")}
-              style={styles.socialImage}
+          </TouchableOpacity>
+          {isSocialModalVisible && (
+            <SocialModal
+              isModalVisible={isSocialModalVisible}
+              hideModal={hideSocialModal}
+              setViewEvents={setIsViewEventsModalVisible}
+              setCreateEvent={setIsCreateEventModalVisible}
+              setCreateColony={setIsCreateColonyModalVisible}
             />
-          </View>
-        </TouchableOpacity>
-        {isSocialModalVisible && (
-          <SocialModal
-            isModalVisible={isSocialModalVisible}
-            hideModal={hideSocialModal}
-            setViewEvents={setIsViewEventsModalVisible}
-            setCreateEvent={setIsCreateEventModalVisible}
-            setCreateColony={setIsCreateColonyModalVisible}
-          />
-        )}
-        {isViewEventsModalVisible && (
-          <ViewEventsModal
-            isModalVisible={isViewEventsModalVisible}
-            hideModal={hideViewEventsModal}
-            setSocialModal={setIsSocialModalVisible}
-          />
-        )}
-        {isCreateEventModalVisible && (
-          <CreateEventModal
-            isModalVisible={isCreateEventModalVisible}
-            hideModal={hideCreateEventModal}
-            setSocialModal={setIsSocialModalVisible}
-          />
-        )}
-        {isCreateColonyModalVisible && (
-          <CreateColonyModal
-            isModalVisible={isCreateColonyModalVisible}
-            hideModal={hideCreateColonyModal}
-            setSocialModal={setIsSocialModalVisible}
-          />
-        )}
-        {/* Chats Button */}
-        <MapButton
-          imageSource={require("../assets/speech-bubble.png")}
-          style={styles.chatButton}
-          onPress={() => {
-            showChatModal();
-            console.log("Pressed chat button");
-          }}
-          width={60}
-          height={60}
-        />
-        <ChatModal
-          isModalVisible={isChatModalVisible}
-          hideModal={hideChatModal}
-        />
-
-        {/* ------ SEARCH BAR ------ */}
-        <SearchBar
-          imageSource={require("../assets/search.png")}
-          style={styles.searchBar}
-          onPress={() => console.log("Pressed search bar")}
-        />
-
-        {/* Colony Buttons Slider */}
-        <ColonySlider style={styles.colonySlider} />
-
-        {/* ------ SIDE BUTTONS ------ */}
-        {showResetButton && (
+          )}
+          {isViewEventsModalVisible && (
+            <ViewEventsModal
+              isModalVisible={isViewEventsModalVisible}
+              hideModal={hideViewEventsModal}
+              setSocialModal={setIsSocialModalVisible}
+            />
+          )}
+          {isCreateEventModalVisible && (
+            <CreateEventModal
+              isModalVisible={isCreateEventModalVisible}
+              hideModal={hideCreateEventModal}
+              setSocialModal={setIsSocialModalVisible}
+            />
+          )}
+          {isCreateColonyModalVisible && (
+            <CreateColonyModal
+              isModalVisible={isCreateColonyModalVisible}
+              hideModal={hideCreateColonyModal}
+              setSocialModal={setIsSocialModalVisible}
+            />
+          )}
+          {/* Chats Button */}
           <MapButton
-            imageSource={require("../assets/target.png")}
-            style={styles.targetButton}
-            onPress={handleResetMap}
+            imageSource={require("../assets/speech-bubble.png")}
+            style={styles.chatButton}
+            onPress={() => {
+              showChatModal();
+              console.log("Pressed chat button");
+            }}
+            width={60}
+            height={60}
+          />
+          <ChatModal
+            isModalVisible={isChatModalVisible}
+            hideModal={hideChatModal}
+          />
+
+          {/* ------ SEARCH BAR ------ */}
+          <SearchBar
+            imageSource={require("../assets/search.png")}
+            style={styles.searchBar}
+            onPress={() => console.log("Pressed search bar")}
+          />
+
+          {/* Colony Buttons Slider */}
+          <ColonySlider style={styles.colonySlider} />
+
+          {/* ------ SIDE BUTTONS ------ */}
+          {showResetButton && (
+            <MapButton
+              imageSource={require("../assets/target.png")}
+              style={styles.targetButton}
+              onPress={handleResetMap}
+              width={45}
+              height={45}
+            />
+          )}
+
+          {/* Incognito Buttons */}
+          <MapButton
+            imageSource={require("../assets/incognito.png")}
+            style={styles.incognitoButton}
+            onPress={handleIncognito}
+            width={45}
+            height={45}
+            active={incognito}
+          />
+          {/* Status Button */}
+          <MapButton
+            imageSource={require("../assets/sensor.png")}
+            style={styles.statusButton}
+            onPress={handleShowStatus}
+            width={45}
+            height={45}
+            active={showStatus}
+          />
+          {/* Change Map View Button */}
+          <MapButton
+            imageSource={require("../assets/layers.png")}
+            style={styles.mapViewButton}
+            onPress={() => {
+              handleMapType();
+              console.log("Pressed map view button");
+            }}
             width={45}
             height={45}
           />
-        )}
-
-        {/* Incognito Buttons */}
-        <MapButton
-          imageSource={require("../assets/incognito.png")}
-          style={styles.incognitoButton}
-          onPress={handleIncognito}
-          width={45}
-          height={45}
-          active={incognito}
-        />
-        {/* Status Button */}
-        <MapButton
-          imageSource={require("../assets/sensor.png")}
-          style={styles.statusButton}
-          onPress={handleShowStatus}
-          width={45}
-          height={45}
-          active={showStatus}
-        />
-        {/* Change Map View Button */}
-        <MapButton
-          imageSource={require("../assets/layers.png")}
-          style={styles.mapViewButton}
-          onPress={() => {
-            handleMapType();
-            console.log("Pressed map view button");
-          }}
-          width={45}
-          height={45}
-        />
-        {/* Spots Modal Button */}
-        <MapButton
-          imageSource={require("../assets/spots.png")}
-          style={styles.spotsButton}
-          active={createSpot}
-          onPress={() => {
-            showSpotsModal();
-            handleCreateSpot();
-          }}
-          width={45}
-          height={45}
-        />
-        {isSpotsModalVisible && (
-          <CreateSpotModal
-            isModalVisible={isSpotsModalVisible}
-            hideModal={hideSpotsModal}
-            cancelCreateSpot={cancelCreateSpot}
-            newSpot={newSpot}
-            setNewSpot={setNewSpot}
-            resetNewSpot={resetNewSpot}
+          {/* Spots Modal Button */}
+          <MapButton
+            imageSource={require("../assets/spots.png")}
+            style={styles.spotsButton}
+            active={createSpot}
+            onPress={() => {
+              showSpotsModal();
+              handleCreateSpot();
+            }}
+            width={45}
+            height={45}
           />
-        )}
-        {/* Settings Button */}
-        <MapButton
-          imageSource={require("../assets/setting.png")}
-          style={styles.settingsButton}
-          onPress={() => {
-            console.log("Pressed settings button");
-            navigation.navigate("Settings");
-          }}
-          width={45}
-          height={45}
-        />
-      </View>
+          {isSpotsModalVisible && (
+            <CreateSpotModal
+              isModalVisible={isSpotsModalVisible}
+              hideModal={hideSpotsModal}
+              cancelCreateSpot={cancelCreateSpot}
+              newSpot={newSpot}
+              setNewSpot={setNewSpot}
+              resetNewSpot={resetNewSpot}
+            />
+          )}
+          {/* Settings Button */}
+          <MapButton
+            imageSource={require("../assets/setting.png")}
+            style={styles.settingsButton}
+            onPress={() => {
+              console.log("Pressed settings button");
+              navigation.navigate("Settings");
+            }}
+            width={45}
+            height={45}
+          />
+        </View>
+      )}
     </KeyboardAvoidingView>
   );
 }

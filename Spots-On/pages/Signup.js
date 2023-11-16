@@ -129,12 +129,12 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   shadow: {
-    elevation: 2,
+    elevation: 20,
     shadowColor: "#171717",
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.5,
     shadowRadius: 1,
-    borderRadius: 50,
+    borderRadius: 100,
   },
 });
 
