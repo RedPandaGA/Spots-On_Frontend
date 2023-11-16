@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     flex: 1,
     flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: "space-between",
     alignItems: "center",
   },
   toggleText: {
@@ -198,10 +198,12 @@ const styles = StyleSheet.create({
     color: COLORS.primary,
     fontWeight: "bold",
     textAlign: "center",
+    marginLeft: 10,
   },
   toggleSwitch: {
     justifyContent: "center",
     alignContent: "center",
+    marginRight: 20,
   },
   spotsNotifButton: {
     marginVertical: 10,
