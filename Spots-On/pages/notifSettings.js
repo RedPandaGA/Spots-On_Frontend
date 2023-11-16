@@ -6,7 +6,9 @@ import {
   StyleSheet,
   Image,
   Switch,
+  ScrollView,
 } from "react-native";
+import COLORS from "../components/colors";
 
 export default function Notifications({ navigation }) {
   const statusList = ["friend1", "friend2", "friend3"];
@@ -45,7 +47,7 @@ export default function Notifications({ navigation }) {
 
   const renderStatusToggleBox = (text, index) => {
     return (
-      <View key={`status_${index}`}>
+      <View style={styles.toggleContainer} key={`status_${index}`}>
         <Text style={styles.toggleText}>{text}</Text>
         <Switch
           style={styles.toggleSwitch}
@@ -63,7 +65,7 @@ export default function Notifications({ navigation }) {
 
   const renderLocationToggleBox = (text, index) => {
     return (
-      <View key={`location_${index}`}>
+      <View style={styles.toggleContainer} key={`location_${index}`}>
         <Text style={styles.toggleText}>{text}</Text>
         <Switch
           style={styles.toggleSwitch}
@@ -82,54 +84,56 @@ export default function Notifications({ navigation }) {
   const renderSpotsToggleBox = (text, index) => {
     return (
       <TouchableOpacity
-        style={styles.toggle}
+        style={styles.spotsNotifButton}
         onPress={() => {
           console.log("Main Map redirection clicked");
           navigation.navigate("Home");
         }}
         key={`spots_${index}`}
       >
-        <Text style={styles.specialText}>{text}</Text>
+        <Text style={styles.toggleText}>{text}</Text>
       </TouchableOpacity>
     );
   };
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity
-          onPress={() => {
-            console.log("Pressed back button");
-            navigation.navigate("Settings");
-          }}
-        >
-          <View style={styles.backButton}>
-            <Image
-              source={require("../assets/back-button-secondary-color.png")}
-              style={styles.image}
-            />
-          </View>
-        </TouchableOpacity>
-        <Text style={styles.title}>Notifications</Text>
-      </View>
-      <Text style={styles.subtitle}>Status notifications</Text>
-      <View style={styles.settingsItems}>
-        {statusList.map((buttonText, index) =>
-          renderStatusToggleBox(buttonText, index)
-        )}
-      </View>
-      <Text style={styles.subtitle}>Location notifications</Text>
-      <View style={styles.settingsItems}>
-        {locationList.map((buttonText, index) =>
-          renderLocationToggleBox(buttonText, index)
-        )}
-      </View>
-      <Text style={styles.subtitle}>Spots notifications</Text>
-      <View style={styles.settingsItems}>
-        {spotsList.map((buttonText, index) =>
-          renderSpotsToggleBox(buttonText, index)
-        )}
-      </View>
+      <ScrollView>
+        <View style={styles.header}>
+          <TouchableOpacity
+            onPress={() => {
+              console.log("Pressed back button");
+              navigation.navigate("Settings");
+            }}
+          >
+            <View style={styles.backButton}>
+              <Image
+                source={require("../assets/back-button-secondary-color.png")}
+                style={styles.image}
+              />
+            </View>
+          </TouchableOpacity>
+          <Text style={styles.title}>Notifications</Text>
+        </View>
+        <Text style={styles.subtitle}>Status notifications</Text>
+        <View style={styles.settingsItems}>
+          {statusList.map((buttonText, index) =>
+            renderStatusToggleBox(buttonText, index)
+          )}
+        </View>
+        <Text style={styles.subtitle}>Location notifications</Text>
+        <View style={styles.settingsItems}>
+          {locationList.map((buttonText, index) =>
+            renderLocationToggleBox(buttonText, index)
+          )}
+        </View>
+        <Text style={styles.subtitle}>Spots notifications</Text>
+        <View style={styles.settingsItems}>
+          {spotsList.map((buttonText, index) =>
+            renderSpotsToggleBox(buttonText, index)
+          )}
+        </View>
+      </ScrollView>
     </View>
   );
 }
@@ -137,22 +141,22 @@ export default function Notifications({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#2C6765",
+    backgroundColor: COLORS.primary,
   },
   header: {
     marginTop: 50,
   },
   title: {
-    color: "#E7EFCA",
+    color: COLORS.secondary,
     fontSize: 40,
     textAlign: "center",
     fontWeight: "bold",
-    width: "100%",
-    paddingLeft: "10%",
+    width: "80%",
+    marginLeft: 20,
     alignSelf: "center",
   },
   subtitle: {
-    color: "#D5B747",
+    color: COLORS.status,
     fontSize: 20,
     fontWeight: "bold",
     marginLeft: 20,
@@ -161,12 +165,12 @@ const styles = StyleSheet.create({
     opacity: 0.9,
   },
   specialText: {
-    color: "#D5B747",
+    color: COLORS.status,
     textAlign: "center",
     fontSize: 20,
     fontWeight: "bold",
     opacity: 0.9,
-    paddingHorizontal: "10%",
+    paddingHorizontal: 30,
   },
   image: {
     height: 50,
@@ -176,27 +180,31 @@ const styles = StyleSheet.create({
   },
   settingsItems: {
     marginTop: 20,
-    backgroundColor: "#E7EFCA",
+    backgroundColor: COLORS.secondary,
     width: "90%",
     alignSelf: "center",
     borderRadius: 15,
   },
-  toggle: {
-    alignSelf: "center",
-    justifyContent: "center",
-    marginVertical: 20,
+  toggleContainer: {
+    marginVertical: 10,
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
   },
   toggleText: {
-    marginBottom: "-7%",
-    paddingTop: "7%",
-    paddingLeft: "10%",
     fontSize: 20,
-    color: "#2C6765",
+    padding: 10,
+    color: COLORS.primary,
     fontWeight: "bold",
+    textAlign: "center",
   },
   toggleSwitch: {
-    paddingBottom: "8%",
-    marginTop: "-8%",
-    marginRight: "5%",
+    justifyContent: "center",
+    alignContent: "center",
+  },
+  spotsNotifButton: {
+    marginVertical: 10,
+    padding: 10,
   },
 });
