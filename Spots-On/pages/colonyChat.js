@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, Image, TouchableOpacity, TextInput, Text } from 'react-native';
-import { GiftedChat, Bubble, Day } from 'react-native-gifted-chat';
-import COLORS from '../components/colors';
+import React, { useState } from "react";
+import { View, StyleSheet, Image, TouchableOpacity, TextInput, Text } from "react-native";
+import { GiftedChat, Bubble, Day } from "react-native-gifted-chat";
+import COLORS from "../components/colors";
 
 // Custom Bubble component
 const CustomBubble = (props) => {
@@ -34,26 +34,26 @@ const CustomBubble = (props) => {
 };
 
 const CustomDay = (props) => {
-    return (
-      <Day
-        {...props}
-        textStyle={{
-          color: COLORS.gray, // Change this to the color you want for the date and year
-        }}
-      />
-    );
-  };
+  return (
+    <Day
+      {...props}
+      textStyle={{
+        color: COLORS.gray, // Change this to the color you want for the date and year
+      }}
+    />
+  );
+};
 
 export default function ColonyChat({ navigation }) {
   const [messages, setMessages] = useState([]);
-  const [inputText, setInputText] = useState('');
+  const [inputText, setInputText] = useState("");
 
   const onSend = () => {
-    if (inputText.trim() === '') {
+    if (inputText.trim() === "") {
       return;
     }
 
-    // Add the user's message to the chat
+    // Add the user"s message to the chat
     const newMessages = [
       {
         _id: messages.length + 1,
@@ -61,37 +61,37 @@ export default function ColonyChat({ navigation }) {
         createdAt: new Date(),
         user: {
           _id: 1,
-          name: 'User', // You can set the user's name dynamically if needed
+          name: "User", // You can set the user"s name dynamically if needed
         },
       },
     ];
 
     setMessages((previousMessages) => GiftedChat.append(previousMessages, newMessages));
-    setInputText('');
+    setInputText("");
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => {
-          navigation.navigate('Home');
+          navigation.navigate("Home");
           console.log("Pressed back button");
         }}>
           <View>
-            <Image 
-              source={require('../assets/backButton.png')}
+            <Image
+              source={require("../assets/backButton.png")}
               style={styles.image}
             />
           </View>
         </TouchableOpacity>
         <Text style={styles.title}>ColonyName</Text>
         <TouchableOpacity onPress={() => {
-          navigation.navigate('Home');
+          navigation.navigate("Home");
           console.log("Pressed three dots button");
         }}>
           <View style={styles.threeDots}>
-            <Image 
-              source={require('../assets/threeDots.png')}
+            <Image
+              source={require("../assets/threeDots.png")}
               style={styles.threeDots}
             />
           </View>
@@ -113,7 +113,7 @@ export default function ColonyChat({ navigation }) {
               />
               <TouchableOpacity onPress={() => onSend()} style={styles.sendButton}>
                 <Image
-                  source={require('../assets/sendIcon.png')}
+                  source={require("../assets/sendIcon.png")}
                   style={styles.sendIcon}
                 />
               </TouchableOpacity>
@@ -121,7 +121,7 @@ export default function ColonyChat({ navigation }) {
           );
         }}
         renderBubble={(props) => <CustomBubble {...props} />}
-        renderDay={(props) => <CustomDay {...props} />} 
+        renderDay={(props) => <CustomDay {...props} />}
       />
     </View>
   );
@@ -130,39 +130,36 @@ export default function ColonyChat({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#2C6765',
+    backgroundColor: COLORS.primary,
   },
   header: {
     marginTop: 50,
   },
   title: {
-    color: '#E7EFCA',
-    fontSize: 35,
-    textAlign: 'center',
-    fontWeight: 'bold',
-    width: '100%',
-    paddingLeft: '3%',
-    alignSelf: 'center'
-  }, 
+    color: COLORS.secondary,
+    fontSize: 40,
+    fontWeight: "bold",
+    alignSelf: "center",
+  },
   image: {
     height: 50,
     width: 50,
-    position: 'absolute',
+    position: "absolute",
     left: 20,
     tintColor: COLORS.secondary
   },
   threeDots: {
     height: 40,
     width: 40,
-    position: 'absolute',
+    position: "absolute",
     top: -20,
     right: 10,
     tintColor: COLORS.secondary
   },
   inputToolbarContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: 10,
     backgroundColor: COLORS.primary,
     marginTop: -3
@@ -182,7 +179,7 @@ const styles = StyleSheet.create({
   sendIcon: {
     width: 25,
     height: 25,
-    resizeMode: 'contain', // Adjust the resizeMode as needed
+    resizeMode: "contain", // Adjust the resizeMode as needed
     tintColor: COLORS.secondary,
   },
 });
