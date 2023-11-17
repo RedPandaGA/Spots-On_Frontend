@@ -5,10 +5,10 @@ import {
   TouchableOpacity,
   Keyboard,
   Image,
-  KeyboardAvoidingView,
+  Text,
   StatusBar,
 } from "react-native";
-import MapView, { Circle, Marker } from "react-native-maps";
+import MapView, { Callout, Circle, Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import MapButton from "../components/mapButton";
 import SearchBar from "../components/searchBar";
@@ -70,7 +70,8 @@ export default function MainMap({ navigation }) {
           latitude: currentLocation.latitude,
           longitude: currentLocation.longitude,
         }}
-        title="Your Location"
+        // title="User name"
+        // description="status description"
       >
         <Image
           source={require("../assets/profilePicture.png")}
@@ -79,9 +80,45 @@ export default function MainMap({ navigation }) {
             height: 40,
             borderRadius: 100,
             borderWidth: 2,
-            borderColor: COLORS.primary,
+            borderColor:
+              showStatus || incognito ? COLORS.active : COLORS.primary,
           }}
         />
+        <Callout>
+          <View style={{ minWidth: 150 }}>
+            <Text
+              style={{
+                fontSize: 18,
+                fontWeight: "bold",
+                color: COLORS.primary,
+              }}
+            >
+              User name
+            </Text>
+            {!showStatus && (
+              <Text
+                style={{
+                  fontSize: 14,
+                  fontWeight: "bold",
+                  color: COLORS.status,
+                }}
+              >
+                status description
+              </Text>
+            )}
+            {showStatus && (
+              <Text
+                style={{
+                  fontSize: 14,
+                  fontWeight: "bold",
+                  color: COLORS.active,
+                }}
+              >
+                Unavailable
+              </Text>
+            )}
+          </View>
+        </Callout>
       </Marker>
     );
   };
