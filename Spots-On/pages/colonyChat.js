@@ -1,47 +1,43 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Image, TouchableOpacity, TextInput, Text, Modal, Animated } from "react-native";
-import { GiftedChat, Bubble, Day } from "react-native-gifted-chat";
+import { View, StyleSheet, Image, TouchableOpacity, TextInput, Text } from "react-native";
+import { GiftedChat, Bubble, Day, Time } from "react-native-gifted-chat";
 import COLORS from "../components/colors";
 import ThreeDotsModal from "../components/threeDotsModal.js";
 import ColonyChatList from "../components/colonyChatList.js";
 
-const CustomBubble = (props) => {
-  const bubbleStyle = {
-    left: {
-      backgroundColor: COLORS.secondary,
-      color: COLORS.primary,
-    },
-    right: {
-      backgroundColor: COLORS.darkerprimary,
-      color: COLORS.secondary,
-    },
-  };
-
-  return (
-    <Bubble
-      {...props}
-      wrapperStyle={{
-        left: bubbleStyle.left,
-        right: bubbleStyle.right,
-      }}
-    >
-      <Text
-        style={{
-          color: props.position === "left" ? bubbleStyle.left.color : bubbleStyle.right.color,
-        }}
-      >
-        {props.text}
-      </Text>
-    </Bubble>
-  );
-};
+const renderBubble = (props) => (
+<Bubble
+    {...props}
+    wrapperStyle={{
+      left: {
+        backgroundColor: COLORS.secondary,
+      },
+      right: {
+        backgroundColor: COLORS.darkerprimary,
+      },
+    }}
+    textProps={{
+      style: {
+        color: props.position === 'left' ? COLORS.primary : COLORS.secondary,
+      },
+    }}
+    textStyle={{
+      left: {
+        color: COLORS.primary,
+      },
+      right: {
+        color: COLORS.secondary,
+      },
+    }}
+  />
+);
 
 const CustomDay = (props) => {
   return (
     <Day
       {...props}
       textStyle={{
-        color: COLORS.gray, // Change this to the color you want for the date and year
+        color: COLORS.gray,
       }}
     />
   );
@@ -141,7 +137,7 @@ export default function ColonyChat({ navigation }) {
             </View>
           );
         }}
-        renderBubble={(props) => <CustomBubble {...props} />}
+        renderBubble={renderBubble}
         renderDay={(props) => <CustomDay {...props} />}
       />
     </View>
