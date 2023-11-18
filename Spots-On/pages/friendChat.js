@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, StyleSheet, Image, TouchableOpacity, TextInput, Text } from "react-native";
 import { GiftedChat, Bubble, Day, Time } from "react-native-gifted-chat";
 import COLORS from "../components/colors.js";
+import ProfileModal from "../components/profileModal.js";
 
 const renderBubble = (props) => (
 <Bubble
@@ -45,7 +46,7 @@ export default function FriendChat({ navigation }) {
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState("");
 
-  const [isThreeDotsVisible, setIsThreeDotsVisible] = useState(false);
+  const [isProfileVisible, setIsProfileVisible] = useState(false);
 
   const onSend = () => {
     if (inputText.trim() === "") {
@@ -69,15 +70,15 @@ export default function FriendChat({ navigation }) {
     setInputText("");
   };
 
-  const toggleThreeDots = () => {
-    setIsThreeDotsVisible(!isThreeDotsVisible);
-    console.log("toggle three dots")
+  const toggleProfile = () => {
+    setIsProfileVisible(!isProfileVisible);
+    console.log("toggle profile")
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={toggleChatList}>
+        <TouchableOpacity onPress={toggleProfile}>
         <Text style={styles.title}>ColonyName</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => {
@@ -89,14 +90,6 @@ export default function FriendChat({ navigation }) {
                 style={styles.backButton}
               />
           </TouchableOpacity>
-        <TouchableOpacity onPress={toggleThreeDots}>
-          <View style={styles.threeDots}>
-            <Image
-              source={require("../assets/threeDots.png")}
-              style={styles.threeDots}
-            />
-          </View>
-        </TouchableOpacity>
       </View>
       <GiftedChat
         messages={messages}
@@ -148,13 +141,6 @@ const styles = StyleSheet.create({
     left: 20,
     top: -48,
     position: 'absolute',
-    tintColor: COLORS.secondary
-  },
-  threeDots: {
-    height: 45,
-    width: 45,
-    top: -22,
-    left: 148,
     tintColor: COLORS.secondary
   },
   inputToolbarContainer: {
