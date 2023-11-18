@@ -43,7 +43,10 @@ const ThreeDotsModal = ({ isModalVisible, hideModal }) => {
     console.log("pressed mute")
   };
 
-  // const modalPosition = -490;
+  const handleSendInput = () => {
+    console.log('Sending input:', phoneNumber);
+    setPhoneNumber("");
+  };
 
   return (
     <Modal
@@ -96,10 +99,12 @@ const ThreeDotsModal = ({ isModalVisible, hideModal }) => {
                 onChangeText={(text) => setPhoneNumber(text)}
                 keyboardType="numeric"
               />
+              <TouchableOpacity 
+                onPress={handleSendInput}>
               <Image
                 source={require("../assets/backButton.png")}
                 style={styles.backButton}
-              />
+              /></TouchableOpacity>
             </View>
             <Bar color={COLORS.primary} />
           </Animated.View>
@@ -173,7 +178,7 @@ const styles = StyleSheet.create({
     height: 50,
     width: 50,
     tintColor: COLORS.primary,
-    top: 5,
+    top: -67,
     right: 5,
     transform: [{ scaleX: -1 }]
   }
