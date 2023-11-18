@@ -30,7 +30,6 @@ export default function Settings({ navigation }) {
     },
     () => {
         console.log('Privacy & Security clicked');
-        navigation.navigate('ColonyChat'); //temp delete later
     },
     () => {
       console.log("About clicked");

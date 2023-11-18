@@ -498,6 +498,7 @@ export default function MainMap({ navigation }) {
           <ChatModal
             isModalVisible={modals.chat}
             hideModal={() => hideModal("chat")}
+            navigation={navigation} 
           />
 
           {/* ------ SEARCH BAR ------ */}
