@@ -49,8 +49,9 @@ const CustomDay = (props) => {
 export default function ColonyChat({ navigation }) {
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState("");
-  const [isChatListVisible, setIsChatListVisible] = useState(false);
+
   const [isThreeDotsVisible, setIsThreeDotsVisible] = useState(false);
+  const [isChatListVisible, setIsChatListVisible] = useState(false);
 
   const onSend = () => {
     if (inputText.trim() === "") {
@@ -76,26 +77,28 @@ export default function ColonyChat({ navigation }) {
 
   const toggleThreeDots = () => {
     setIsThreeDotsVisible(!isThreeDotsVisible);
+    console.log("toggle three dots")
   };
 
   const toggleChatList = () => {
     setIsChatListVisible(!isChatListVisible);
+    console.log("toggle chat list")
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => {
-          navigation.navigate("Home");
-          console.log("Pressed back button");
-        }}>
-          <View>
-            <Image
-              source={require("../assets/backButton.png")}
-              style={styles.image}
-            />
-          </View>
-        </TouchableOpacity>
+      <TouchableOpacity onPress={() => {
+            navigation.navigate("Home");
+            console.log("Pressed back button");
+          }}>
+            <View style={styles.backButton}>
+              <Image
+                source={require("../assets/backButton.png")}
+                style={styles.image}
+              />
+            </View>
+          </TouchableOpacity>
         <TouchableOpacity onPress={toggleChatList}>
         <Text style={styles.title}>ColonyName</Text>
         </TouchableOpacity>
@@ -109,11 +112,11 @@ export default function ColonyChat({ navigation }) {
         </TouchableOpacity>
       </View>
       <ThreeDotsModal
-        isThreeDotsVisible={isThreeDotsVisible}
+        isModalVisible={isThreeDotsVisible}
         hideModal={toggleThreeDots}
       />
       <ColonyChatList
-        isChatListVisible={isChatListVisible}
+        isModalVisible={isChatListVisible}
         hideModal={toggleChatList}
       />
       <GiftedChat

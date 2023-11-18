@@ -7,7 +7,6 @@ import {
   Animated,
   TouchableOpacity,
   FlatList,
-  KeyboardAvoidingView,
 } from "react-native";
 import Bar from "./bar";
 import COLORS from "./colors";
