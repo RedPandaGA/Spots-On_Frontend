@@ -85,7 +85,10 @@ export default function ColonyChat({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-      <TouchableOpacity onPress={() => {
+        <TouchableOpacity onPress={toggleChatList}>
+        <Text style={styles.title}>ColonyName</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => {
             navigation.navigate("Home");
             console.log("Pressed back button");
           }}>
@@ -94,9 +97,6 @@ export default function ColonyChat({ navigation }) {
                 style={styles.backButton}
               />
           </TouchableOpacity>
-        <TouchableOpacity onPress={toggleChatList}>
-        <Text style={styles.title}>ColonyName</Text>
-        </TouchableOpacity>
         <TouchableOpacity onPress={toggleThreeDots}>
           <View style={styles.threeDots}>
             <Image
@@ -161,15 +161,16 @@ const styles = StyleSheet.create({
   backButton: {
     height: 50,
     width: 50,
-    position: "absolute",
     left: 20,
+    top: -48,
+    position: 'absolute',
     tintColor: COLORS.secondary
   },
   threeDots: {
-    height: 30,
-    width: 30,
-    top: -18,
-    left: 150,
+    height: 45,
+    width: 45,
+    top: -22,
+    left: 148,
     tintColor: COLORS.secondary
   },
   inputToolbarContainer: {
