@@ -5,10 +5,10 @@ import {
   TouchableOpacity,
   Keyboard,
   Image,
-  KeyboardAvoidingView,
+  Text,
   StatusBar,
 } from "react-native";
-import MapView, { Circle, Marker } from "react-native-maps";
+import MapView, { Callout, Circle, Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import MapButton from "../components/mapButton";
 import SearchBar from "../components/searchBar";
@@ -63,6 +63,66 @@ export default function MainMap({ navigation }) {
     getLocation();
   }, []);
 
+  const showCurrentLocation = () => {
+    return (
+      <Marker
+        coordinate={{
+          latitude: currentLocation.latitude,
+          longitude: currentLocation.longitude,
+        }}
+        // title="User name"
+        // description="status description"
+      >
+        <Image
+          source={require("../assets/profilePicture.png")}
+          style={{
+            width: 40,
+            height: 40,
+            borderRadius: 100,
+            borderWidth: 2,
+            borderColor:
+              showStatus || incognito ? COLORS.active : COLORS.primary,
+          }}
+        />
+        <Callout>
+          <View style={{ minWidth: 150 }}>
+            <Text
+              style={{
+                fontSize: 18,
+                fontWeight: "bold",
+                color: COLORS.primary,
+              }}
+            >
+              User name
+            </Text>
+            {!showStatus && (
+              <Text
+                style={{
+                  fontSize: 14,
+                  fontWeight: "bold",
+                  color: COLORS.status,
+                }}
+              >
+                status description
+              </Text>
+            )}
+            {showStatus && (
+              <Text
+                style={{
+                  fontSize: 14,
+                  fontWeight: "bold",
+                  color: COLORS.active,
+                }}
+              >
+                Unavailable
+              </Text>
+            )}
+          </View>
+        </Callout>
+      </Marker>
+    );
+  };
+
   const mapRef = useRef(null);
 
   const handleRegionChange = (region) => {
@@ -87,7 +147,7 @@ export default function MainMap({ navigation }) {
     setCurrentRegion(initialRegion);
 
     if (mapRef.current) {
-      mapRef.current.animateToRegion(initialRegion, 1000);
+      mapRef.current.animateToRegion(initialRegion, 750);
     }
   };
 
@@ -200,7 +260,7 @@ export default function MainMap({ navigation }) {
     }
   };
 
-  const handleMarkerDrag = (event, spotId) => {
+  const handleSpotDrag = (event, spotId) => {
     const updatedSpots = spots.map((spot) => {
       if (spot.id === spotId) {
         return {
@@ -213,7 +273,7 @@ export default function MainMap({ navigation }) {
     setSpots(updatedSpots);
   };
 
-  const handleMarkerDragEnd = (event, spotId) => {
+  const handleSpotDragEnd = (event, spotId) => {
     const updatedSpots = spots.map((spot) => {
       if (spot.id === spotId) {
         console.log("New coords for", spot);
@@ -225,6 +285,21 @@ export default function MainMap({ navigation }) {
       return spot;
     });
     setSpots(updatedSpots);
+  };
+
+  const displayAllSpots = () => {
+    return spots.map((spot) => (
+      <Spot
+        key={spot.id}
+        coordinate={spot.coordinate}
+        spotName={spot.name}
+        colonyName={spot.colonyName}
+        spotRadius={spot.radius}
+        isSafe={spot.safe}
+        onDrag={(e) => handleSpotDrag(e, spot.id)}
+        onDragEnd={(e) => handleSpotDragEnd(e, spot.id)}
+      />
+    ));
   };
 
   // let locationsOfInterest = [
@@ -315,38 +390,8 @@ export default function MainMap({ navigation }) {
                                   description="This is a draggable marker"
                                   title='draggable marker'
                               /> */}
-            {spots.map((spot) => (
-              <Spot
-                key={spot.id}
-                coordinate={spot.coordinate}
-                spotName={spot.name}
-                colonyName={spot.colonyName}
-                spotRadius={spot.radius}
-                isSafe={spot.safe}
-                onDrag={(e) => handleMarkerDrag(e, spot.id)}
-                onDragEnd={(e) => handleMarkerDragEnd(e, spot.id)}
-              />
-            ))}
-            {currentLocation && (
-              <Marker
-                coordinate={{
-                  latitude: currentLocation.latitude,
-                  longitude: currentLocation.longitude,
-                }}
-                title="Your Location"
-              >
-                <Image
-                  source={require("../assets/profilePicture.png")}
-                  style={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: 100,
-                    borderWidth: 2,
-                    borderColor: COLORS.primary,
-                  }}
-                />
-              </Marker>
-            )}
+            {displayAllSpots()}
+            {currentLocation && showCurrentLocation()}
             <Circle
               center={{
                 latitude: 30.41699914895536,
@@ -416,9 +461,6 @@ export default function MainMap({ navigation }) {
               isModalVisible={modals.social}
               hideModal={() => hideModal("social")}
               showModal={showModal}
-              // setViewEvents={setIsViewEventsModalVisible}
-              // setCreateEvent={setIsCreateEventModalVisible}
-              // setCreateColony={setIsCreateColonyModalVisible}
             />
           )}
           {modals.viewEvents && (
