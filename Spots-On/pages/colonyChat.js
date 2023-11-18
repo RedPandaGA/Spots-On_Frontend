@@ -3,6 +3,7 @@ import { View, StyleSheet, Image, TouchableOpacity, TextInput, Text, Modal, Anim
 import { GiftedChat, Bubble, Day } from "react-native-gifted-chat";
 import COLORS from "../components/colors";
 import ThreeDotsModal from "../components/threeDotsModal.js";
+import ColonyChatList from "../components/colonyChatList.js";
 
 // Custom Bubble component
 const CustomBubble = (props) => {
@@ -48,7 +49,8 @@ const CustomDay = (props) => {
 export default function ColonyChat({ navigation }) {
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState("");
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isChatListVisible, setIsChatListVisible] = useState(false);
+  const [isThreeDotsVisible, setIsThreeDotsVisible] = useState(false);
 
   const onSend = () => {
     if (inputText.trim() === "") {
@@ -72,8 +74,12 @@ export default function ColonyChat({ navigation }) {
     setInputText("");
   };
 
-  const toggleModal = () => {
-    setIsModalVisible(!isModalVisible);
+  const toggleThreeDots = () => {
+    setIsThreeDotsVisible(!isThreeDotsVisible);
+  };
+
+  const toggleChatList = () => {
+    setIsChatListVisible(!isChatListVisible);
   };
 
   return (
@@ -90,8 +96,10 @@ export default function ColonyChat({ navigation }) {
             />
           </View>
         </TouchableOpacity>
+        <TouchableOpacity onPress={toggleChatList}>
         <Text style={styles.title}>ColonyName</Text>
-        <TouchableOpacity onPress={toggleModal}>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={toggleThreeDots}>
           <View style={styles.threeDots}>
             <Image
               source={require("../assets/threeDots.png")}
@@ -101,8 +109,12 @@ export default function ColonyChat({ navigation }) {
         </TouchableOpacity>
       </View>
       <ThreeDotsModal
-        isModalVisible={isModalVisible}
-        hideModal={toggleModal}
+        isThreeDotsVisible={isThreeDotsVisible}
+        hideModal={toggleThreeDots}
+      />
+      <ColonyChatList
+        isChatListVisible={isChatListVisible}
+        hideModal={toggleChatList}
       />
       <GiftedChat
         messages={messages}
