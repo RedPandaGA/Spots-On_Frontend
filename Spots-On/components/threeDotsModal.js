@@ -81,6 +81,10 @@ const ThreeDotsModal = ({ isModalVisible, hideModal, setSocialModal }) => {
                 onChangeText={(text) => setPhoneNumber(text)}
                 keyboardType="numeric"
               />
+              <Image
+                source={require("../assets/backButton.png")}
+                style={styles.backButton}
+              />
             </View>
             <Bar color={COLORS.primary} />
           </Animated.View>
@@ -150,6 +154,15 @@ const styles = StyleSheet.create({
     color: COLORS.primary,
     paddingVertical: 5,
   },
+  backButton: {
+    position: 'absolute',
+    height: 50,
+    width: 50,
+    tintColor: COLORS.primary,
+    top: 5,
+    right: 5,
+    transform: [{ scaleX: -1 }]
+  }
 });
 
 export default ThreeDotsModal;

@@ -92,12 +92,10 @@ export default function ColonyChat({ navigation }) {
             navigation.navigate("Home");
             console.log("Pressed back button");
           }}>
-            <View style={styles.backButton}>
               <Image
                 source={require("../assets/backButton.png")}
-                style={styles.image}
+                style={styles.backButton}
               />
-            </View>
           </TouchableOpacity>
         <TouchableOpacity onPress={toggleChatList}>
         <Text style={styles.title}>ColonyName</Text>
@@ -163,7 +161,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     alignSelf: "center",
   },
-  image: {
+  backButton: {
     height: 50,
     width: 50,
     position: "absolute",
