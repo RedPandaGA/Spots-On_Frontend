@@ -16,6 +16,7 @@ const COLORS = {
   primary: "#2C6765",
   secondary: "#E7EFCA",
   status: "#D5B747",
+  active: "#FF5555",
   gray: "#ccc",
 };
 
