@@ -78,8 +78,11 @@ export default function FriendChat({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
+      <TouchableOpacity onPress={toggleProfile}>
+        <Image source={require("../assets/profilePicture.png")} style={styles.profilePicture} />
+        </TouchableOpacity>
         <TouchableOpacity onPress={toggleProfile}>
-        <Text style={styles.title}>ColonyName</Text>
+        <Text style={styles.title}>Faris Khattak</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => {
             navigation.navigate("Home");
@@ -127,7 +130,9 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary,
   },
   header: {
-    marginTop: 50,
+    paddingTop: 10,
+    paddingBottom: 5,
+    backgroundColor: COLORS.lighterprimary,
   },
   title: {
     color: COLORS.secondary,
@@ -139,7 +144,7 @@ const styles = StyleSheet.create({
     height: 50,
     width: 50,
     left: 20,
-    top: -48,
+    top: -105,
     position: 'absolute',
     tintColor: COLORS.secondary
   },
@@ -168,5 +173,13 @@ const styles = StyleSheet.create({
     height: 25,
     resizeMode: "contain", // Adjust the resizeMode as needed
     tintColor: COLORS.secondary,
+  },
+  profilePicture: {
+    height: 60,
+    width: 60,
+    alignSelf: "center",
+    borderRadius: 100,
+    marginTop: 10,
+    marginBottom: 5
   },
 });
