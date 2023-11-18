@@ -108,29 +108,29 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     width: '100%',
-    marginVertical: -10,
+    marginVertical: 0,
   },
   bar: {
     alignItems: 'center'
   },
   chatItem: {
-    paddingVertical: 10,
+    paddingVertical: 7,
   },
   chatName: {
     fontSize: 18,
     fontWeight: 'bold',
     color: COLORS.primary,
-    left: 100,
+    left: 80,
   },
   memberCount: {
     fontSize: 16,
     color: COLORS.status,
-    left: 100,
+    left: 80,
   },
   chatImage: {
     height: 40,
     width: 40,
-    left: 30,
+    left: 20,
     position: 'absolute',
     tintColor: COLORS.primary
   },
