@@ -5,28 +5,29 @@ import COLORS from "../components/colors";
 import ThreeDotsModal from "../components/threeDotsModal.js";
 import ColonyChatList from "../components/colonyChatList.js";
 
-// Custom Bubble component
 const CustomBubble = (props) => {
+  const bubbleStyle = {
+    left: {
+      backgroundColor: COLORS.secondary,
+      color: COLORS.primary,
+    },
+    right: {
+      backgroundColor: COLORS.darkerprimary,
+      color: COLORS.secondary,
+    },
+  };
+
   return (
     <Bubble
       {...props}
       wrapperStyle={{
-        left: {
-          backgroundColor: COLORS.secondary,
-        },
-        right: {
-          backgroundColor: COLORS.darkerprimary,
-        },
+        left: bubbleStyle.left,
+        right: bubbleStyle.right,
       }}
     >
       <Text
         style={{
-          left: {
-            color: COLORS.primary,
-          },
-          right: {
-            color: COLORS.secondary,
-          },
+          color: props.position === "left" ? bubbleStyle.left.color : bubbleStyle.right.color,
         }}
       >
         {props.text}
