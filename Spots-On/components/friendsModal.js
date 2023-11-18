@@ -15,7 +15,7 @@ import ColonySliderModal from "../components/colonySliderModal";
 import SearchBarModal from "../components/searchBarModal";
 import COLORS from "./colors";
 
-const FriendsModal = ({ isModalVisible, hideModal }) => {
+const FriendsModal = ({ isModalVisible, hideModal, navigation}) => {
   // Define an array of friends and their statuses
   const friendsList = [
     {
@@ -81,7 +81,7 @@ const FriendsModal = ({ isModalVisible, hideModal }) => {
   ];
 
   const renderItem = ({ item }) => (
-    <TouchableOpacity>
+    <TouchableOpacity onPress={() => navigation.navigate('FriendChat')}>
       <View style={styles.friendItem}>
         <View styles={styles.infoContainer}>
           <Image
