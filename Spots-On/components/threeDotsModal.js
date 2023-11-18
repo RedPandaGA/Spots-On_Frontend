@@ -1,30 +1,49 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import {
-  Dimensions,
   StyleSheet,
   View,
   Text,
   Image,
   Animated,
-  PanResponder,
   TouchableOpacity,
   TextInput,
-  KeyboardAvoidingView,
+  Keyboard,
 } from "react-native";
 import Bar from "./bar";
 import COLORS from "./colors";
 import Modal from "react-native-modal";
 
-const ThreeDotsModal = ({ isModalVisible, hideModal, setSocialModal }) => {
+const ThreeDotsModal = ({ isModalVisible, hideModal }) => {
   const [isMute, setIsMute] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [modalPosition, setModalPosition] = useState(-490);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setModalPosition(-150); // Set a position that suits your layout
+      }
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setModalPosition(-490); // Restore initial position when keyboard hides
+      }
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
 
   const toggleMute = () => {
     setIsMute((prevState) => !prevState);
     console.log("pressed mute")
   };
 
-  const modalPosition = -490;
+  // const modalPosition = -490;
 
   return (
     <Modal
@@ -36,10 +55,6 @@ const ThreeDotsModal = ({ isModalVisible, hideModal, setSocialModal }) => {
       transparent
       visible={isModalVisible}
     >
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === "ios" ? "padding" : null}
-      >
         <View style={styles.modalContainer}>
           <Animated.View
             style={[
@@ -89,7 +104,6 @@ const ThreeDotsModal = ({ isModalVisible, hideModal, setSocialModal }) => {
             <Bar color={COLORS.primary} />
           </Animated.View>
         </View>
-      </KeyboardAvoidingView>
     </Modal>
   );
 };
