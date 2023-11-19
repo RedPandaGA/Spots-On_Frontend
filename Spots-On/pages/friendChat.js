@@ -78,7 +78,7 @@ export default function FriendChat({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-      <TouchableOpacity onPress={toggleProfile}>
+      <TouchableOpacity  style={styles.pictureContainer} onPress={toggleProfile}>
         <Image source={require("../assets/profilePicture.png")} style={styles.profilePicture} />
         </TouchableOpacity>
         <TouchableOpacity onPress={toggleProfile}>
@@ -187,5 +187,9 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     borderColor: COLORS.red,
     borderWidth: 3
+  },
+  pictureContainer: {
+    width: '50%',
+    alignSelf: "center",
   },
 });
