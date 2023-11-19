@@ -94,6 +94,10 @@ export default function FriendChat({ navigation }) {
               />
           </TouchableOpacity>
       </View>
+      <ProfileModal
+        isModalVisible={isProfileVisible}
+        hideModal={toggleProfile}
+      />
       <GiftedChat
         messages={messages}
         onSend={(newMessages) => onSend(newMessages)}
@@ -180,6 +184,8 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     borderRadius: 100,
     marginTop: 10,
-    marginBottom: 5
+    marginBottom: 5,
+    borderColor: COLORS.red,
+    borderWidth: 3
   },
 });

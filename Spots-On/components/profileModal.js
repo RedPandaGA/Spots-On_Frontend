@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   View,
@@ -6,47 +6,14 @@ import {
   Image,
   Animated,
   TouchableOpacity,
-  TextInput,
-  Keyboard,
 } from "react-native";
 import Bar from "./bar";
 import COLORS from "./colors";
 import Modal from "react-native-modal";
 
 const ProfileModal = ({ isModalVisible, hideModal }) => {
-  const [isMute, setIsMute] = useState(false);
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [modalPosition, setModalPosition] = useState(-490);
 
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
-      () => {
-        setModalPosition(-150); // Set a position that suits your layout
-      }
-    );
-    const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
-      () => {
-        setModalPosition(-490); // Restore initial position when keyboard hides
-      }
-    );
-
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
-  }, []);
-
-  const toggleMute = () => {
-    setIsMute((prevState) => !prevState);
-    console.log("pressed mute")
-  };
-
-  const handleSendInput = () => {
-    console.log('Sending input:', phoneNumber);
-    setPhoneNumber("");
-  };
+  const modalPosition = -425
 
   return (
     <Modal
@@ -65,46 +32,26 @@ const ProfileModal = ({ isModalVisible, hideModal }) => {
               { transform: [{ translateY: modalPosition }] },
             ]}
           >
+        <Image source={require("../assets/profilePicture.png")} style={styles.profilePicture} />
+          <Text style={styles.nameText}>Faris Khattak</Text>
+          <Text style={styles.statusText}>dont talk to me. studying</Text>
             <View style={styles.buttonContainer}>
               <TouchableOpacity
-                style={isMute ? styles.buttonPressed : styles.buttonNormal}
-                onPress={toggleMute} // Use toggleMute function
-              >
-                <Text style={styles.buttonText}>Mute</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.buttonNormal}
+                style={styles.button}
                 onPress={() => {
-                  console.log("Pressed share");
+                  console.log("pressed block");
                 }}
               >
-                <Text style={styles.buttonText}>Share</Text>
+                <Text style={styles.buttonText}>Block</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={styles.buttonNormal}
+                style={styles.button}
                 onPress={() => {
-                  console.log("Pressed Leave");
+                  console.log("Pressed call");
                 }}
               >
-                <Text style={styles.buttonText}>Leave</Text>
+                <Text style={styles.buttonText}>Call</Text>
               </TouchableOpacity>
-            </View>
-            <Text style={styles.code}>M1L4N1SC00L</Text>
-            <View style={{ width: "100%" }}>
-              <TextInput
-                style={styles.input}
-                placeholder="Phone #"
-                placeholderTextColor={COLORS.primary}
-                value={phoneNumber}
-                onChangeText={(text) => setPhoneNumber(text)}
-                keyboardType="numeric"
-              />
-              <TouchableOpacity 
-                onPress={handleSendInput}>
-              <Image
-                source={require("../assets/backButton.png")}
-                style={styles.backButton}
-              /></TouchableOpacity>
             </View>
             <Bar color={COLORS.primary} />
           </Animated.View>
@@ -122,31 +69,24 @@ const styles = StyleSheet.create({
   modalContent: {
     backgroundColor: COLORS.secondary,
     borderRadius: 50,
-    padding: 20,
-    height: 225,
-    width: "103%",
+    paddingTop: 70,
+    height: "55%",
+    width: "111%",
     alignSelf: "center",
     alignItems: "center",
   },
   buttonContainer: {
     flexDirection: "row",
-    width: "100%",
+    width: "90%",
     justifyContent: "space-around",
+    paddingBottom: 15
   },
-  buttonNormal: {
+  button: {
     borderRadius: 30,
-    width: 93,
+    width: 145,
     borderWidth: 2,
     borderColor: COLORS.darkersecondary,
     alignItems: "center",
-  },
-  buttonPressed: {
-    borderRadius: 30,
-    width: 93,
-    borderWidth: 2,
-    borderColor: COLORS.darkersecondary,
-    alignItems: "center",
-    backgroundColor: COLORS.darkersecondary,
   },
   buttonText: {
     fontSize: 18,
@@ -157,30 +97,26 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     alignSelf: "center",
   },
-  input: {
-    height: 60,
-    backgroundColor: COLORS.darkersecondary,
-    padding: 10,
-    borderRadius: 15,
-    color: COLORS.primary,
-    fontWeight: "bold",
-    fontSize: 18,
-    marginBottom: 12,
+  profilePicture: {
+    height: 200,
+    width: 200,
+    alignSelf: "center",
+    borderRadius: 100,
+    marginBottom: 5,
+    borderColor: COLORS.red,
+    borderWidth: 5
   },
-  code: {
-    fontSize: 42,
-    fontWeight: "bold",
+  nameText: {
     color: COLORS.primary,
-    paddingVertical: 5,
+    fontSize: 40,
+    textAlign: "center",
+    fontWeight: "bold",
   },
-  backButton: {
-    position: 'absolute',
-    height: 50,
-    width: 50,
-    tintColor: COLORS.primary,
-    top: -67,
-    right: 5,
-    transform: [{ scaleX: -1 }]
+  statusText: {
+    fontSize: 16,
+    color: COLORS.primary,
+    fontWeight: 'bold',
+    marginBottom: 15
   }
 });
 
