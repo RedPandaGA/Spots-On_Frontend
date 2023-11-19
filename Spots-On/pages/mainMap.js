@@ -439,6 +439,7 @@ export default function MainMap({ navigation }) {
           <FriendsModal
             isModalVisible={modals.friends}
             hideModal={() => hideModal("friends")}
+            navigation={navigation}
           />
 
           {/* Social Button */}

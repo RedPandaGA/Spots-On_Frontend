@@ -30,7 +30,6 @@ export default function Settings({ navigation }) {
     },
     () => {
         console.log('Privacy & Security clicked');
-        navigation.navigate('FriendChat')
     },
     () => {
       console.log("About clicked");
