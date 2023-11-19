@@ -63,10 +63,14 @@ export default function Account({ navigation }) {
           <Text style={styles.title}>Account</Text>
         </View>
         <Image source={require("../assets/profilePicture.png")} style={styles.profilePicture} />
-        <Image source={require("../assets/editIcon.png")} style={styles.editIcon1} />
+        <TouchableOpacity>
+        <Image source={require("../assets/editIcon.png")} style={styles.editIcon1}/>
+        </TouchableOpacity>
         <View>
           <Text style={styles.nameText}>Faris Khattak</Text>
+          <TouchableOpacity>
           <Image source={require("../assets/editIcon.png")} style={styles.editIcon2} />
+          </TouchableOpacity>
         </View>
         <View style={styles.settingsItems}>
           {detailList.map((buttonText, index) => renderDetailButton(buttonText, index))}
@@ -135,7 +139,7 @@ const styles = StyleSheet.create({
     width: 40,
     tintColor: COLORS.gold,
     position: "absolute",
-    top: 265,
+    top: -60,
     left: 240,
   },
   editIcon2: {
@@ -144,7 +148,7 @@ const styles = StyleSheet.create({
     tintColor: COLORS.gold,
     position: "absolute",
     right: 15,
-    bottom: 5
+    bottom: 3
   }
 })
 
