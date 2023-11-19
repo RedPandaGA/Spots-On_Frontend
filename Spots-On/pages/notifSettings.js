@@ -9,6 +9,7 @@ import {
   ScrollView,
 } from "react-native";
 import COLORS from "../components/colors";
+import ColonySliderModal from "../components/colonySliderModal";
 
 export default function Notifications({ navigation }) {
   const statusList = ["friend1", "friend2", "friend3"];
@@ -115,6 +116,9 @@ export default function Notifications({ navigation }) {
           </TouchableOpacity>
           <Text style={styles.title}>Notifications</Text>
         </View>
+        <View style={styles.sliderContainer}>
+            <ColonySliderModal/>
+          </View>
         <Text style={styles.subtitle}>Status notifications</Text>
         <View style={styles.settingsItems}>
           {statusList.map((buttonText, index) =>
@@ -208,5 +212,10 @@ const styles = StyleSheet.create({
   spotsNotifButton: {
     marginVertical: 10,
     padding: 10,
+  },
+  sliderContainer: {
+    marginTop: 13,
+    marginBottom: -10,
+    width: "110%",
   },
 });

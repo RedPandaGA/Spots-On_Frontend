@@ -114,7 +114,7 @@ const FriendsModal = ({ isModalVisible, hideModal, navigation}) => {
 
           <View style={styles.sliderContainer}>
             {/* Colony Buttons Slider */}
-            <ColonySliderModal style={styles.colonySlider} />
+            <ColonySliderModal/>
 
             {/* Add Friends Button */}
             {/* <TouchableOpacity style={styles.plusButton}>

@@ -9,6 +9,7 @@ import {
   ScrollView,
 } from "react-native";
 import COLORS from "../components/colors";
+import ColonySliderModal from "../components/colonySliderModal";
 
 export default function LocationSharing({ navigation }) {
   const hibernationList = ["Location sharing", "Status sharing"];
@@ -131,6 +132,9 @@ export default function LocationSharing({ navigation }) {
           </TouchableOpacity>
           <Text style={styles.title}>Sharing</Text>
         </View>
+        <View style={styles.sliderContainer}>
+            <ColonySliderModal/>
+          </View>
         <Text style={styles.subtitle}>Hibernation mode</Text>
         <View style={styles.settingsItems}>
           {hibernationList.map((buttonText, index) =>
@@ -220,5 +224,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignContent: "center",
     marginRight: 20,
+  },
+  sliderContainer: {
+    marginTop: 13,
+    marginBottom: -10,
+    width: "110%",
   },
 });

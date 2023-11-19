@@ -8,6 +8,7 @@ import {
   ScrollView,
 } from "react-native";
 import COLORS from "../components/colors";
+import ColonySliderModal from "../components/colonySliderModal";
 
 export default function ColonyManagement({ navigation }) {
   const detailList = ["Edit Colony Name"];
@@ -92,6 +93,9 @@ export default function ColonyManagement({ navigation }) {
           </TouchableOpacity>
           <Text style={styles.title}>ColonyName</Text>
         </View>
+        <View style={styles.sliderContainer}>
+            <ColonySliderModal/>
+          </View>
         <Text style={styles.subtitle}>Colony details</Text>
         <View style={styles.settingsItems}>
           {detailList.map((buttonText, index) =>
@@ -156,5 +160,10 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: COLORS.primary,
     fontWeight: "bold",
+  },
+  sliderContainer: {
+    marginTop: 13,
+    marginBottom: -10,
+    width: "110%",
   },
 });
