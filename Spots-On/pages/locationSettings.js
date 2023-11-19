@@ -148,7 +148,7 @@ export default function LocationSharing({ navigation }) {
           )}
         </View>
         <Text style={styles.subtitle}>Share my status to...</Text>
-        <View style={styles.settingsItems}>
+        <View style={[styles.settingsItems, { marginBottom: 20 }]}>
           {statusList.map((buttonText, index) =>
             renderLocationToggleBox(buttonText, index)
           )}

@@ -132,7 +132,7 @@ export default function Notifications({ navigation }) {
           )}
         </View>
         <Text style={styles.subtitle}>Spots notifications</Text>
-        <View style={styles.settingsItems}>
+        <View style={[styles.settingsItems, { marginBottom: 20 }]}>
           {spotsList.map((buttonText, index) =>
             renderSpotsToggleBox(buttonText, index)
           )}
