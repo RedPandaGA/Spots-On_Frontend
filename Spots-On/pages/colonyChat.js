@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
     height: 45,
     width: 45,
     top: -22,
-    left: 148,
+    left: 170,
     tintColor: COLORS.secondary
   },
   inputToolbarContainer: {

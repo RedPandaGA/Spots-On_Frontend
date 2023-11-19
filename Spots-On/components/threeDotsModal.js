@@ -22,7 +22,7 @@ const ThreeDotsModal = ({ isModalVisible, hideModal }) => {
     const keyboardDidShowListener = Keyboard.addListener(
       'keyboardDidShow',
       () => {
-        setModalPosition(-150); // Set a position that suits your layout
+        setModalPosition(-220); // Set a position that suits your layout
       }
     );
     const keyboardDidHideListener = Keyboard.addListener(
