@@ -26,11 +26,6 @@ const Signup = ({ navigation }) => {
     return false; // Change this logic based on your data structure or API call
   };
 
-  const isValidPhoneNumber = (phoneNumber) => {
-    const phoneRegex = /^[+]?[(]?\d{1,4}[)]?[-\s./0-9]*$/;
-    return phoneRegex.test(phoneNumber);
-  };
-
   const isValidEmail = (email) => {
     const emailRegex = /\S+@\S+\.\S+/;
     return emailRegex.test(email);
@@ -40,13 +35,6 @@ const Signup = ({ navigation }) => {
     if (!phoneNumber || !email || !password || !confirmPassword) {
       setAlertTitle('Incomplete Fields');
       setAlertMessage('Please fill in all the fields.');
-      setShowAlert(true);
-      return;
-    }
-
-    if (!isValidPhoneNumber(phoneNumber)) {
-      setAlertTitle('Invalid Phone Number');
-      setAlertMessage('Please enter a valid phone number.');
       setShowAlert(true);
       return;
     }
