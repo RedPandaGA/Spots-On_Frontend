@@ -270,8 +270,8 @@ const styles = StyleSheet.create({
   buttonNormal: {
     borderRadius: 30,
     width: 160,
-    borderWidth: 1.5,
-    borderColor: COLORS.gray,
+    borderWidth: 2,
+    borderColor: COLORS.darkersecondary,
     marginVertical: 10,
     alignItems: "center",
   },
@@ -301,7 +301,7 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 50,
-    borderColor: COLORS.gray,
+    borderColor: COLORS.darkersecondary,
     borderWidth: 2,
     margin: 10,
     padding: 10,
