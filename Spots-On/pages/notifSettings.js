@@ -14,7 +14,7 @@ import ColonySliderModal from "../components/colonySliderModal";
 export default function Notifications({ navigation }) {
   const statusList = ["friend1", "friend2", "friend3"];
 
-  const locationList = ["friend1l", "friend2l", "friend3lr"];
+  const locationList = ["friend1", "friend2", "friend3"];
 
   const [statusSwitches, setStatusSwitches] = useState({
     friend1: false,
@@ -55,10 +55,10 @@ export default function Notifications({ navigation }) {
           value={statusSwitches[text]}
           onValueChange={() => handleStatusToggle(text)}
           trackColor={{
-            false: "#305c5c", // color when switch is off
-            true: "#D5B747", // color when switch is on
+            false: COLORS.darkerprimary, // color when switch is off
+            true: COLORS.gold, // color when switch is on
           }}
-          thumbColor={statusSwitches[text] ? "#E7EFCA" : "#2C6765"}
+          thumbColor={statusSwitches[text] ? COLORS.white : COLORS.lighterprimary}
         />
       </View>
     );
@@ -73,10 +73,10 @@ export default function Notifications({ navigation }) {
           value={locationSwitches[text]}
           onValueChange={() => handleLocationToggle(text)}
           trackColor={{
-            false: "#305c5c", // color when switch is off
-            true: "#D5B747", // color when switch is on
+            false: COLORS.darkerprimary, // color when switch is off
+            true: COLORS.gold, // color when switch is on
           }}
-          thumbColor={locationSwitches[text] ? "#E7EFCA" : "#2C6765"}
+          thumbColor={locationSwitches[text] ? COLORS.white : COLORS.lighterprimary}
         />
       </View>
     );
