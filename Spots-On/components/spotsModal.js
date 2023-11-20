@@ -319,14 +319,14 @@ const CreateSpotModal = ({
                       setCircleCenter(newRegion);
                     }}
                   >
-                    <View
+                    {/* <View
                       style={{
                         position: "absolute",
-                        top: "56%",
+                        top: "50%",
                         left: "50%",
                       }}
                     >
-                      <Marker>
+                      <Marker coordinate={circleCenter}>
                         <Image
                           source={require("../assets/marker.png")}
                           style={{ width: 30, height: 30 }}
@@ -343,7 +343,14 @@ const CreateSpotModal = ({
                             : "rgba(255, 85, 85, .3)"
                         } // transparent versions of COLORS.primary/COLORS.active
                       />
-                    </View>
+                    </View> */}
+                    <Spot
+                      coordinate={circleCenter}
+                      spotName={newSpot.name}
+                      colonyName={newSpot.colonyName}
+                      isSafe={newSpot.safe}
+                      spotRadius={circleRadius}
+                    />
                   </MapView>
 
                   <View style={styles.sliderContainer}>
@@ -482,6 +489,7 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     marginHorizontal: 20,
+    marginTop: 5,
   },
   inputContainer: {
     width: "100%",
@@ -502,7 +510,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignContent: "space-between",
     flexDirection: "row",
-    marginVertical: 20,
+    marginVertical: 10,
     marginHorizontal: 10,
   },
   switchText: {
@@ -519,7 +527,7 @@ const styles = StyleSheet.create({
     color: COLORS.secondary,
     textAlign: "center",
     justifyContent: "center",
-    paddingTop: 20,
+    paddingTop: 10,
     paddingHorizontal: 10,
     marginTop: 10,
   },
@@ -539,7 +547,7 @@ const styles = StyleSheet.create({
     marginBottom: 0,
   },
   map: {
-    height: "35%",
+    height: "30%",
     width: "100%",
     borderWidth: 1,
     borderColor: COLORS.secondary,
