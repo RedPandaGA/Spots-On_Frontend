@@ -52,6 +52,9 @@ const CreateSpotModal = ({
     safe: true,
   });
 
+  const [spotNameError, setSpotNameError] = useState(null);
+  const [colonyNameError, setColonyNameError] = useState(null);
+
   // Animated values
   const spotListOpacity = new Animated.Value(1);
   const addSpotOpacity = new Animated.Value(0);
@@ -60,6 +63,37 @@ const CreateSpotModal = ({
 
   const handleInputChange = (key, value) => {
     setNewSpot({ ...newSpot, [key]: value });
+    // Clear the error when the user starts typing
+    key === "name" && setSpotNameError(null);
+    key === "colonyName" && setColonyNameError(null);
+  };
+
+  const resetValues = () => {
+    setCircleCenter({
+      latitude: mapRegion.latitude,
+      longitude: mapRegion.longitude,
+    });
+    setCircleRadius(50);
+    setShowAddSpot(false);
+    setShowSpotList(true);
+    setSpotNameError(false);
+    setColonyNameError(false);
+  };
+
+  const validateInputs = () => {
+    let isValid = true;
+
+    if (!newSpot.name.trim()) {
+      setSpotNameError("Spot Name is required");
+      isValid = false;
+    }
+
+    if (!newSpot.colonyName.trim()) {
+      setColonyNameError("Colony Name is required");
+      isValid = false;
+    }
+
+    return isValid;
   };
 
   const toggleSafety = () => {
@@ -68,12 +102,6 @@ const CreateSpotModal = ({
       safe: !prevSpot.safe,
     }));
   };
-
-  // const handleMapPress = (event) => {
-  //   // Update the spot's location when the map is pressed
-  //   const { coordinate } = event.nativeEvent;
-  //   setCircleCenter(coordinate);
-  // };
 
   useEffect(() => {
     // Animate the content switch
@@ -154,21 +182,6 @@ const CreateSpotModal = ({
     return feet.toFixed(0);
   };
 
-  // const renderSpotItem = ({ item }) => {
-  //   console.log(item);
-
-  //   return (
-  //     <TouchableOpacity style={styles.addSpotButton}>
-  //       {/* Adjust the rendering of spot information based on your data */}
-  //       <Image
-  //         style={styles.spotListImage}
-  //         source={require("../assets/marker.png")}
-  //       />
-  //       <Text style={styles.addSpotText}>{item.name}</Text>
-  //     </TouchableOpacity>
-  //   );
-  // };
-
   let feetValue = metersToFeet(circleRadius);
 
   return (
@@ -245,13 +258,7 @@ const CreateSpotModal = ({
                 <View style={styles.addSpotHeader}>
                   <TouchableOpacity
                     onPress={() => {
-                      setCircleCenter({
-                        latitude: mapRegion.latitude,
-                        longitude: mapRegion.longitude,
-                      });
-                      setCircleRadius(50);
-                      setShowAddSpot(false);
-                      setShowSpotList(true);
+                      resetValues();
                     }}
                   >
                     <Image
@@ -264,14 +271,20 @@ const CreateSpotModal = ({
                 <View style={styles.infoContainer}>
                   <View style={styles.inputContainer}>
                     <TextInput
-                      style={styles.input}
+                      style={[styles.input, spotNameError && styles.inputError]}
                       placeholder="Spot Name *"
                       placeholderTextColor={COLORS.secondary}
                       value={newSpot.name}
                       onChangeText={(text) => handleInputChange("name", text)}
                     />
+                    {spotNameError && (
+                      <Text style={styles.errorMessage}>{spotNameError}</Text>
+                    )}
                     <TextInput
-                      style={styles.input}
+                      style={[
+                        styles.input,
+                        colonyNameError && styles.inputError,
+                      ]}
                       placeholder="Colony Name *"
                       placeholderTextColor={COLORS.secondary}
                       value={newSpot.colonyName}
@@ -279,6 +292,9 @@ const CreateSpotModal = ({
                         handleInputChange("colonyName", text)
                       }
                     />
+                    {colonyNameError && (
+                      <Text style={styles.errorMessage}>{colonyNameError}</Text>
+                    )}
                     <View style={styles.findLocationContainer}>
                       <TextInput
                         style={[styles.input, { width: "80%" }]}
@@ -380,18 +396,21 @@ const CreateSpotModal = ({
                     <TouchableOpacity
                       style={styles.buttonNormal}
                       onPress={() => {
-                        // Save the event object or perform other actions here
-                        const updatedSpot = {
-                          ...newSpot,
-                          id: Date.now(),
-                          radius: circleRadius,
-                          coordinate: circleCenter,
-                        };
-                        setAllSpots([...allSpots, updatedSpot]);
-                        setShowAddSpot(false);
-                        setShowSpotList(true);
-                        // hideModal();
-                        console.log("Spot Created:\n", newSpot);
+                        // Validate inputs before proceeding
+                        if (validateInputs()) {
+                          // Save the event object or perform other actions here
+                          const updatedSpot = {
+                            ...newSpot,
+                            id: Date.now(),
+                            radius: circleRadius,
+                            coordinate: circleCenter,
+                          };
+                          setAllSpots([...allSpots, updatedSpot]);
+                          setShowAddSpot(false);
+                          setShowSpotList(true);
+                          // hideModal();
+                          console.log("Spot Created:\n", newSpot);
+                        }
                       }}
                     >
                       <Text style={styles.buttonText}>Create</Text>
@@ -581,6 +600,16 @@ const styles = StyleSheet.create({
     color: COLORS.primary,
     fontWeight: "bold",
     fontSize: 18,
+  },
+  // inputError: {
+  //   borderColor: "red",
+  // },
+  errorMessage: {
+    color: COLORS.active,
+    fontSize: 14,
+    marginTop: 5,
+    marginLeft: 10,
+    fontWeight: "bold",
   },
 });
 
