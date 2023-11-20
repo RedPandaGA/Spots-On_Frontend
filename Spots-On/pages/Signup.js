@@ -20,6 +20,22 @@ const Signup = ({ navigation }) => {
   const [alertTitle, setAlertTitle] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
 
+  // Function to check if the phone number is already used (mock implementation)
+  const isPhoneNumberUsed = (phoneNumber) => {
+    // Mock implementation checking if the number is already used
+    return false; // Change this logic based on your data structure or API call
+  };
+
+  const isValidPhoneNumber = (phoneNumber) => {
+    const phoneRegex = /^[+]?[(]?\d{1,4}[)]?[-\s./0-9]*$/;
+    return phoneRegex.test(phoneNumber);
+  };
+
+  const isValidEmail = (email) => {
+    const emailRegex = /\S+@\S+\.\S+/;
+    return emailRegex.test(email);
+  };
+
   const handleSignup = () => {
     if (!phoneNumber || !email || !password || !confirmPassword) {
       setAlertTitle('Incomplete Fields');
@@ -28,9 +44,30 @@ const Signup = ({ navigation }) => {
       return;
     }
 
+    if (!isValidPhoneNumber(phoneNumber)) {
+      setAlertTitle('Invalid Phone Number');
+      setAlertMessage('Please enter a valid phone number.');
+      setShowAlert(true);
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      setAlertTitle('Invalid Email');
+      setAlertMessage('Please enter a valid email address.');
+      setShowAlert(true);
+      return;
+    }
+
     if (password !== confirmPassword) {
       setAlertTitle('Passwords Mismatch');
       setAlertMessage('Please match the passwords.');
+      setShowAlert(true);
+      return;
+    }
+
+    if (isPhoneNumberUsed(phoneNumber)) {
+      setAlertTitle('Phone Number Exists');
+      setAlertMessage('This phone number is already in use.');
       setShowAlert(true);
       return;
     }
@@ -101,14 +138,14 @@ const Signup = ({ navigation }) => {
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
       <View style={styles.container}>
-      {/* ... (rest of your code remains the same) */}
-      <CustomAlert
-        visible={showAlert}
-        title={alertTitle}
-        message={alertMessage}
-        onClose={() => setShowAlert(false)}
-      />
-    </View>
+        {/* ... (rest of your code remains the same) */}
+        <CustomAlert
+          visible={showAlert}
+          title={alertTitle}
+          message={alertMessage}
+          onClose={() => setShowAlert(false)}
+        />
+      </View>
     </View>
   );
 };
