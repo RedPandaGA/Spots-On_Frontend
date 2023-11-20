@@ -84,7 +84,7 @@ const SocialModal = ({ isModalVisible, hideModal, showModal }) => {
   const modalPosition = new Animated.Value(0);
 
   const buttonList = [
-    "Set Status",
+    // "Create a Spot",
     "Join Colony",
     "Create Colony",
     "View Events",
@@ -93,9 +93,9 @@ const SocialModal = ({ isModalVisible, hideModal, showModal }) => {
 
   // Create an array of functions to handle button actions
   const buttonActions = [
-    () => {
-      console.log("Set Status clicked");
-    },
+    // () => {
+    //   console.log("Create a Spot clicked");
+    // },
     () => {
       console.log("Join Colony clicked");
       // Handle specific action for Button 4
@@ -122,41 +122,42 @@ const SocialModal = ({ isModalVisible, hideModal, showModal }) => {
   ];
 
   const renderButton = (text, index) => {
-    if (text === "Set Status") {
-      return (
-        <View key={text}>
-          <TextInput
-            ref={statusInputRef}
-            style={[
-              styles.modalButton,
-              styles.inputNormal,
-              isStatusInputFocused ? styles.inputFocused : null,
-            ]}
-            placeholder={isStatusInputFocused ? "" : text}
-            placeholderTextColor={COLORS.primary}
-            value={statusInput}
-            onChangeText={(text) => setStatusInput(text)}
-            onFocus={handleStatusFocus}
-            onBlur={handleStatusBlur}
-          />
-          {isStatusInputFocused && (
-            <TouchableOpacity
-              style={styles.imageContainer}
-              onPress={() => {
-                handleUnfocus();
-                console.log("Changed status to: " + statusInput);
-                setStatusInput("");
-              }}
-            >
-              <Image
-                source={require("../assets/back-button-primary-color.png")}
-                style={styles.image}
-              />
-            </TouchableOpacity>
-          )}
-        </View>
-      );
-    } else if (text === "Join Colony") {
+    // if (text === "Create a Spot") {
+    //   return (
+    //     <View key={text}>
+    //       <TextInput
+    //         ref={statusInputRef}
+    //         style={[
+    //           styles.modalButton,
+    //           styles.inputNormal,
+    //           isStatusInputFocused ? styles.inputFocused : null,
+    //         ]}
+    //         placeholder={isStatusInputFocused ? "" : text}
+    //         placeholderTextColor={COLORS.primary}
+    //         value={statusInput}
+    //         onChangeText={(text) => setStatusInput(text)}
+    //         onFocus={handleStatusFocus}
+    //         onBlur={handleStatusBlur}
+    //       />
+    //       {isStatusInputFocused && (
+    //         <TouchableOpacity
+    //           style={styles.imageContainer}
+    //           onPress={() => {
+    //             handleUnfocus();
+    //             console.log("Changed status to: " + statusInput);
+    //             setStatusInput("");
+    //           }}
+    //         >
+    //           <Image
+    //             source={require("../assets/back-button-primary-color.png")}
+    //             style={styles.image}
+    //           />
+    //         </TouchableOpacity>
+    //       )}
+    //     </View>
+    //   );
+    // } else
+    if (text === "Join Colony") {
       return (
         <View key={text}>
           <TextInput
@@ -238,13 +239,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-end",
     backgroundColor: "transparent",
+    height: 400,
   },
   modalContent: {
     backgroundColor: COLORS.secondary,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
     padding: 20,
-    height: 400,
+
     alignItems: "center",
     justifyContent: "center",
   },
@@ -261,7 +263,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1.5,
     borderColor: COLORS.gray,
-    marginVertical: 5,
+    marginVertical: 10,
   },
   buttonText: {
     fontSize: 20,
