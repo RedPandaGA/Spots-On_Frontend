@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import COLORS from "../components/colors";
+import CustomAlert from '../components/alert';
 
 const Signup = ({ navigation }) => {
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -15,22 +16,27 @@ const Signup = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleSignup = () => {
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertTitle, setAlertTitle] = useState('');
+  const [alertMessage, setAlertMessage] = useState('');
 
+  const handleSignup = () => {
     if (!phoneNumber || !email || !password || !confirmPassword) {
-      alert("Please fill in all the fields");
+      setAlertTitle('Incomplete Fields');
+      setAlertMessage('Please fill in all the fields.');
+      setShowAlert(true);
       return;
     }
-  
+
     if (password !== confirmPassword) {
-      alert("Passwords do not match");
+      setAlertTitle('Passwords Mismatch');
+      setAlertMessage('Please match the passwords.');
+      setShowAlert(true);
       return;
     }
-  
-    console.log(
-      "Created an Account: " + phoneNumber + " with password: " + password
-    );
-    navigation.navigate("Home");
+
+    console.log('Created an Account: ' + phoneNumber + ' with password: ' + password);
+    navigation.navigate('Home');
   };
 
   const handleLogin = () => {
@@ -94,6 +100,15 @@ const Signup = ({ navigation }) => {
       >
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
+      <View style={styles.container}>
+      {/* ... (rest of your code remains the same) */}
+      <CustomAlert
+        visible={showAlert}
+        title={alertTitle}
+        message={alertMessage}
+        onClose={() => setShowAlert(false)}
+      />
+    </View>
     </View>
   );
 };
