@@ -73,6 +73,9 @@ const CreateColonyModal = ({ isModalVisible, hideModal, showModal }) => {
                   hideModal();
                   showModal("social");
                   console.log("Pressed back button to social");
+
+                  // CREATE COLONY AND UPLOAD COLONY INFORMATION TO DATABASE
+                  // ENTER USER IN SAID NEW COLONY WITH ADMIN PERMISSIONS?
                 }}
               >
                 <Image

@@ -41,6 +41,7 @@ export default function MainMap({ navigation }) {
   const [currentRegion, setCurrentRegion] = useState(initialRegion);
   const [showResetButton, setShowResetButton] = useState(false);
 
+  // CREATE FUNCTION TO GRAB USER INFORMATION AND STORE INTO USESTATE VARIABLES?
   const [user, setUser] = useState({
     nickname: "faris",
     uid: "1000",
@@ -58,6 +59,7 @@ export default function MainMap({ navigation }) {
     console.log(user);
   };
 
+  // GRAB LOCATION FROM USER AND STORE IN DATABASE
   useEffect(() => {
     const getLocation = async () => {
       console.log("Asking permission for location...");
@@ -89,6 +91,7 @@ export default function MainMap({ navigation }) {
     getLocation();
   }, []);
 
+  // GRAB LOCATION FROM USER AND STORE IN DATABASE
   const getCurrentLocation = () => {
     const timeout = 10000;
     return new Promise(async (resolve, reject) => {
@@ -203,10 +206,6 @@ export default function MainMap({ navigation }) {
     }
   };
 
-  // Track incognito and status choices
-  // const [incognito, setIncognito] = useState(false);
-  // const [showStatus, setShowStatus] = useState(false);
-
   const statusIdentifiers = [
     {
       label: "Online",
@@ -230,15 +229,6 @@ export default function MainMap({ navigation }) {
       setUser({ ...user, incognito: true });
     }
   };
-
-  // const handleShowStatus = () => {
-  //   console.log("Pressed show status button");
-  //   if (showStatus) {
-  //     setShowStatus(false);
-  //   } else {
-  //     setShowStatus(true);
-  //   }
-  // };
 
   // Create a state variable to control the visibility of all modals
   const [modals, setModals] = useState({
@@ -268,60 +258,8 @@ export default function MainMap({ navigation }) {
     }));
   };
 
+  // GET ALL SPOTS FROM DATABASE BASED ON SELECTED COLONY
   const [spots, setSpots] = useState([]);
-
-  // const [createSpot, setCreateSpot] = useState(false);
-
-  // const handleCreateSpot = () => {
-  //   console.log("Pressed create spot button");
-  //   setCreateSpot(true);
-  // };
-
-  // const cancelCreateSpot = () => {
-  //   setCreateSpot(false);
-  // };
-
-  // const resetNewSpot = () => {
-  //   setNewSpot({
-  //     name: "",
-  //     colonyName: "",
-  //     radius: 250,
-  //     coordinate: {},
-  //     safe: true,
-  //   });
-  // };
-
-  // const addSpot = (event) => {
-  //   if (Keyboard.isVisible()) {
-  //     Keyboard.dismiss();
-  //   }
-  //   if (createSpot) {
-  //     currentSpot = newSpot;
-  //     const updatedSpot = {
-  //       ...currentSpot,
-  //       id: Date.now(),
-  //       coordinate: event.nativeEvent.coordinate,
-  //     };
-
-  //     setSpots([...spots, updatedSpot]);
-  //     resetNewSpot();
-  //     setCreateSpot(false);
-  //     console.log("Added spot: ", updatedSpot);
-
-  //     //tests if user location is within spot
-  //     const userLocation = {
-  //       latitude: user.currentLocation.latitude,
-  //       longitude: user.currentLocation.longitude,
-  //     };
-  //     const insideSpot = isPointWithinRadius(
-  //       userLocation,
-  //       updatedSpot.coordinate,
-  //       updatedSpot.radius
-  //     );
-  //     console.log("Is current user location within spot?", insideSpot);
-  //     logUser();
-  //   }
-  // };
 
   const handleSpotDrag = (event, spotId) => {
     const updatedSpots = spots.map((spot) => {
@@ -365,6 +303,8 @@ export default function MainMap({ navigation }) {
     ));
   };
 
+  // GET ALL COLONIES FROM DATABASE AND STORE INTO VARIABLES TO USE AND DISPLAY
+  // USE THE SELECTED VALUE OR SOMETHING SIMILAR TO GRAB SPECIFIC MEMBERS/SPOTS BASED ON THE SELECTED COLONY
   const [colonies, setColonies] = useState([
     { name: "SASE", selected: true },
     { name: "lsu engineering", selected: false },
@@ -376,58 +316,7 @@ export default function MainMap({ navigation }) {
     { name: "vsa", selected: false },
   ]);
 
-  // let locationsOfInterest = [
-  //     {
-  //         title: "First",
-  //         location: {
-  //             latitude: 30.4077,
-  //             longitude: -91.17989,
-  //         },
-  //         description: "Patrick F Taylor Hall"
-  //     },
-  //     {
-  //         title: "Second",
-  //         location: {
-  //             latitude: 30.412035,
-  //             longitude: -91.183815,
-  //         },
-  //         description: "Tiger Stadium"
-  //     }
-  // ];
-
-  // const showLocationsOfInterest = () => {
-  //     return locationsOfInterest.map((item, index) => {
-  //         return (
-  //             <Marker
-  //                 key={index}
-  //                 coordinate={item.location}
-  //                 title={item.title}
-  //                 description={item.description}
-  //                 style={{height: 100}}
-  //             />
-  //         )
-  //     });
-  // };
-
-  // const panResponder = PanResponder.create({
-  //     onStartShouldSetPanResponder: () => isSocialModalVisible,
-  //     onPanResponderMove: (event, gestureState) => {
-  //         if (gestureState.dy > 0) {
-  //             if (gestureState.dy < 150) {
-  //             modalPosition.setValue(gestureState.dy);
-  //             }
-  //         }
-  //     },
-  //     onPanResponderRelease: (event, gestureState) => {
-  //         if (gestureState.dy > 50) {
-  //             hideSocialModal();
-  //         } else {
-  //             modalPosition.setValue(0);
-  //         }
-  //     },
-  // });
-
-  // const modalPosition = new Animated.Value(0);
+  // CREATE FUNCTION TO GET ALL MEMBERS WITHIN A SELECTED COLONY AND DISPLAY THEM ON THE MAP
 
   if (initialRegion === null || currentRegion == null) {
     return <Splash />;
@@ -452,19 +341,7 @@ export default function MainMap({ navigation }) {
               // onPress={addSpot}
               onPress={() => Keyboard.dismiss()}
             >
-              {/* {showLocationsOfInterest()}
-                              <Marker 
-                                  draggable
-                                  pinColor={'#0000ff'}
-                                  coordinate={draggableMarkerCoord}
-                                  onDragEnd={(e) => {
-                                      setDraggableMarkerCoord(e.nativeEvent.coordinate);
-                                      console.log("New coordinates for marker:");
-                                      console.log(e.nativeEvent.coordinate)
-                                  }}
-                                  description="This is a draggable marker"
-                                  title='draggable marker'
-                              /> */}
+              {/* FUNCTION TO DISPLAY ALL MEMBERS WITHIN SELECTED COLONY */}
               {displayAllSpots()}
               {user.currentLocation && showCurrentLocation()}
               <Circle
@@ -538,11 +415,6 @@ export default function MainMap({ navigation }) {
                 showModal={showModal}
               />
             )}
-            {/* <SocialModal
-              isModalVisible={modals.social}
-              hideModal={() => hideModal("social")}
-              showModal={showModal}
-            /> */}
             {modals.viewEvents && (
               <ViewEventsModal
                 isModalVisible={modals.viewEvents}
@@ -581,6 +453,7 @@ export default function MainMap({ navigation }) {
             />
 
             {/* ------ SEARCH BAR ------ */}
+            {/* PASS IN COLONIES/PEOPLE TO SEARCH FOR IN ORDER TO USE SEARCH FUNCTION */}
             <SearchBar
               imageSource={require("../assets/search.png")}
               style={styles.searchBar}
@@ -618,22 +491,10 @@ export default function MainMap({ navigation }) {
             <MapButton
               imageSource={require("../assets/sensor.png")}
               style={styles.statusButton}
-              // onPress={handleShowStatus}
               onPress={() => showModal("status")}
               width={45}
               height={45}
-              // active={showStatus}
             />
-            {/* {modals.status && (
-              <StatusModal
-                isModalVisible={modals.status}
-                hideModal={() => hideModal("status")}
-                // cancelCreateSpot={cancelCreateSpot}
-                // newSpot={newSpot}
-                // setNewSpot={setNewSpot}
-                // resetNewSpot={resetNewSpot}
-              />
-            )} */}
             <StatusModal
               isModalVisible={modals.status}
               hideModal={() => hideModal("status")}
@@ -656,10 +517,8 @@ export default function MainMap({ navigation }) {
             <MapButton
               imageSource={require("../assets/spots.png")}
               style={styles.spotsButton}
-              // active={createSpot}
               onPress={() => {
                 showModal("spots");
-                // handleCreateSpot();
               }}
               width={45}
               height={45}
@@ -668,10 +527,6 @@ export default function MainMap({ navigation }) {
               <CreateSpotModal
                 isModalVisible={modals.spots}
                 hideModal={() => hideModal("spots")}
-                // cancelCreateSpot={cancelCreateSpot}
-                // newSpot={newSpot}
-                // setNewSpot={setNewSpot}
-                // resetNewSpot={resetNewSpot}
                 allSpots={spots}
                 setAllSpots={setSpots}
                 mapRegion={{

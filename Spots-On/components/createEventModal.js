@@ -133,6 +133,9 @@ const CreateEventModal = ({ isModalVisible, hideModal, showModal }) => {
                   hideModal();
                   showModal("social");
                   console.log("Pressed back button to social");
+
+                  // CREATE EVENT AND UDPDATE DATABASE WITH ALL THE INFO RECEIVED FROM THIS MODAL
+                  // DATE, TIME, ASSOCIATED COLONY NAME, LOCATION, DESCRIPTION, ETC.
                 }}
               >
                 <Image

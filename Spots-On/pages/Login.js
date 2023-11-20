@@ -15,6 +15,10 @@ const Login = ({ navigation }) => {
 
   const handleLogin = () => {
     // Navigate to the main app screen
+
+    // VALIDATE USER IS IN DATABASE AND LOGIN IF SUCCEED
+    // THROW ERROR AND DISPLAY THAT USER IS NOT IN DATABSE OTHERWISE
+
     console.log(
       "Logged into account: " + phoneNumber + " with password: " + password
     );

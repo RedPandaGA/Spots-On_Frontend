@@ -45,6 +45,8 @@ const ViewEventsModal = ({ isModalVisible, hideModal, showModal }) => {
 
   const modalPosition = new Animated.Value(0);
 
+  // CREATE FUNCTION TO GRAB EVENTS FROM DATABASE AND PUT THEM INTO TODAY AND UPCOMING FLATLISTS
+
   // Today's events
   const eventsToday = [
     {

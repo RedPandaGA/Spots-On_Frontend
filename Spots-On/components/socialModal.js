@@ -18,21 +18,8 @@ import COLORS from "./colors";
 const SocialModal = ({ isModalVisible, hideModal, showModal }) => {
   const [joinColonyCode, setJoinColonyCode] = useState("");
 
-  const [statusInput, setStatusInput] = useState("");
-
-  const [isStatusInputFocused, setIsStatusInputFocused] = useState(false);
-
   const [isJoinColonyInputFocused, setIsJoinColonyInputFocused] =
     useState(false);
-
-  const handleStatusFocus = () => {
-    setIsStatusInputFocused(true);
-  };
-
-  const handleStatusBlur = () => {
-    setStatusInput("");
-    setIsStatusInputFocused(false);
-  };
 
   const handleJoinColonyFocus = () => {
     setIsJoinColonyInputFocused(true);
@@ -99,6 +86,10 @@ const SocialModal = ({ isModalVisible, hideModal, showModal }) => {
     () => {
       console.log("Join Colony clicked");
       // Handle specific action for Button 4
+
+      // CHECK IF CODE IS ASSOCIATED WITH COLONY IN DATABASE
+      // IF SO, UPDATE DATABASE TO ENTER USER IN COLONY
+      // ELSE, THROW ERROR AND SAY INVALID CODE OR SOMETHING
     },
     () => {
       hideModal();
@@ -122,41 +113,6 @@ const SocialModal = ({ isModalVisible, hideModal, showModal }) => {
   ];
 
   const renderButton = (text, index) => {
-    // if (text === "Create a Spot") {
-    //   return (
-    //     <View key={text}>
-    //       <TextInput
-    //         ref={statusInputRef}
-    //         style={[
-    //           styles.modalButton,
-    //           styles.inputNormal,
-    //           isStatusInputFocused ? styles.inputFocused : null,
-    //         ]}
-    //         placeholder={isStatusInputFocused ? "" : text}
-    //         placeholderTextColor={COLORS.primary}
-    //         value={statusInput}
-    //         onChangeText={(text) => setStatusInput(text)}
-    //         onFocus={handleStatusFocus}
-    //         onBlur={handleStatusBlur}
-    //       />
-    //       {isStatusInputFocused && (
-    //         <TouchableOpacity
-    //           style={styles.imageContainer}
-    //           onPress={() => {
-    //             handleUnfocus();
-    //             console.log("Changed status to: " + statusInput);
-    //             setStatusInput("");
-    //           }}
-    //         >
-    //           <Image
-    //             source={require("../assets/back-button-primary-color.png")}
-    //             style={styles.image}
-    //           />
-    //         </TouchableOpacity>
-    //       )}
-    //     </View>
-    //   );
-    // } else
     if (text === "Join Colony") {
       return (
         <View key={text}>
@@ -180,7 +136,7 @@ const SocialModal = ({ isModalVisible, hideModal, showModal }) => {
               onPress={() => {
                 handleUnfocus();
                 setJoinColonyCode("");
-                handleStatusBlur();
+                // handleStatusBlur();
                 console.log("Joined colony with code: " + joinColonyCode);
               }}
             >
@@ -288,7 +244,7 @@ const styles = StyleSheet.create({
     height: 40, // Adjust the height as needed
     position: "absolute",
     right: 10, // Adjust the position as needed
-    top: 10, // Adjust the position as needed
+    top: 15, // Adjust the position as needed
     transform: [{ rotate: "180deg" }],
   },
   image: {
