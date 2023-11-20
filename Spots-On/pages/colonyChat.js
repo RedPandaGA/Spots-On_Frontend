@@ -113,6 +113,7 @@ export default function ColonyChat({ navigation }) {
       <ColonyChatList
         isModalVisible={isChatListVisible}
         hideModal={toggleChatList}
+        navigation={navigation}
       />
       <GiftedChat
         messages={messages}
