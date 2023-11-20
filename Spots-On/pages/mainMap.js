@@ -4,6 +4,7 @@ import {
   View,
   TouchableOpacity,
   Keyboard,
+  KeyboardAvoidingView,
   Image,
   Text,
   StatusBar,
@@ -23,6 +24,8 @@ import ChatModal from "../components/chatModal";
 import COLORS from "../components/colors";
 import Spot from "../components/spot";
 import Splash from "./splash";
+import { isPointWithinRadius } from "geolib";
+import StatusModal from "../components/statusModal";
 
 export default function MainMap({ navigation }) {
   // Manage the location of the map
@@ -33,21 +36,44 @@ export default function MainMap({ navigation }) {
   //     longitudeDelta: 0.0421,
   //   });
 
-  const [currentLocation, setCurrentLocation] = useState(null);
+  // const [currentLocation, setCurrentLocation] = useState(null);
   const [initialRegion, setInitialRegion] = useState(null);
   const [currentRegion, setCurrentRegion] = useState(initialRegion);
   const [showResetButton, setShowResetButton] = useState(false);
 
+  const [user, setUser] = useState({
+    nickname: "faris",
+    uid: "1000",
+    status: "", // custom description
+    statusCode: 0, // 0 - online, 1 - idle, 2 - do not disturb
+    incognito: false,
+    userSettings: {}, // JSON of settings
+    currentLocation: {},
+    lastContact: "", // time
+    picture: "../assets/profilePicture.png", // not sure how to store yet
+    emergency: false,
+  });
+
+  const logUser = () => {
+    console.log(user);
+  };
+
   useEffect(() => {
     const getLocation = async () => {
+      console.log("Asking permission for location...");
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
         console.log("Permission to access location was denied");
         return;
       }
+      console.log("Permission granted!");
 
-      let location = await Location.getCurrentPositionAsync({});
-      setCurrentLocation(location.coords);
+      console.log("Getting current position...");
+      // let location = await Location.getCurrentPositionAsync({});
+      let location = await getCurrentLocation();
+      // setCurrentLocation(location.coords);
+      setUser({ ...user, currentLocation: location.coords });
+      console.log("Received current position!");
 
       const initialRegion = {
         latitude: location.coords.latitude,
@@ -63,12 +89,29 @@ export default function MainMap({ navigation }) {
     getLocation();
   }, []);
 
+  const getCurrentLocation = () => {
+    const timeout = 10000;
+    return new Promise(async (resolve, reject) => {
+      setTimeout(() => {
+        reject(
+          new Error(
+            `Error getting gps location after ${(timeout * 2) / 1000} s`
+          )
+        );
+      }, timeout * 2);
+      setTimeout(async () => {
+        resolve(await Location.getLastKnownPositionAsync());
+      }, timeout);
+      resolve(await Location.getCurrentPositionAsync());
+    });
+  };
+
   const showCurrentLocation = () => {
     return (
       <Marker
         coordinate={{
-          latitude: currentLocation.latitude,
-          longitude: currentLocation.longitude,
+          latitude: user.currentLocation.latitude,
+          longitude: user.currentLocation.longitude,
         }}
         // title="User name"
         // description="status description"
@@ -80,47 +123,45 @@ export default function MainMap({ navigation }) {
             height: 40,
             borderRadius: 100,
             borderWidth: 2,
-            borderColor:
-              showStatus || incognito ? COLORS.active : COLORS.primary,
+            borderColor: getStatusColor(user),
           }}
         />
         <Callout>
           <View style={{ minWidth: 150 }}>
             <Text
               style={{
-                fontSize: 18,
+                fontSize: 20,
                 fontWeight: "bold",
                 color: COLORS.primary,
               }}
             >
-              User name
+              {user.nickname}
             </Text>
-            {!showStatus && (
+            {user.status === "" && (
               <Text
-                style={{
-                  fontSize: 14,
-                  fontWeight: "bold",
-                  color: COLORS.status,
-                }}
+                style={[styles.statusLabel, { color: getStatusColor(user) }]}
               >
-                status description
+                {statusIdentifiers[user.statusCode].label}
               </Text>
             )}
-            {showStatus && (
+            {user.status !== "" && (
               <Text
-                style={{
-                  fontSize: 14,
-                  fontWeight: "bold",
-                  color: COLORS.active,
-                }}
+                style={[styles.statusLabel, { color: getStatusColor(user) }]}
               >
-                Unavailable
+                {user.status}
               </Text>
             )}
           </View>
         </Callout>
       </Marker>
     );
+  };
+
+  const getStatusColor = (user) => {
+    const { statusCode, incognito } = user;
+    if (statusCode === 2 || incognito) return COLORS.active;
+    if (statusCode === 1) return COLORS.status;
+    return COLORS.green;
   };
 
   const mapRef = useRef(null);
@@ -163,26 +204,41 @@ export default function MainMap({ navigation }) {
   };
 
   // Track incognito and status choices
-  const [incognito, setIncognito] = useState(false);
-  const [showStatus, setShowStatus] = useState(false);
+  // const [incognito, setIncognito] = useState(false);
+  // const [showStatus, setShowStatus] = useState(false);
+
+  const statusIdentifiers = [
+    {
+      label: "Online",
+      value: "1",
+    },
+    {
+      label: "Idle",
+      value: "2",
+    },
+    {
+      label: "Do not disturb",
+      value: "3",
+    },
+  ];
 
   const handleIncognito = () => {
     console.log("Pressed incognito button");
-    if (incognito) {
-      setIncognito(false);
+    if (user.incognito) {
+      setUser({ ...user, incognito: false });
     } else {
-      setIncognito(true);
+      setUser({ ...user, incognito: true });
     }
   };
 
-  const handleShowStatus = () => {
-    console.log("Pressed show status button");
-    if (showStatus) {
-      setShowStatus(false);
-    } else {
-      setShowStatus(true);
-    }
-  };
+  // const handleShowStatus = () => {
+  //   console.log("Pressed show status button");
+  //   if (showStatus) {
+  //     setShowStatus(false);
+  //   } else {
+  //     setShowStatus(true);
+  //   }
+  // };
 
   // Create a state variable to control the visibility of all modals
   const [modals, setModals] = useState({
@@ -193,6 +249,7 @@ export default function MainMap({ navigation }) {
     createColony: false,
     spots: false,
     chat: false,
+    status: false,
   });
 
   // Function to show a specific modal
@@ -212,53 +269,59 @@ export default function MainMap({ navigation }) {
   };
 
   const [spots, setSpots] = useState([]);
-  const [createSpot, setCreateSpot] = useState(false);
 
-  const handleCreateSpot = () => {
-    console.log("Pressed create spot button");
-    setCreateSpot(true);
-  };
+  // const [createSpot, setCreateSpot] = useState(false);
 
-  const cancelCreateSpot = () => {
-    setCreateSpot(false);
-  };
+  // const handleCreateSpot = () => {
+  //   console.log("Pressed create spot button");
+  //   setCreateSpot(true);
+  // };
 
-  const [newSpot, setNewSpot] = useState({
-    name: "",
-    colonyName: "",
-    radius: 250,
-    coordinate: {},
-    safe: true,
-  });
+  // const cancelCreateSpot = () => {
+  //   setCreateSpot(false);
+  // };
 
-  const resetNewSpot = () => {
-    setNewSpot({
-      name: "",
-      colonyName: "",
-      radius: 250,
-      coordinate: {},
-      safe: true,
-    });
-  };
+  // const resetNewSpot = () => {
+  //   setNewSpot({
+  //     name: "",
+  //     colonyName: "",
+  //     radius: 250,
+  //     coordinate: {},
+  //     safe: true,
+  //   });
+  // };
 
-  const addSpot = (event) => {
-    if (Keyboard.isVisible()) {
-      Keyboard.dismiss();
-    }
-    if (createSpot) {
-      currentSpot = newSpot;
-      const updatedSpot = {
-        ...currentSpot,
-        id: Date.now(),
-        coordinate: event.nativeEvent.coordinate,
-      };
+  // const addSpot = (event) => {
+  //   if (Keyboard.isVisible()) {
+  //     Keyboard.dismiss();
+  //   }
+  //   if (createSpot) {
+  //     currentSpot = newSpot;
+  //     const updatedSpot = {
+  //       ...currentSpot,
+  //       id: Date.now(),
+  //       coordinate: event.nativeEvent.coordinate,
+  //     };
 
-      setSpots([...spots, updatedSpot]);
-      resetNewSpot();
-      setCreateSpot(false);
-      console.log("Added spot: ", updatedSpot);
-    }
-  };
+  //     setSpots([...spots, updatedSpot]);
+  //     resetNewSpot();
+  //     setCreateSpot(false);
+  //     console.log("Added spot: ", updatedSpot);
+
+  //     //tests if user location is within spot
+  //     const userLocation = {
+  //       latitude: user.currentLocation.latitude,
+  //       longitude: user.currentLocation.longitude,
+  //     };
+  //     const insideSpot = isPointWithinRadius(
+  //       userLocation,
+  //       updatedSpot.coordinate,
+  //       updatedSpot.radius
+  //     );
+  //     console.log("Is current user location within spot?", insideSpot);
+  //     logUser();
+  //   }
+  // };
 
   const handleSpotDrag = (event, spotId) => {
     const updatedSpots = spots.map((spot) => {
@@ -301,6 +364,17 @@ export default function MainMap({ navigation }) {
       />
     ));
   };
+
+  const [colonies, setColonies] = useState([
+    { name: "SASE", selected: true },
+    { name: "lsu engineering", selected: false },
+    { name: "swim friends", selected: false },
+    { name: "ood group", selected: false },
+    { name: "best friends", selected: false },
+    { name: "volleyball", selected: false },
+    { name: "oopah", selected: false },
+    { name: "vsa", selected: false },
+  ]);
 
   // let locationsOfInterest = [
   //     {
@@ -360,24 +434,25 @@ export default function MainMap({ navigation }) {
   }
 
   return (
-    // <KeyboardAvoidingView behavior="height" enabled={false}>
-    <View>
-      {initialRegion && currentRegion && (
-        <View>
-          <StatusBar />
-          {/* Main Map */}
-          <MapView
-            style={styles.map}
-            //   initialRegion={defaultRegion}
-            ref={mapRef}
-            initialRegion={initialRegion}
-            region={currentRegion}
-            //   onRegionChange={(newRegion) => setMapRegion(newRegion)}
-            onRegionChange={handleRegionChange}
-            mapType={mapType}
-            onPress={addSpot}
-          >
-            {/* {showLocationsOfInterest()}
+    <KeyboardAvoidingView behavior="height" enabled={false}>
+      <View>
+        {initialRegion && currentRegion && (
+          <View>
+            <StatusBar />
+            {/* Main Map */}
+            <MapView
+              style={styles.map}
+              //   initialRegion={defaultRegion}
+              ref={mapRef}
+              initialRegion={initialRegion}
+              region={currentRegion}
+              //   onRegionChange={(newRegion) => setMapRegion(newRegion)}
+              onRegionChange={handleRegionChange}
+              mapType={mapType}
+              // onPress={addSpot}
+              onPress={() => Keyboard.dismiss()}
+            >
+              {/* {showLocationsOfInterest()}
                               <Marker 
                                   draggable
                                   pinColor={'#0000ff'}
@@ -390,206 +465,238 @@ export default function MainMap({ navigation }) {
                                   description="This is a draggable marker"
                                   title='draggable marker'
                               /> */}
-            {displayAllSpots()}
-            {currentLocation && showCurrentLocation()}
-            <Circle
-              center={{
-                latitude: 30.41699914895536,
-                longitude: -91.17555990815163,
-              }}
-              radius={1000}
-              strokeWidth={1}
-              strokeColor="#2C6765"
-              fillColor="rgba(44, 103, 101, .3)"
-            />
-            <Circle
-              center={{
-                latitude: 30.39950609050538,
-                longitude: -91.18346974253654,
-              }}
-              radius={400}
-              strokeWidth={1}
-              strokeColor="#2C6765"
-              fillColor="rgba(44, 103, 101, .3)"
-            />
-            <Circle
-              center={{
-                latitude: 30.39446465572983,
-                longitude: -91.17913294583559,
-              }}
-              radius={200}
-              strokeWidth={1}
-              strokeColor="#rgba(255, 85, 85, 1)"
-              fillColor="rgba(255, 85, 85, .3)"
-            />
-          </MapView>
-
-          {/* ------ MAIN NAV BUTTONS ------ */}
-          {/* Friends Button */}
-          <MapButton
-            imageSource={require("../assets/people.png")}
-            style={styles.friendsButton}
-            onPress={() => {
-              showModal("friends");
-              console.log("Pressed friends button");
-            }}
-            width={60}
-            height={60}
-          />
-          <FriendsModal
-            isModalVisible={modals.friends}
-            hideModal={() => hideModal("friends")}
-            navigation={navigation}
-          />
-
-          {/* Social Button */}
-          <TouchableOpacity
-            onPress={() => {
-              showModal("social");
-              console.log("Pressed social button");
-            }}
-            style={styles.socialButtonOnMap}
-          >
-            <View style={styles.socialButton}>
-              <Image
-                source={require("../assets/ladybugfixed.png")}
-                style={styles.socialImage}
+              {displayAllSpots()}
+              {user.currentLocation && showCurrentLocation()}
+              <Circle
+                center={{
+                  latitude: 30.41699914895536,
+                  longitude: -91.17555990815163,
+                }}
+                radius={1000}
+                strokeWidth={1}
+                strokeColor="#2C6765"
+                fillColor="rgba(44, 103, 101, .3)"
               />
-            </View>
-          </TouchableOpacity>
-          {modals.social && (
-            <SocialModal
+              <Circle
+                center={{
+                  latitude: 30.39950609050538,
+                  longitude: -91.18346974253654,
+                }}
+                radius={400}
+                strokeWidth={1}
+                strokeColor="#2C6765"
+                fillColor="rgba(44, 103, 101, .3)"
+              />
+              <Circle
+                center={{
+                  latitude: 30.39446465572983,
+                  longitude: -91.17913294583559,
+                }}
+                radius={200}
+                strokeWidth={1}
+                strokeColor="#rgba(255, 85, 85, 1)"
+                fillColor="rgba(255, 85, 85, .3)"
+              />
+            </MapView>
+
+            {/* ------ MAIN NAV BUTTONS ------ */}
+            {/* Friends Button */}
+            <MapButton
+              imageSource={require("../assets/people.png")}
+              style={styles.friendsButton}
+              onPress={() => {
+                showModal("friends");
+                console.log("Pressed friends button");
+              }}
+              width={60}
+              height={60}
+            />
+            <FriendsModal
+              isModalVisible={modals.friends}
+              hideModal={() => hideModal("friends")}
+            />
+
+            {/* Social Button */}
+            <TouchableOpacity
+              onPress={() => {
+                showModal("social");
+                console.log("Pressed social button");
+              }}
+              style={styles.socialButtonOnMap}
+            >
+              <View style={styles.socialButton}>
+                <Image
+                  source={require("../assets/ladybugfixed.png")}
+                  style={styles.socialImage}
+                />
+              </View>
+            </TouchableOpacity>
+            {modals.social && (
+              <SocialModal
+                isModalVisible={modals.social}
+                hideModal={() => hideModal("social")}
+                showModal={showModal}
+              />
+            )}
+            {/* <SocialModal
               isModalVisible={modals.social}
               hideModal={() => hideModal("social")}
               showModal={showModal}
-            />
-          )}
-          {modals.viewEvents && (
-            <ViewEventsModal
-              isModalVisible={modals.viewEvents}
-              hideModal={() => hideModal("viewEvents")}
-              showModal={showModal}
-            />
-          )}
-          {modals.createEvent && (
-            <CreateEventModal
-              isModalVisible={modals.createEvent}
-              hideModal={() => hideModal("createEvent")}
-              showModal={showModal}
-            />
-          )}
-          {modals.createColony && (
-            <CreateColonyModal
-              isModalVisible={modals.createColony}
-              hideModal={() => hideModal("createColony")}
-              showModal={showModal}
-            />
-          )}
-          {/* Chats Button */}
-          <MapButton
-            imageSource={require("../assets/speech-bubble.png")}
-            style={styles.chatButton}
-            onPress={() => {
-              showModal("chat");
-              console.log("Pressed chat button");
-            }}
-            width={60}
-            height={60}
-          />
-          <ChatModal
-            isModalVisible={modals.chat}
-            hideModal={() => hideModal("chat")}
-            navigation={navigation} 
-          />
-
-          {/* ------ SEARCH BAR ------ */}
-          <SearchBar
-            imageSource={require("../assets/search.png")}
-            style={styles.searchBar}
-            onPress={() => console.log("Pressed search bar")}
-          />
-
-          {/* Colony Buttons Slider */}
-          <ColonySlider style={styles.colonySlider} />
-
-          {/* ------ SIDE BUTTONS ------ */}
-          {showResetButton && (
+            /> */}
+            {modals.viewEvents && (
+              <ViewEventsModal
+                isModalVisible={modals.viewEvents}
+                hideModal={() => hideModal("viewEvents")}
+                showModal={showModal}
+              />
+            )}
+            {modals.createEvent && (
+              <CreateEventModal
+                isModalVisible={modals.createEvent}
+                hideModal={() => hideModal("createEvent")}
+                showModal={showModal}
+              />
+            )}
+            {modals.createColony && (
+              <CreateColonyModal
+                isModalVisible={modals.createColony}
+                hideModal={() => hideModal("createColony")}
+                showModal={showModal}
+              />
+            )}
+            {/* Chats Button */}
             <MapButton
-              imageSource={require("../assets/target.png")}
-              style={styles.targetButton}
-              onPress={handleResetMap}
+              imageSource={require("../assets/speech-bubble.png")}
+              style={styles.chatButton}
+              onPress={() => {
+                showModal("chat");
+                console.log("Pressed chat button");
+              }}
+              width={60}
+              height={60}
+            />
+            <ChatModal
+              isModalVisible={modals.chat}
+              hideModal={() => hideModal("chat")}
+            />
+
+            {/* ------ SEARCH BAR ------ */}
+            <SearchBar
+              imageSource={require("../assets/search.png")}
+              style={styles.searchBar}
+              onPress={() => console.log("Pressed search bar")}
+            />
+
+            {/* Colony Buttons Slider */}
+            <ColonySlider
+              style={styles.colonySlider}
+              colonies={colonies}
+              setColonies={setColonies}
+            />
+
+            {/* ------ SIDE BUTTONS ------ */}
+            {showResetButton && (
+              <MapButton
+                imageSource={require("../assets/target.png")}
+                style={styles.targetButton}
+                onPress={handleResetMap}
+                width={45}
+                height={45}
+              />
+            )}
+
+            {/* Incognito Buttons */}
+            <MapButton
+              imageSource={require("../assets/incognito.png")}
+              style={styles.incognitoButton}
+              onPress={handleIncognito}
+              width={45}
+              height={45}
+              active={user.incognito}
+            />
+            {/* Status Button */}
+            <MapButton
+              imageSource={require("../assets/sensor.png")}
+              style={styles.statusButton}
+              // onPress={handleShowStatus}
+              onPress={() => showModal("status")}
+              width={45}
+              height={45}
+              // active={showStatus}
+            />
+            {/* {modals.status && (
+              <StatusModal
+                isModalVisible={modals.status}
+                hideModal={() => hideModal("status")}
+                // cancelCreateSpot={cancelCreateSpot}
+                // newSpot={newSpot}
+                // setNewSpot={setNewSpot}
+                // resetNewSpot={resetNewSpot}
+              />
+            )} */}
+            <StatusModal
+              isModalVisible={modals.status}
+              hideModal={() => hideModal("status")}
+              user={user}
+              setUser={setUser}
+              statusIdentifiers={statusIdentifiers}
+            />
+            {/* Change Map View Button */}
+            <MapButton
+              imageSource={require("../assets/layers.png")}
+              style={styles.mapViewButton}
+              onPress={() => {
+                handleMapType();
+                console.log("Pressed map view button");
+              }}
               width={45}
               height={45}
             />
-          )}
-
-          {/* Incognito Buttons */}
-          <MapButton
-            imageSource={require("../assets/incognito.png")}
-            style={styles.incognitoButton}
-            onPress={handleIncognito}
-            width={45}
-            height={45}
-            active={incognito}
-          />
-          {/* Status Button */}
-          <MapButton
-            imageSource={require("../assets/sensor.png")}
-            style={styles.statusButton}
-            onPress={handleShowStatus}
-            width={45}
-            height={45}
-            active={showStatus}
-          />
-          {/* Change Map View Button */}
-          <MapButton
-            imageSource={require("../assets/layers.png")}
-            style={styles.mapViewButton}
-            onPress={() => {
-              handleMapType();
-              console.log("Pressed map view button");
-            }}
-            width={45}
-            height={45}
-          />
-          {/* Spots Modal Button */}
-          <MapButton
-            imageSource={require("../assets/spots.png")}
-            style={styles.spotsButton}
-            active={createSpot}
-            onPress={() => {
-              showModal("spots");
-              handleCreateSpot();
-            }}
-            width={45}
-            height={45}
-          />
-          {modals.spots && (
-            <CreateSpotModal
-              isModalVisible={modals.spot}
-              hideModal={() => hideModal("spots")}
-              cancelCreateSpot={cancelCreateSpot}
-              newSpot={newSpot}
-              setNewSpot={setNewSpot}
-              resetNewSpot={resetNewSpot}
+            {/* Spots Modal Button */}
+            <MapButton
+              imageSource={require("../assets/spots.png")}
+              style={styles.spotsButton}
+              // active={createSpot}
+              onPress={() => {
+                showModal("spots");
+                // handleCreateSpot();
+              }}
+              width={45}
+              height={45}
             />
-          )}
-          {/* Settings Button */}
-          <MapButton
-            imageSource={require("../assets/setting.png")}
-            style={styles.settingsButton}
-            onPress={() => {
-              console.log("Pressed settings button");
-              navigation.navigate("Settings");
-            }}
-            width={45}
-            height={45}
-          />
-        </View>
-      )}
-    </View>
-
-    // </KeyboardAvoidingView>
+            {modals.spots && (
+              <CreateSpotModal
+                isModalVisible={modals.spots}
+                hideModal={() => hideModal("spots")}
+                // cancelCreateSpot={cancelCreateSpot}
+                // newSpot={newSpot}
+                // setNewSpot={setNewSpot}
+                // resetNewSpot={resetNewSpot}
+                allSpots={spots}
+                setAllSpots={setSpots}
+                mapRegion={{
+                  latitude: user.currentLocation.latitude,
+                  longitude: user.currentLocation.longitude,
+                  latitudeDelta: 0.005,
+                  longitudeDelta: 0.005,
+                }}
+              />
+            )}
+            {/* Settings Button */}
+            <MapButton
+              imageSource={require("../assets/setting.png")}
+              style={styles.settingsButton}
+              onPress={() => {
+                console.log("Pressed settings button");
+                navigation.navigate("Settings");
+              }}
+              width={45}
+              height={45}
+            />
+          </View>
+        )}
+      </View>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -715,5 +822,9 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     tintColor: COLORS.primary,
+  },
+  statusLabel: {
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });

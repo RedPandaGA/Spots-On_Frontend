@@ -21,11 +21,11 @@ export default function ColonyManagement({ navigation }) {
 
   //gotta change admin to a real role
   const mngmntList = [
-    "My Role: " + "admin",
-    "Change Admin Status",
-    "Add Colony Members",
-    "Delete Colony Members",
-    "Set Spot access",
+    "My Role: " + "Creator",
+    "Edit Permissions",
+    "Manage Members",
+    // "Delete Colony Members",
+    // "Set Spot access",
     "Leave Colony",
   ];
 
@@ -33,18 +33,21 @@ export default function ColonyManagement({ navigation }) {
     () => {
       console.log("my role clicked");
     },
+    // () => {
+    //   console.log("change admin status clicked");
+    // },
     () => {
-      console.log("change admin status clicked");
+      console.log("edit permissions clicked");
     },
     () => {
-      console.log("add colony members clicked");
+      console.log("manage members clicked");
     },
-    () => {
-      console.log("delete colony members clicked");
-    },
-    () => {
-      console.log("set bubble access clicked");
-    },
+    // () => {
+    //   console.log("delete colony members clicked");
+    // },
+    // () => {
+    //   console.log("set bubble access clicked");
+    // },
     () => {
       console.log("leave colony clicked");
     },

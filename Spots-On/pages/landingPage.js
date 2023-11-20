@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   paginationDot: {
-    backgroundColor: "#305c5c", // Change the color of inactive dots
+    backgroundColor: COLORS.darkblackgreen, // Change the color of inactive dots
     width: 8,
     height: 8,
     borderRadius: 4,

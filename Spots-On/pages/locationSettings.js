@@ -135,19 +135,19 @@ export default function LocationSharing({ navigation }) {
         <View style={styles.sliderContainer}>
             <ColonySliderModal/>
           </View>
-        <Text style={styles.subtitle}>Hibernation mode</Text>
+        <Text style={styles.subtitle}>Sharing to Colony</Text>
         <View style={styles.settingsItems}>
           {hibernationList.map((buttonText, index) =>
             renderHibernationToggleBox(buttonText, index)
           )}
         </View>
-        <Text style={styles.subtitle}>Share my location to...</Text>
+        <Text style={styles.subtitle}>Sharing location to colony members</Text>
         <View style={styles.settingsItems}>
           {locationList.map((buttonText, index) =>
             renderStatusToggleBox(buttonText, index)
           )}
         </View>
-        <Text style={styles.subtitle}>Share my status to...</Text>
+        <Text style={styles.subtitle}>Sharing status to colony members</Text>
         <View style={[styles.settingsItems, { marginBottom: 20 }]}>
           {statusList.map((buttonText, index) =>
             renderLocationToggleBox(buttonText, index)
