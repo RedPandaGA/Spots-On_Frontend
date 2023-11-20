@@ -8,20 +8,15 @@ import {
 } from "react-native";
 import COLORS from "./colors";
 
-export default function ColonySlider({ style }) {
-  const [colony, setColony] = useState([
-    { name: "SASE", selected: false },
-    { name: "lsu engineering", selected: false },
-    { name: "swim friends", selected: false },
-    { name: "ood group", selected: false },
-    { name: "best friends", selected: false },
-    { name: "volleyball", selected: false },
-    { name: "oopah", selected: false },
-    { name: "vsa", selected: false },
-  ]);
-
+export default function ColonySlider({ style, colonies, setColonies }) {
   const onPress = (name) => {
-    console.log(name);
+    // Update the selected state for each colony
+    const updatedColony = colonies.map((item) => ({
+      ...item,
+      selected: item.name === name,
+    }));
+
+    setColonies(updatedColony);
   };
 
   return (
@@ -29,15 +24,23 @@ export default function ColonySlider({ style }) {
       <FlatList
         style={styles.list}
         horizontal
-        data={colony}
+        data={colonies}
         keyExtractor={(item, index) => index.toString()}
         showsHorizontalScrollIndicator={false}
         renderItem={({ item }) => (
           <TouchableOpacity
-            style={[styles.button, styles.shadow]}
+            style={[
+              styles.button,
+              styles.shadow,
+              item.selected ? styles.selected : "",
+            ]}
             onPress={() => onPress(item.name)}
           >
-            <Text style={styles.text}>{item.name}</Text>
+            <Text
+              style={[styles.text, item.selected ? styles.selectedText : ""]}
+            >
+              {item.name}
+            </Text>
           </TouchableOpacity>
         )}
       />
@@ -57,6 +60,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     height: 45,
     minWidth: 100,
+  },
+  selected: {
+    backgroundColor: COLORS.secondary,
+  },
+  selectedText: {
+    color: COLORS.primary,
   },
   shadow: {
     elevation: 5,
