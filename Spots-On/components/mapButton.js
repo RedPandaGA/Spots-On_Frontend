@@ -1,5 +1,6 @@
 import React from "react";
 import { StyleSheet, Image, View, TouchableOpacity } from "react-native";
+import COLORS from "./colors";
 
 export default function MapButton({
   imageSource,
@@ -44,7 +45,7 @@ const styles = StyleSheet.create({
   },
   shadow: {
     elevation: 20,
-    shadowColor: "#171717",
+    shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.6,
     shadowRadius: 10,

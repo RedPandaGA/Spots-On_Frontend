@@ -4,7 +4,7 @@ import SearchBarModal from "./searchBarModal";
 import Modal from "react-native-modal";
 import COLORS from "./colors";
 
-const ChatModal = ({ isModalVisible, hideModal }) => {
+const ChatModal = ({ isModalVisible, hideModal, navigation }) => {
 
     // Define an array of friends and their statuses
     const chatList = [
@@ -34,7 +34,7 @@ const ChatModal = ({ isModalVisible, hideModal }) => {
     const [isFriendsPressed, setIsFriendsPressed] = useState(false);
 
     const renderItem = ({ item }) => (
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('ColonyChat')}>
             <View style={styles.chatItem}>
                 <View styles={styles.infoContainer}>
                     <Image
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
         borderRadius: 30,
         width: 140,
         borderWidth: 2,
-        borderColor: COLORS.lightwhitegreen,
+        borderColor: COLORS.lighterprimary,
         marginVertical: 5,
         alignItems: "center",
         marginHorizontal: 5
@@ -171,10 +171,10 @@ const styles = StyleSheet.create({
         borderRadius: 30,
         width: 140,
         borderWidth: 1.5,
-        borderColor: COLORS.lightwhitegreen,
+        borderColor: COLORS.lighterprimary,
         marginVertical: 5,
-        alignItems: "center",
-        backgroundColor: COLORS.lightwhitegreen,
+        alignItems: 'center',
+        backgroundColor: COLORS.lighterprimary,
         marginHorizontal: 5
     },
     buttonText: {

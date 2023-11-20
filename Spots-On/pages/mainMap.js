@@ -514,6 +514,7 @@ export default function MainMap({ navigation }) {
             <FriendsModal
               isModalVisible={modals.friends}
               hideModal={() => hideModal("friends")}
+              navigation={navigation}
             />
 
             {/* Social Button */}
@@ -578,6 +579,7 @@ export default function MainMap({ navigation }) {
             <ChatModal
               isModalVisible={modals.chat}
               hideModal={() => hideModal("chat")}
+              navigation={navigation}
             />
 
             {/* ------ SEARCH BAR ------ */}

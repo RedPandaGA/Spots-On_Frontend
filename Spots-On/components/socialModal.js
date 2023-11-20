@@ -185,7 +185,7 @@ const SocialModal = ({ isModalVisible, hideModal, showModal }) => {
               }}
             >
               <Image
-                source={require("../assets/back-button-primary-color.png")}
+                source={require("../assets/backButton.png")}
                 style={styles.image}
               />
             </TouchableOpacity>
@@ -261,8 +261,8 @@ const styles = StyleSheet.create({
     width: 350,
     height: 50,
     borderRadius: 10,
-    borderWidth: 1.5,
-    borderColor: COLORS.gray,
+    borderWidth: 2,
+    borderColor: COLORS.darkersecondary,
     marginVertical: 10,
   },
   buttonText: {
@@ -281,19 +281,20 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   inputFocused: {
-    backgroundColor: "rgba(44, 103, 101, .2)",
+    backgroundColor: COLORS.darkersecondary,
   },
   imageContainer: {
     width: 40, // Adjust the width as needed
     height: 40, // Adjust the height as needed
     position: "absolute",
     right: 10, // Adjust the position as needed
-    top: 10, // Adjust the position as needed
+    top: 15, // Adjust the position as needed
     transform: [{ rotate: "180deg" }],
   },
   image: {
     width: 40,
     height: 40,
+    tintColor: COLORS.primary,
   },
 });
 

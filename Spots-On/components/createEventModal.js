@@ -136,7 +136,7 @@ const CreateEventModal = ({ isModalVisible, hideModal, showModal }) => {
                 }}
               >
                 <Image
-                  source={require("../assets/back-button-primary-color.png")}
+                  source={require("../assets/backButton.png")}
                   style={styles.backButton}
                 />
               </TouchableOpacity>
@@ -270,8 +270,8 @@ const styles = StyleSheet.create({
   buttonNormal: {
     borderRadius: 30,
     width: 160,
-    borderWidth: 1.5,
-    borderColor: COLORS.gray,
+    borderWidth: 2,
+    borderColor: COLORS.darkersecondary,
     marginVertical: 10,
     alignItems: "center",
   },
@@ -294,13 +294,14 @@ const styles = StyleSheet.create({
     width: 50,
     position: "absolute",
     left: -60,
+    tintColor: COLORS.primary
   },
   inputContainer: {
     width: "100%",
   },
   input: {
     height: 50,
-    borderColor: COLORS.gray,
+    borderColor: COLORS.darkersecondary,
     borderWidth: 2,
     margin: 10,
     padding: 10,

@@ -38,10 +38,10 @@ const LandingPage = ({ navigation }) => {
         />
         <Text style={styles.text}>Connect</Text>
         <TouchableOpacity
-          style={styles.createAccountButton}
+          style={styles.button}
           onPress={handleGetStarted}
         >
-          <Text style={styles.createAccountButtonText}>Get Started</Text>
+          <Text style={styles.buttonText}>Get Started</Text>
         </TouchableOpacity>
       </View>
     </Swiper>
@@ -61,22 +61,22 @@ const styles = StyleSheet.create({
     fontSize: 40,
     fontWeight: "bold",
   },
-  createAccountButton: {
-    position: "absolute",
-    bottom: 150,
-    padding: 10,
-    backgroundColor: COLORS.primary,
-    borderRadius: 10,
-    width: 200,
+  button: {
+    borderRadius: 30,
+    height: 48,
+    width: "50%",
+    backgroundColor: COLORS.darkerprimary,
+    alignItems: "center",
   },
-  createAccountButtonText: {
+  buttonText: {
+    fontSize: 16,
     color: COLORS.secondary,
-    fontSize: 20,
-    fontWeight: "bold",
     textAlign: "center",
+    fontWeight: "bold",
+    paddingVertical: 12,
   },
   paginationDot: {
-    backgroundColor: COLORS.darkblackgreen, // Change the color of inactive dots
+    backgroundColor: COLORS.darkerprimary, // Change the color of inactive dots
     width: 8,
     height: 8,
     borderRadius: 4,
