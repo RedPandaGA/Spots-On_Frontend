@@ -9,6 +9,7 @@ import {
   ScrollView,
 } from "react-native";
 import COLORS from "../components/colors";
+import ColonySliderModal from "../components/colonySliderModal";
 
 export default function LocationSharing({ navigation }) {
   const hibernationList = ["Location sharing", "Status sharing"];
@@ -67,10 +68,10 @@ export default function LocationSharing({ navigation }) {
           value={hibernationSwitches[text]}
           onValueChange={() => handleHibernationToggle(text)}
           trackColor={{
-            false: "#305c5c", // color when switch is off
-            true: "#D5B747", // color when switch is on
+            false: COLORS.darkerprimary, // color when switch is off
+            true: COLORS.gold, // color when switch is on
           }}
-          thumbColor={hibernationSwitches[text] ? "#E7EFCA" : "#2C6765"}
+          thumbColor={hibernationSwitches[text] ? COLORS.white : COLORS.lighterprimary}
         />
       </View>
     );
@@ -85,10 +86,10 @@ export default function LocationSharing({ navigation }) {
           value={statusSwitches[text]}
           onValueChange={() => handleStatusToggle(text)}
           trackColor={{
-            false: "#305c5c", // color when switch is off
-            true: "#D5B747", // color when switch is on
+            false: COLORS.darkerprimary, // color when switch is off
+            true: COLORS.gold, // color when switch is on
           }}
-          thumbColor={statusSwitches[text] ? "#E7EFCA" : "#2C6765"}
+          thumbColor={statusSwitches[text] ? COLORS.white : COLORS.lighterprimary}
         />
       </View>
     );
@@ -103,10 +104,10 @@ export default function LocationSharing({ navigation }) {
           value={locationSwitches[text]}
           onValueChange={() => handleLocationToggle(text)}
           trackColor={{
-            false: "#305c5c", // color when switch is off
-            true: "#D5B747", // color when switch is on
+            false: COLORS.darkerprimary, // color when switch is off
+            true: COLORS.gold, // color when switch is on
           }}
-          thumbColor={locationSwitches[text] ? "#E7EFCA" : "#2C6765"}
+          thumbColor={locationSwitches[text] ? COLORS.white : COLORS.lighterprimary}
         />
       </View>
     );
@@ -131,6 +132,9 @@ export default function LocationSharing({ navigation }) {
           </TouchableOpacity>
           <Text style={styles.title}>Sharing</Text>
         </View>
+        <View style={styles.sliderContainer}>
+            <ColonySliderModal/>
+          </View>
         <Text style={styles.subtitle}>Sharing to Colony</Text>
         <View style={styles.settingsItems}>
           {hibernationList.map((buttonText, index) =>
@@ -144,7 +148,7 @@ export default function LocationSharing({ navigation }) {
           )}
         </View>
         <Text style={styles.subtitle}>Sharing status to colony members</Text>
-        <View style={styles.settingsItems}>
+        <View style={[styles.settingsItems, { marginBottom: 20 }]}>
           {statusList.map((buttonText, index) =>
             renderLocationToggleBox(buttonText, index)
           )}
@@ -220,5 +224,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignContent: "center",
     marginRight: 20,
+  },
+  sliderContainer: {
+    marginTop: 13,
+    marginBottom: -10,
+    width: "110%",
   },
 });

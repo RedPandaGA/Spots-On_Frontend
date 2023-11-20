@@ -99,7 +99,6 @@ const styles = StyleSheet.create({
   icon: {
     width: 150,
     height: 150,
-    // shadowColor: '#000',
   },
   input: {
     height: 50,
@@ -118,7 +117,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     height: 48,
     width: "50%",
-    backgroundColor: "#305c5c",
+    backgroundColor: COLORS.darkerprimary,
     alignItems: "center",
   },
   buttonText: {
@@ -130,7 +129,7 @@ const styles = StyleSheet.create({
   },
   shadow: {
     elevation: 20,
-    shadowColor: "#171717",
+    shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.5,
     shadowRadius: 1,

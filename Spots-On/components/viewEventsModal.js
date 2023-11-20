@@ -144,7 +144,7 @@ const ViewEventsModal = ({ isModalVisible, hideModal, showModal }) => {
               }}
             >
               <Image
-                source={require("../assets/back-button-primary-color.png")}
+                source={require("../assets/backButton.png")}
                 style={styles.backButton}
               />
             </TouchableOpacity>
@@ -230,19 +230,19 @@ const styles = StyleSheet.create({
   buttonNormal: {
     borderRadius: 30,
     width: 160,
-    borderWidth: 1.5,
-    borderColor: COLORS.gray,
+    borderWidth: 2,
+    borderColor: COLORS.darkersecondary,
     marginVertical: 5,
     alignItems: "center",
   },
   buttonPressed: {
     borderRadius: 30,
     width: 160,
-    borderWidth: 1.5,
-    borderColor: COLORS.gray,
+    borderWidth: 2,
+    borderColor: COLORS.darkersecondary,
     marginVertical: 5,
     alignItems: "center",
-    backgroundColor: "rgba(44, 103, 101, .2)",
+    backgroundColor: COLORS.darkersecondary,
   },
   buttonText: {
     fontSize: 20,
@@ -263,6 +263,7 @@ const styles = StyleSheet.create({
     width: 50,
     position: "absolute",
     left: -100,
+    tintColor: COLORS.primary,
   },
   infoContainer: {
     flexDirection: "row",

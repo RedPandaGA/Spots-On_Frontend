@@ -8,6 +8,7 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
+import COLORS from "../components/colors";
 
 const Login = ({ navigation }) => {
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -44,14 +45,14 @@ const Login = ({ navigation }) => {
         style={[styles.input, { marginTop: 50 }]}
         keyboardType="numeric"
         placeholder="Phone #"
-        placeholderTextColor={"#E7EFCA"}
+        placeholderTextColor={COLORS.secondary}
         value={phoneNumber}
         onChangeText={(text) => setPhoneNumber(text)}
       />
       <TextInput
         style={styles.input}
         placeholder="Password"
-        placeholderTextColor={"#E7EFCA"}
+        placeholderTextColor={COLORS.secondary}
         value={password}
         onChangeText={(text) => setPassword(text)}
         secureTextEntry={true}
@@ -77,23 +78,22 @@ const styles = StyleSheet.create({
     flex: 1,
     // justifyContent: 'center',
     alignItems: "center",
-    backgroundColor: "#2C6765",
+    backgroundColor: COLORS.primary,
     paddingTop: "30%",
   },
   icon: {
     width: 150,
     height: 150,
-    // shadowColor: '#000',
   },
   input: {
     height: 50,
     width: "90%",
-    borderColor: "#305c5c",
+    borderColor: COLORS.darkerprimary,
     borderWidth: 2,
     margin: 10,
     padding: 10,
     borderRadius: 10,
-    color: "#E7EFCA",
+    color: COLORS.secondary,
     fontWeight: "bold",
     fontSize: 16,
     textAlign: "center",
@@ -102,19 +102,19 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     height: 48,
     width: "50%",
-    backgroundColor: "#305c5c",
+    backgroundColor: COLORS.darkerprimary,
     alignItems: "center",
   },
   buttonText: {
     fontSize: 16,
-    color: "#E7EFCA",
+    color: COLORS.secondary,
     textAlign: "center",
     fontWeight: "bold",
     paddingVertical: 12,
   },
   shadow: {
     elevation: 20,
-    shadowColor: "#171717",
+    shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.5,
     shadowRadius: 1,
