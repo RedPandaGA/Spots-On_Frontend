@@ -16,35 +16,35 @@ import Modal from "react-native-modal";
 const ThreeDotsModal = ({ isModalVisible, hideModal }) => {
   const [isMute, setIsMute] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [modalPosition, setModalPosition] = useState(-490);
+  // const [modalPosition, setModalPosition] = useState(-490);
 
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
-      () => {
-        setModalPosition(-220); // Set a position that suits your layout
-      }
-    );
-    const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
-      () => {
-        setModalPosition(-490); // Restore initial position when keyboard hides
-      }
-    );
+  // useEffect(() => {
+  //   const keyboardDidShowListener = Keyboard.addListener(
+  //     "keyboardDidShow",
+  //     () => {
+  //       setModalPosition(-220); // Set a position that suits your layout
+  //     }
+  //   );
+  //   const keyboardDidHideListener = Keyboard.addListener(
+  //     "keyboardDidHide",
+  //     () => {
+  //       setModalPosition(-490); // Restore initial position when keyboard hides
+  //     }
+  //   );
 
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
-  }, []);
+  //   return () => {
+  //     keyboardDidShowListener.remove();
+  //     keyboardDidHideListener.remove();
+  //   };
+  // }, []);
 
   const toggleMute = () => {
     setIsMute((prevState) => !prevState);
-    console.log("pressed mute")
+    console.log("pressed mute");
   };
 
   const handleSendInput = () => {
-    console.log('Sending input:', phoneNumber);
+    console.log("Sending input:", phoneNumber);
     setPhoneNumber("");
   };
 
@@ -53,62 +53,56 @@ const ThreeDotsModal = ({ isModalVisible, hideModal }) => {
       animationIn="slideInDown"
       animationOut="slideOutUp"
       onSwipeComplete={hideModal}
+      onBackdropPress={hideModal}
       backdropOpacity={0}
       swipeDirection="up"
-      transparent
-      visible={isModalVisible}
+      isVisible={isModalVisible}
+      style={styles.modalContainer}
     >
-        <View style={styles.modalContainer}>
-          <Animated.View
-            style={[
-              styles.modalContent,
-              { transform: [{ translateY: modalPosition }] },
-            ]}
+      <View style={styles.modalContent}>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={isMute ? styles.buttonPressed : styles.buttonNormal}
+            onPress={toggleMute} // Use toggleMute function
           >
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                style={isMute ? styles.buttonPressed : styles.buttonNormal}
-                onPress={toggleMute} // Use toggleMute function
-              >
-                <Text style={styles.buttonText}>Mute</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.buttonNormal}
-                onPress={() => {
-                  console.log("Pressed share");
-                }}
-              >
-                <Text style={styles.buttonText}>Share</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.buttonNormal}
-                onPress={() => {
-                  console.log("Pressed Leave");
-                }}
-              >
-                <Text style={styles.buttonText}>Leave</Text>
-              </TouchableOpacity>
-            </View>
-            <Text style={styles.code}>M1L4N1SC00L</Text>
-            <View style={{ width: "100%" }}>
-              <TextInput
-                style={styles.input}
-                placeholder="Phone #"
-                placeholderTextColor={COLORS.primary}
-                value={phoneNumber}
-                onChangeText={(text) => setPhoneNumber(text)}
-                keyboardType="numeric"
-              />
-              <TouchableOpacity 
-                onPress={handleSendInput}>
-              <Image
-                source={require("../assets/backButton.png")}
-                style={styles.backButton}
-              /></TouchableOpacity>
-            </View>
-            <Bar color={COLORS.primary} />
-          </Animated.View>
+            <Text style={styles.buttonText}>Mute</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.buttonNormal}
+            onPress={() => {
+              console.log("Pressed share");
+            }}
+          >
+            <Text style={styles.buttonText}>Share</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.buttonNormal}
+            onPress={() => {
+              console.log("Pressed Leave");
+            }}
+          >
+            <Text style={styles.buttonText}>Leave</Text>
+          </TouchableOpacity>
         </View>
+        <Text style={styles.code}>M1L4N1SC00L</Text>
+        <View style={{ width: "100%" }}>
+          <TextInput
+            style={styles.input}
+            placeholder="Phone #"
+            placeholderTextColor={COLORS.primary}
+            value={phoneNumber}
+            onChangeText={(text) => setPhoneNumber(text)}
+            keyboardType="numeric"
+          />
+          <TouchableOpacity onPress={handleSendInput}>
+            <Image
+              source={require("../assets/backButton.png")}
+              style={styles.backButton}
+            />
+          </TouchableOpacity>
+        </View>
+        <Bar color={COLORS.primary} />
+      </View>
     </Modal>
   );
 };
@@ -116,15 +110,16 @@ const ThreeDotsModal = ({ isModalVisible, hideModal }) => {
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
-    justifyContent: "flex-end",
+    justifyContent: "flex-start",
     backgroundColor: "transparent",
+    paddingTop: 90,
   },
   modalContent: {
     backgroundColor: COLORS.secondary,
     borderRadius: 50,
     padding: 20,
     height: 225,
-    width: "103%",
+    width: "100%",
     alignSelf: "center",
     alignItems: "center",
   },
@@ -174,14 +169,14 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
   },
   backButton: {
-    position: 'absolute',
+    position: "absolute",
     height: 50,
     width: 50,
     tintColor: COLORS.primary,
     top: -67,
     right: 5,
-    transform: [{ scaleX: -1 }]
-  }
+    transform: [{ scaleX: -1 }],
+  },
 });
 
 export default ThreeDotsModal;
