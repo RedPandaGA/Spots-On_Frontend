@@ -16,7 +16,17 @@ const Signup = ({ navigation }) => {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleSignup = () => {
-    // Navigate to the main app screen
+
+    if (!phoneNumber || !email || !password || !confirmPassword) {
+      alert("Please fill in all the fields");
+      return;
+    }
+  
+    if (password !== confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
+  
     console.log(
       "Created an Account: " + phoneNumber + " with password: " + password
     );
