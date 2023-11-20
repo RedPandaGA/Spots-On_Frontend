@@ -1,12 +1,19 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Image, TouchableOpacity, TextInput, Text } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  TextInput,
+  Text,
+} from "react-native";
 import { GiftedChat, Bubble, Day, Time } from "react-native-gifted-chat";
 import COLORS from "../components/colors";
 import ThreeDotsModal from "../components/threeDotsModal.js";
 import ColonyChatList from "../components/colonyChatList.js";
 
 const renderBubble = (props) => (
-<Bubble
+  <Bubble
     {...props}
     wrapperStyle={{
       left: {
@@ -18,7 +25,7 @@ const renderBubble = (props) => (
     }}
     textProps={{
       style: {
-        color: props.position === 'left' ? COLORS.primary : COLORS.secondary,
+        color: props.position === "left" ? COLORS.primary : COLORS.secondary,
       },
     }}
     textStyle={{
@@ -68,35 +75,39 @@ export default function ColonyChat({ navigation }) {
       },
     ];
 
-    setMessages((previousMessages) => GiftedChat.append(previousMessages, newMessages));
+    setMessages((previousMessages) =>
+      GiftedChat.append(previousMessages, newMessages)
+    );
     setInputText("");
   };
 
   const toggleThreeDots = () => {
     setIsThreeDotsVisible(!isThreeDotsVisible);
-    console.log("toggle three dots")
+    console.log("toggle three dots");
   };
 
   const toggleChatList = () => {
     setIsChatListVisible(!isChatListVisible);
-    console.log("toggle chat list")
+    console.log("toggle chat list");
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={toggleChatList}>
-        <Text style={styles.title}>ColonyName</Text>
+          <Text style={styles.title}>ColonyName</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => {
+        <TouchableOpacity
+          onPress={() => {
             navigation.navigate("Home");
             console.log("Pressed back button");
-          }}>
-              <Image
-                source={require("../assets/backButton.png")}
-                style={styles.backButton}
-              />
-          </TouchableOpacity>
+          }}
+        >
+          <Image
+            source={require("../assets/backButton.png")}
+            style={styles.backButton}
+          />
+        </TouchableOpacity>
         <TouchableOpacity onPress={toggleThreeDots}>
           <View style={styles.threeDots}>
             <Image
@@ -129,7 +140,10 @@ export default function ColonyChat({ navigation }) {
                 value={inputText}
                 onChangeText={(text) => setInputText(text)}
               />
-              <TouchableOpacity onPress={() => onSend()} style={styles.sendButton}>
+              <TouchableOpacity
+                onPress={() => onSend()}
+                style={styles.sendButton}
+              >
                 <Image
                   source={require("../assets/sendIcon.png")}
                   style={styles.sendIcon}
@@ -164,15 +178,15 @@ const styles = StyleSheet.create({
     width: 50,
     left: 20,
     top: -48,
-    position: 'absolute',
-    tintColor: COLORS.secondary
+    position: "absolute",
+    tintColor: COLORS.secondary,
   },
   threeDots: {
     height: 45,
     width: 45,
     top: -22,
-    left: '73%',
-    tintColor: COLORS.secondary
+    left: "73%",
+    tintColor: COLORS.secondary,
   },
   inputToolbarContainer: {
     flexDirection: "row",
@@ -180,13 +194,14 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: 10,
     backgroundColor: COLORS.primary,
-    marginTop: -3
+    marginTop: -10,
+    marginHorizontal: 10,
   },
   input: {
     flex: 1,
     height: 40,
     borderRadius: 20,
-    paddingHorizontal: 10,
+    paddingHorizontal: 20,
     color: COLORS.secondary,
     fontSize: 17,
     backgroundColor: COLORS.darkerprimary,

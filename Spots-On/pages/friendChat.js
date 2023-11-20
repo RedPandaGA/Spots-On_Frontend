@@ -1,23 +1,32 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Image, TouchableOpacity, TextInput, Text } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  TextInput,
+  Text,
+} from "react-native";
 import { GiftedChat, Bubble, Day, Time } from "react-native-gifted-chat";
 import COLORS from "../components/colors.js";
 import ProfileModal from "../components/profileModal.js";
 
 const renderBubble = (props) => (
-<Bubble
+  <Bubble
     {...props}
     wrapperStyle={{
       left: {
         backgroundColor: COLORS.secondary,
+        marginBottom: 5,
       },
       right: {
         backgroundColor: COLORS.darkerprimary,
+        marginBottom: 5,
       },
     }}
     textProps={{
       style: {
-        color: props.position === 'left' ? COLORS.primary : COLORS.secondary,
+        color: props.position === "left" ? COLORS.primary : COLORS.secondary,
       },
     }}
     textStyle={{
@@ -66,33 +75,43 @@ export default function FriendChat({ navigation }) {
       },
     ];
 
-    setMessages((previousMessages) => GiftedChat.append(previousMessages, newMessages));
+    setMessages((previousMessages) =>
+      GiftedChat.append(previousMessages, newMessages)
+    );
     setInputText("");
   };
 
   const toggleProfile = () => {
     setIsProfileVisible(!isProfileVisible);
-    console.log("toggle profile")
+    console.log("toggle profile");
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-      <TouchableOpacity  style={styles.pictureContainer} onPress={toggleProfile}>
-        <Image source={require("../assets/profilePicture.png")} style={styles.profilePicture} />
+        <TouchableOpacity
+          style={styles.pictureContainer}
+          onPress={toggleProfile}
+        >
+          <Image
+            source={require("../assets/profilePicture.png")}
+            style={styles.profilePicture}
+          />
         </TouchableOpacity>
         <TouchableOpacity onPress={toggleProfile}>
-        <Text style={styles.title}>Faris Khattak</Text>
+          <Text style={styles.title}>Faris Khattak</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => {
+        <TouchableOpacity
+          onPress={() => {
             navigation.navigate("Home");
             console.log("Pressed back button");
-          }}>
-              <Image
-                source={require("../assets/backButton.png")}
-                style={styles.backButton}
-              />
-          </TouchableOpacity>
+          }}
+        >
+          <Image
+            source={require("../assets/backButton.png")}
+            style={styles.backButton}
+          />
+        </TouchableOpacity>
       </View>
       <ProfileModal
         isModalVisible={isProfileVisible}
@@ -112,7 +131,10 @@ export default function FriendChat({ navigation }) {
                 value={inputText}
                 onChangeText={(text) => setInputText(text)}
               />
-              <TouchableOpacity onPress={() => onSend()} style={styles.sendButton}>
+              <TouchableOpacity
+                onPress={() => onSend()}
+                style={styles.sendButton}
+              >
                 <Image
                   source={require("../assets/sendIcon.png")}
                   style={styles.sendIcon}
@@ -134,7 +156,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary,
   },
   header: {
-    paddingTop: 10,
+    paddingTop: 35,
     paddingBottom: 5,
     backgroundColor: COLORS.lighterprimary,
   },
@@ -149,8 +171,8 @@ const styles = StyleSheet.create({
     width: 50,
     left: 20,
     top: -105,
-    position: 'absolute',
-    tintColor: COLORS.secondary
+    position: "absolute",
+    tintColor: COLORS.secondary,
   },
   inputToolbarContainer: {
     flexDirection: "row",
@@ -158,13 +180,14 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: 10,
     backgroundColor: COLORS.primary,
-    marginTop: -3
+    marginTop: -10,
+    marginHorizontal: 10,
   },
   input: {
     flex: 1,
     height: 40,
     borderRadius: 20,
-    paddingHorizontal: 10,
+    paddingHorizontal: 20,
     color: COLORS.secondary,
     fontSize: 17,
     backgroundColor: COLORS.darkerprimary,
@@ -186,10 +209,10 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 5,
     borderColor: COLORS.red,
-    borderWidth: 3
+    borderWidth: 3,
   },
   pictureContainer: {
-    width: '50%',
+    width: "50%",
     alignSelf: "center",
   },
 });

@@ -12,8 +12,7 @@ import COLORS from "./colors";
 import Modal from "react-native-modal";
 
 const ProfileModal = ({ isModalVisible, hideModal }) => {
-
-  const modalPosition = -425
+  // const modalPosition = -425;
 
   return (
     <Modal
@@ -21,57 +20,54 @@ const ProfileModal = ({ isModalVisible, hideModal }) => {
       animationOut="slideOutUp"
       onSwipeComplete={hideModal}
       backdropOpacity={0}
+      onBackdropPress={hideModal}
       swipeDirection="up"
-      transparent
-      visible={isModalVisible}
+      isVisible={isModalVisible}
+      style={styles.modalContainer}
     >
-        <View style={styles.modalContainer}>
-          <Animated.View
-            style={[
-              styles.modalContent,
-              { transform: [{ translateY: modalPosition }] },
-            ]}
+      <View style={styles.modalContent}>
+        <Image
+          source={require("../assets/profilePicture.png")}
+          style={styles.profilePicture}
+        />
+        <Text style={styles.nameText}>Faris Khattak</Text>
+        <Text style={styles.statusText}>dont talk to me. studying</Text>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => {
+              console.log("pressed block");
+            }}
           >
-        <Image source={require("../assets/profilePicture.png")} style={styles.profilePicture} />
-          <Text style={styles.nameText}>Faris Khattak</Text>
-          <Text style={styles.statusText}>dont talk to me. studying</Text>
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => {
-                  console.log("pressed block");
-                }}
-              >
-                <Text style={styles.buttonText}>Block</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => {
-                  console.log("Pressed call");
-                }}
-              >
-                <Text style={styles.buttonText}>Call</Text>
-              </TouchableOpacity>
-            </View>
-            <Bar color={COLORS.primary} />
-          </Animated.View>
+            <Text style={styles.buttonText}>Block</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => {
+              console.log("Pressed call");
+            }}
+          >
+            <Text style={styles.buttonText}>Call</Text>
+          </TouchableOpacity>
         </View>
+        <Bar color={COLORS.primary} style={{ width: "60%" }} />
+        {/* </Animated.View> */}
+      </View>
     </Modal>
   );
 };
 
 const styles = StyleSheet.create({
   modalContainer: {
-    flex: 1,
-    justifyContent: "flex-end",
-    backgroundColor: "transparent",
+    justifyContent: "flex-start",
+    margin: 0,
   },
   modalContent: {
     backgroundColor: COLORS.secondary,
-    borderRadius: 50,
-    paddingTop: 70,
-    height: "55%",
-    width: "111%",
+    borderBottomRightRadius: 50,
+    borderBottomLeftRadius: 50,
+    paddingTop: 40,
+    width: "100%",
     alignSelf: "center",
     alignItems: "center",
   },
@@ -79,7 +75,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: "90%",
     justifyContent: "space-around",
-    paddingBottom: 15
+    paddingBottom: 15,
   },
   button: {
     borderRadius: 30,
@@ -102,9 +98,9 @@ const styles = StyleSheet.create({
     width: 200,
     alignSelf: "center",
     borderRadius: 100,
-    marginBottom: 5,
+    marginVertical: 10,
     borderColor: COLORS.red,
-    borderWidth: 5
+    borderWidth: 5,
   },
   nameText: {
     color: COLORS.primary,
@@ -115,9 +111,9 @@ const styles = StyleSheet.create({
   statusText: {
     fontSize: 16,
     color: COLORS.primary,
-    fontWeight: 'bold',
-    marginBottom: 15
-  }
+    fontWeight: "bold",
+    marginBottom: 15,
+  },
 });
 
 export default ProfileModal;
