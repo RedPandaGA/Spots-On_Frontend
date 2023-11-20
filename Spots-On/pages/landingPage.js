@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 150,
     padding: 10,
-    backgroundColor: "#305c5c",
+    backgroundColor: COLORS.primary,
     borderRadius: 10,
     width: 200,
   },
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   paginationDot: {
-    backgroundColor: "#305c5c", // Change the color of inactive dots
+    backgroundColor: COLORS.darkblackgreen, // Change the color of inactive dots
     width: 8,
     height: 8,
     borderRadius: 4,

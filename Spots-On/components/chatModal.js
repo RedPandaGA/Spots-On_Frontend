@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Text, FlatList, Image, TouchableOpacity } from 'react-native';
+import React, { useState } from "react";
+import { StyleSheet, View, Text, FlatList, Image, TouchableOpacity } from "react-native";
 import SearchBarModal from "./searchBarModal";
 import Modal from "react-native-modal";
 import COLORS from "./colors";
@@ -9,23 +9,23 @@ const ChatModal = ({ isModalVisible, hideModal }) => {
     // Define an array of friends and their statuses
     const chatList = [
         {
-            name: 'Bestiesss',
+            name: "Bestiesss",
             memberCount: 3,
         },
         {
-            name: 'Volleyball squad',
+            name: "Volleyball squad",
             memberCount: 4,
         },
         {
-            name: 'OOD group',
+            name: "OOD group",
             memberCount: 5,
         },
         {
-            name: 'CSC 3102',
+            name: "CSC 3102",
             memberCount: 20,
         },
         {
-            name: 'SASE people',
+            name: "SASE people",
             memberCount: 28,
         },
     ];
@@ -39,7 +39,7 @@ const ChatModal = ({ isModalVisible, hideModal }) => {
                 <View styles={styles.infoContainer}>
                     <Image
                         style={styles.chatImage}
-                        source={require('../assets/marker.png')}
+                        source={require("../assets/marker.png")}
                     />
                     <Text style={styles.chatName}>{item.name}</Text>
                 </View>
@@ -64,7 +64,7 @@ const ChatModal = ({ isModalVisible, hideModal }) => {
                 <View style={styles.modalContent}>
                     {/* ------ SEARCH BAR ------ */}
                     <SearchBarModal
-                        imageSource={require('../assets/search.png')}
+                        imageSource={require("../assets/search.png")}
                         style={styles.searchBar}
                         onPress={() => console.log("Pressed search bar")}
                     />
@@ -94,7 +94,7 @@ const ChatModal = ({ isModalVisible, hideModal }) => {
                     </View>
 
                     {/* Display the list of friends and statuses using FlatList */}
-                    <View style={{ marginTop: '3%', flex: 1, width: '100%' }}>
+                    <View style={{ marginTop: "3%", flex: 1, width: "100%" }}>
                         <FlatList
                             data={chatList}
                             renderItem={renderItem}
@@ -113,8 +113,8 @@ const ChatModal = ({ isModalVisible, hideModal }) => {
 const styles = StyleSheet.create({
     modalContainer: {
         flex: 1,
-        width: '90%',
-        alignSelf: 'flex-end'
+        width: "90%",
+        alignSelf: "flex-end"
     },
     modalContent: {
         backgroundColor: COLORS.primary,
@@ -123,20 +123,20 @@ const styles = StyleSheet.create({
         flex: 1
     },
     searchBar: {
-        alignSelf: 'center',
+        alignSelf: "center",
         marginTop: 43,
     },
     infoContainer: {
-        flexDirection: 'row',
-        display: 'flex',
-        alignContent: 'space-around',
+        flexDirection: "row",
+        display: "flex",
+        alignContent: "space-around",
     },
     chatItem: {
         margin: 10,
     },
     chatName: {
         fontSize: 18,
-        fontWeight: 'bold',
+        fontWeight: "bold",
         color: COLORS.secondary,
         left: 80,
     },
@@ -149,13 +149,13 @@ const styles = StyleSheet.create({
         height: 40,
         width: 40,
         left: 20,
-        position: 'absolute',
+        position: "absolute",
         tintColor: COLORS.secondary
     },
     buttonContainer: {
-        flexDirection: 'row',
-        width: '100%',
-        justifyContent: 'center',
+        flexDirection: "row",
+        width: "100%",
+        justifyContent: "center",
         marginTop: 20
     },
     buttonNormal: {
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         borderColor: COLORS.lightwhitegreen,
         marginVertical: 5,
-        alignItems: 'center',
+        alignItems: "center",
         marginHorizontal: 5
     },
     buttonPressed: {
@@ -173,18 +173,18 @@ const styles = StyleSheet.create({
         borderWidth: 1.5,
         borderColor: COLORS.lightwhitegreen,
         marginVertical: 5,
-        alignItems: 'center',
+        alignItems: "center",
         backgroundColor: COLORS.lightwhitegreen,
         marginHorizontal: 5
     },
     buttonText: {
         fontSize: 16,
         color: COLORS.secondary,
-        textAlign: 'center',
-        fontWeight: 'bold',
+        textAlign: "center",
+        fontWeight: "bold",
         paddingHorizontal: 10,
         paddingVertical: 10,
-        alignSelf: 'center'
+        alignSelf: "center"
     },
 });
 
