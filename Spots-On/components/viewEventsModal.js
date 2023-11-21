@@ -289,6 +289,7 @@ const styles = StyleSheet.create({
     width: 40,
     position: "absolute",
     left: -50,
+    tintColor: COLORS.red
   },
 });
 

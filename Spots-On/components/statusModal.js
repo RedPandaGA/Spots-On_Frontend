@@ -180,9 +180,9 @@ const styles = StyleSheet.create({
   },
   buttonNormal: {
     borderRadius: 30,
+    borderColor: COLORS.secondary,
     width: "45%",
     borderWidth: 1.5,
-    borderColor: "#ccc",
     marginVertical: 10,
     alignItems: "center",
     backgroundColor: COLORS.secondary,
