@@ -8,7 +8,13 @@ import {
 } from "react-native";
 import COLORS from "./colors";
 
-export default function ColonySlider({ style, colonies, setColonies }) {
+export default function ColonySlider({
+  style,
+  colonies,
+  setColonies,
+  spots,
+  setSpots,
+}) {
   const onPress = (name) => {
     // Update the selected state for each colony
     const updatedColony = colonies.map((item) => ({
