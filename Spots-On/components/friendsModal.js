@@ -11,6 +11,7 @@ import Modal from "react-native-modal";
 import ColonySliderModal from "../components/colonySliderModal";
 import SearchBarModal from "../components/searchBarModal";
 import COLORS from "./colors";
+import { AntDesign } from "@expo/vector-icons";
 
 const FriendsModal = ({ isModalVisible, hideModal, navigation }) => {
   // Define an array of friends and their statuses
@@ -129,6 +130,22 @@ const FriendsModal = ({ isModalVisible, hideModal, navigation }) => {
 
           {/* Display the list of friends and statuses using FlatList */}
           <View style={{ flex: 1, marginTop: 20, marginRight: 20 }}>
+            <TouchableOpacity
+              style={styles.addFriendButton}
+              onPress={() => {
+                // setShowAddSpot(true);
+                // setShowSpotList(false);
+                // console.log(mapRegion);
+              }}
+            >
+              <AntDesign
+                style={styles.addFriendImage}
+                name="pluscircle"
+                size={40}
+                color={COLORS.secondary}
+              />
+              <Text style={styles.addFriendText}>Add a new friend</Text>
+            </TouchableOpacity>
             <FlatList
               data={friendsList}
               renderItem={renderItem}
@@ -204,6 +221,21 @@ const styles = StyleSheet.create({
     left: 20,
     position: "absolute",
     tintColor: COLORS.secondary,
+  },
+  addFriendButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 10,
+    marginLeft: 20,
+  },
+  addFriendImage: {
+    marginRight: 20,
+  },
+  addFriendText: {
+    color: COLORS.secondary,
+    fontSize: 18,
+    fontWeight: "bold",
+    paddingVertical: 10,
   },
 });
 
