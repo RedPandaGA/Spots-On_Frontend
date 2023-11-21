@@ -103,6 +103,7 @@ const Signup = ({ navigation }) => {
         placeholder="Email"
         placeholderTextColor={COLORS.secondary}
         value={email}
+        keyboardType="email-address"
         onChangeText={(text) => setEmail(text)}
       />
       <View style={styles.passwordContainer}>
