@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   View,
@@ -6,14 +6,34 @@ import {
   TouchableOpacity,
   FlatList,
   Image,
+  TextInput
 } from "react-native";
 import Modal from "react-native-modal";
+import { LayoutAnimation, UIManager } from 'react-native';
 import ColonySliderModal from "../components/colonySliderModal";
 import SearchBarModal from "../components/searchBarModal";
 import COLORS from "./colors";
 import { AntDesign } from "@expo/vector-icons";
 
+if (Platform.OS === 'android') {
+  if (UIManager.setLayoutAnimationEnabledExperimental) {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+  }
+}
+
 const FriendsModal = ({ isModalVisible, hideModal, navigation }) => {
+  const [addingFriend, setAddingFriend] = useState(false);
+
+  const expandButton = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setAddingFriend(true);
+  };
+
+  const collapseButton = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setAddingFriend(false);
+  };
+
   // Define an array of friends and their statuses
   const friendsList = [
     {
@@ -130,22 +150,40 @@ const FriendsModal = ({ isModalVisible, hideModal, navigation }) => {
 
           {/* Display the list of friends and statuses using FlatList */}
           <View style={{ flex: 1, marginTop: 20, marginRight: 20 }}>
-            <TouchableOpacity
-              style={styles.addFriendButton}
-              onPress={() => {
-                // setShowAddSpot(true);
-                // setShowSpotList(false);
-                // console.log(mapRegion);
-              }}
-            >
-              <AntDesign
-                style={styles.addFriendImage}
-                name="pluscircle"
-                size={40}
-                color={COLORS.secondary}
-              />
-              <Text style={styles.addFriendText}>Add a new friend</Text>
-            </TouchableOpacity>
+            {addingFriend ? (
+              <View>
+                <TextInput
+                  placeholder="Enter friend's phone #"
+                  placeholderTextColor={COLORS.secondary}
+                  onSubmitEditing={(event) => {
+                    const friendName = event.nativeEvent.text;
+                    console.log("New friend added:", friendName);
+                    collapseButton();
+                  }}
+                  style={styles.expandedInput}
+                  keyboardType="numeric"
+                />
+                <AntDesign
+                  style={styles.addFriendImageInput}
+                  name="pluscircle"
+                  size={40}
+                  color={COLORS.secondary}
+                />
+                </View>
+            ) : (
+              <TouchableOpacity
+                style={styles.addFriendButton}
+                onPress={expandButton}
+              >
+                <AntDesign
+                  style={styles.addFriendImage}
+                  name="pluscircle"
+                  size={40}
+                  color={COLORS.secondary}
+                />
+                <Text style={styles.addFriendText}>Add a new friend</Text>
+              </TouchableOpacity>
+            )}
             <FlatList
               data={friendsList}
               renderItem={renderItem}
@@ -231,11 +269,29 @@ const styles = StyleSheet.create({
   addFriendImage: {
     marginRight: 20,
   },
+  addFriendImageInput: {
+    marginLeft: 30,
+    marginTop: 12.25,
+    position: 'absolute'
+  },
   addFriendText: {
     color: COLORS.secondary,
     fontSize: 18,
     fontWeight: "bold",
     paddingVertical: 10,
+  },
+  expandedInput: {
+    marginLeft: 30,
+    marginRight: -10,
+    marginTop: 12.25,
+    backgroundColor: COLORS.darkerprimary,
+    paddingVertical: 6.25,
+    paddingLeft: 60,
+    marginBottom: 12,
+    borderRadius: 30,
+    fontSize: 18,
+    color: COLORS.secondary,
+    fontWeight: 'bold'
   },
 });
 
