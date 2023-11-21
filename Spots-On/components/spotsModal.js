@@ -23,6 +23,7 @@ import MapView, { Marker, Circle } from "react-native-maps";
 import Slider from "@react-native-community/slider";
 import Spot from "./spot";
 import * as Location from "expo-location";
+import { Dropdown } from "react-native-element-dropdown";
 
 const CreateSpotModal = ({
   isModalVisible,
@@ -34,8 +35,9 @@ const CreateSpotModal = ({
   allSpots,
   setAllSpots,
   mapRegion,
+  colonies,
 }) => {
-  const [showAddSpot, setShowAddSpot] = useState(false);
+  // const [showAddSpot, setShowAddSpot] = useState(false);
   const [showSpotList, setShowSpotList] = useState(true);
   const [circleRadius, setCircleRadius] = useState(50);
   const [circleCenter, setCircleCenter] = useState({
@@ -52,14 +54,33 @@ const CreateSpotModal = ({
     safe: true,
   });
 
+  const resetNewSpot = () => {
+    setNewSpot({
+      name: "",
+      colonyName: "",
+      radius: 250,
+      coordinate: {},
+      address: "",
+      safe: true,
+    });
+  };
+
+  // const colonyList = colonies.map((colony, index) => [
+  //   {
+  //     label: colony.name,
+  //     value: index + 1,
+  //   },
+  // ]);
+  // console.log(colonyList);
+
   const [spotNameError, setSpotNameError] = useState(null);
   const [colonyNameError, setColonyNameError] = useState(null);
 
-  // Animated values
-  const spotListOpacity = new Animated.Value(1);
-  const addSpotOpacity = new Animated.Value(0);
-  const addSpotTranslateX = new Animated.Value(300);
-  const spotListTranslateX = new Animated.Value(-300);
+  // // Animated values
+  // const spotListOpacity = new Animated.Value(1);
+  // const addSpotOpacity = new Animated.Value(0);
+  // const addSpotTranslateX = new Animated.Value(300);
+  // const spotListTranslateX = new Animated.Value(-300);
 
   const handleInputChange = (key, value) => {
     setNewSpot({ ...newSpot, [key]: value });
@@ -74,10 +95,11 @@ const CreateSpotModal = ({
       longitude: mapRegion.longitude,
     });
     setCircleRadius(50);
-    setShowAddSpot(false);
+    // setShowAddSpot(false);
     setShowSpotList(true);
     setSpotNameError(false);
     setColonyNameError(false);
+    resetNewSpot();
   };
 
   const validateInputs = () => {
@@ -103,61 +125,87 @@ const CreateSpotModal = ({
     }));
   };
 
-  useEffect(() => {
-    // Animate the content switch
-    if (showAddSpot) {
-      // Spot list slides out to the left
-      Animated.timing(spotListTranslateX, {
-        toValue: -300,
-        duration: 500,
-        useNativeDriver: false,
-      }).start();
+  // useEffect(() => {
+  //   // Animate the content switch
+  //   if (showAddSpot) {
+  //     // Spot list slides out to the left
+  //     Animated.timing(spotListTranslateX, {
+  //       toValue: -300,
+  //       duration: 500,
+  //       useNativeDriver: false,
+  //     }).start();
 
-      // Add spot form fades in and slides in from the right
-      Animated.parallel([
-        Animated.timing(addSpotOpacity, {
-          toValue: 1,
-          duration: 500,
-          useNativeDriver: false,
-        }),
-        Animated.spring(addSpotTranslateX, {
-          toValue: 0,
-          useNativeDriver: false,
-        }),
-      ]).start();
-    } else {
-      // Spot list slides in from the left
-      Animated.timing(spotListTranslateX, {
-        toValue: 0,
-        duration: 200,
-        useNativeDriver: false,
-      }).start();
+  //     // Add spot form fades in and slides in from the right
+  //     Animated.parallel([
+  //       Animated.timing(addSpotOpacity, {
+  //         toValue: 1,
+  //         duration: 500,
+  //         useNativeDriver: false,
+  //       }),
+  //       Animated.spring(addSpotTranslateX, {
+  //         toValue: 0,
+  //         useNativeDriver: false,
+  //       }),
+  //     ]).start();
+  //   } else {
+  //     // Spot list slides in from the left
+  //     Animated.timing(spotListTranslateX, {
+  //       toValue: 0,
+  //       duration: 200,
+  //       useNativeDriver: false,
+  //     }).start();
 
-      // Add spot form fades out and slides out to the right
-      Animated.parallel([
-        Animated.timing(addSpotOpacity, {
-          toValue: 0,
-          duration: 500,
-          useNativeDriver: false,
-        }),
-        Animated.spring(addSpotTranslateX, {
-          toValue: 300,
-          useNativeDriver: false,
-        }),
-      ]).start();
-    }
-  }, [showAddSpot]);
+  //     // Add spot form fades out and slides out to the right
+  //     Animated.parallel([
+  //       Animated.timing(addSpotOpacity, {
+  //         toValue: 0,
+  //         duration: 500,
+  //         useNativeDriver: false,
+  //       }),
+  //       Animated.spring(addSpotTranslateX, {
+  //         toValue: 300,
+  //         useNativeDriver: false,
+  //       }),
+  //     ]).start();
+  //   }
+  // }, [showAddSpot]);
+
+  // const renderSpotItem = ({ item }) => {
+  //   return (
+  //     <TouchableOpacity style={styles.addSpotButton}>
+  //       <Image
+  //         style={styles.spotListImage}
+  //         source={require("../assets/marker.png")}
+  //       />
+  //       <Text style={styles.addSpotText}>{item.name}</Text>
+  //     </TouchableOpacity>
+  //   );
+  // };
 
   const renderSpotItem = ({ item }) => {
-    return (
-      <TouchableOpacity style={styles.addSpotButton}>
-        <Image
-          style={styles.spotListImage}
-          source={require("../assets/marker.png")}
-        />
-        <Text style={styles.addSpotText}>{item.name}</Text>
-      </TouchableOpacity>
+    // Find the associated colony
+    const associatedColony = colonies.find(
+      (colony) => colony.name === item.colonyName
     );
+
+    // Display the spot only if the associated colony is selected
+    if (associatedColony && associatedColony.selected) {
+      return (
+        <TouchableOpacity
+          onPress={() => console.log(item.coordinate)}
+          style={styles.addSpotButton}
+        >
+          <Image
+            style={styles.spotListImage}
+            source={require("../assets/marker.png")}
+          />
+          <Text style={styles.addSpotText}>{item.name}</Text>
+        </TouchableOpacity>
+      );
+    }
+
+    // If the associated colony is not selected, return null to render nothing
+    return null;
   };
 
   const geocode = async () => {
@@ -190,19 +238,20 @@ const CreateSpotModal = ({
       animationOut="slideOutDown"
       isVisible={isModalVisible}
       onBackdropPress={() => {
-        setShowAddSpot(false);
+        // setShowAddSpot(false);
         setShowSpotList(true);
         hideModal();
         // cancelCreateSpot();
         // resetNewSpot();
       }}
       onSwipeComplete={() => {
-        setShowAddSpot(false);
+        // setShowAddSpot(false);
         setShowSpotList(true);
         hideModal();
         // cancelCreateSpot();
         // resetNewSpot();
       }}
+      swipeThreshold={200}
       swipeDirection={showSpotList ? "down" : null}
       propagateSwipe
       style={styles.modalContainer}
@@ -211,10 +260,8 @@ const CreateSpotModal = ({
         <View style={styles.modalContent}>
           <Bar style={styles.bar} color={COLORS.secondary} />
           {showSpotList ? (
-            <Animated.View
+            <View
               style={{
-                opacity: spotListOpacity,
-                transform: [{ translateX: spotListTranslateX }],
                 flex: 1,
               }}
             >
@@ -225,7 +272,7 @@ const CreateSpotModal = ({
                 <TouchableOpacity
                   style={styles.addSpotButton}
                   onPress={() => {
-                    setShowAddSpot(true);
+                    // setShowAddSpot(true);
                     setShowSpotList(false);
                     console.log(mapRegion);
                   }}
@@ -245,13 +292,11 @@ const CreateSpotModal = ({
                   style={styles.spotList}
                 />
               </View>
-            </Animated.View>
+            </View>
           ) : (
             <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-              <Animated.View
+              <View
                 style={{
-                  opacity: addSpotOpacity,
-                  transform: [{ translateX: addSpotTranslateX }],
                   flex: 1,
                 }}
               >
@@ -280,7 +325,7 @@ const CreateSpotModal = ({
                     {spotNameError && (
                       <Text style={styles.errorMessage}>{spotNameError}</Text>
                     )}
-                    <TextInput
+                    {/* <TextInput
                       style={[
                         styles.input,
                         colonyNameError && styles.inputError,
@@ -291,6 +336,30 @@ const CreateSpotModal = ({
                       onChangeText={(text) =>
                         handleInputChange("colonyName", text)
                       }
+                    /> */}
+                    <Dropdown
+                      style={styles.input}
+                      placeholderStyle={styles.placeholderStyle}
+                      selectedTextStyle={styles.placeholderStyle}
+                      itemTextStyle={styles.itemTextStyle}
+                      iconStyle={styles.iconStyle}
+                      data={colonies}
+                      search={false}
+                      maxHeight={300}
+                      labelField="name"
+                      valueField="value"
+                      placeholder={
+                        newSpot.colonyName === ""
+                          ? "Colony Name *"
+                          : newSpot.colonyName
+                      }
+                      value={newSpot.colonyName}
+                      onChange={(item) => {
+                        // const statusValue = item.value - 1;
+                        // setUser({ ...user, statusCode: statusValue });
+                        // console.log(statusIdentifiers[statusValue].label);
+                        handleInputChange("colonyName", item.name);
+                      }}
                     />
                     {colonyNameError && (
                       <Text style={styles.errorMessage}>{colonyNameError}</Text>
@@ -298,7 +367,7 @@ const CreateSpotModal = ({
                     <View style={styles.findLocationContainer}>
                       <TextInput
                         style={[styles.input, { width: "80%" }]}
-                        placeholder="Find Location"
+                        placeholder="Find Address"
                         placeholderTextColor={COLORS.secondary}
                         value={newSpot.address}
                         onChangeText={(text) =>
@@ -328,9 +397,9 @@ const CreateSpotModal = ({
                     region={region}
                     userInterfaceStyle="light"
                     // onPress={handleMapPress}
-                    // onRegionChange={(newRegion) => {
-                    //   setCircleCenter(newRegion);
-                    // }}
+                    onRegionChange={(newRegion) => {
+                      setCircleCenter(newRegion);
+                    }}
                     onRegionChangeComplete={(newRegion) => {
                       setCircleCenter(newRegion);
                     }}
@@ -406,10 +475,11 @@ const CreateSpotModal = ({
                             coordinate: circleCenter,
                           };
                           setAllSpots([...allSpots, updatedSpot]);
-                          setShowAddSpot(false);
+                          // setShowAddSpot(false);
                           setShowSpotList(true);
                           // hideModal();
                           console.log("Spot Created:\n", newSpot);
+                          resetValues();
                         }
                       }}
                     >
@@ -417,7 +487,7 @@ const CreateSpotModal = ({
                     </TouchableOpacity>
                   </View>
                 </View>
-              </Animated.View>
+              </View>
             </TouchableWithoutFeedback>
           )}
         </View>
@@ -517,10 +587,10 @@ const styles = StyleSheet.create({
     height: 60,
     borderColor: COLORS.secondary,
     borderBottomWidth: 1,
-    padding: 10,
+    paddingTop: 10,
     marginBottom: 10,
     paddingBottom: 0,
-    borderRadius: 10,
+    // borderRadius: 10,
     color: COLORS.secondary,
     fontWeight: "bold",
     fontSize: 20,
@@ -607,9 +677,20 @@ const styles = StyleSheet.create({
   errorMessage: {
     color: COLORS.active,
     fontSize: 14,
-    marginTop: 5,
+    // marginTop: 5,
     marginLeft: 10,
     fontWeight: "bold",
+  },
+  placeholderStyle: {
+    fontSize: 20,
+    color: COLORS.secondary,
+    fontWeight: "bold",
+  },
+  itemTextStyle: {
+    fontSize: 20,
+  },
+  iconStyle: {
+    tintColor: COLORS.secondary,
   },
 });
 
