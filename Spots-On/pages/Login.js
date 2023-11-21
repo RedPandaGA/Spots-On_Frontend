@@ -10,6 +10,10 @@ import {
 } from "react-native";
 import COLORS from "../components/colors";
 import CustomAlert from '../components/alert';
+import Config from '../.config.js';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const apiUrl = Config.API_URL;
 
 const Login = ({ navigation }) => {
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -25,7 +29,7 @@ const Login = ({ navigation }) => {
     setIsPasswordVisible(!isPasswordVisible);
   };
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     // Navigate to the main app screen
 
     // VALIDATE USER IS IN DATABASE AND LOGIN IF SUCCEED
@@ -38,10 +42,39 @@ const Login = ({ navigation }) => {
       return;
     }
 
-    console.log(
-      "Logged into account: " + phoneNumber + " with password: " + password
-    );
-    navigation.navigate("Home");
+    const userData = {
+        pnum: phoneNumber,
+        pass: password,
+    };
+
+    try {
+        const response = await fetch(`${apiUrl}/login`, {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userData),
+        });
+
+        if (!response.ok) {
+            console.error('Error logging in: ', response.status);
+            return;
+        }
+
+        const data = await response.json();
+        const receivedToken = data.token;
+        const newuid = data.uid;
+
+        // Store the token in AsyncStorage
+        await AsyncStorage.setItem('token', receivedToken);
+        await AsyncStorage.setItem('uid', newuid);
+
+        console.log('Logged Into Account: ' + await AsyncStorage.getItem('token') + " uid: " + await AsyncStorage.getItem('uid'));
+        navigation.navigate('Home');
+    } catch (error) {
+        console.error('Error:', error);
+        // Handle other errors as needed
+    }
   };
 
   const handleSignup = () => {

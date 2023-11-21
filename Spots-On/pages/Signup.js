@@ -12,7 +12,6 @@ import CustomAlert from '../components/alert';
 import Config from '../.config.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
 const apiUrl = Config.API_URL;
 
 const Signup = ({ navigation }) => {
