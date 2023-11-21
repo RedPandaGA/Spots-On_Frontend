@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   View,
   Text,
@@ -10,8 +10,27 @@ import {
 } from "react-native";
 import COLORS from "../components/colors";
 import ColonySliderModal from "../components/colonySliderModal";
+import Carousel from "react-native-snap-carousel";
 
 export default function Notifications({ navigation }) {
+
+  const carouselData = [
+    { title: "Slide 1", text: "Content of Slide 1" },
+    { title: "Slide 2", text: "Content of Slide 2" },
+    { title: "Slide 3", text: "Content of Slide 3" },
+  ];
+
+  const carouselRef = useRef(null);
+
+  const renderItem = ({ item }) => {
+    return (
+      <View style={styles.carouselItem}>
+        <Text style={styles.carouselTitle}>{item.title}</Text>
+        <Text style={styles.carouselText}>{item.text}</Text>
+      </View>
+    );
+  };
+
   const statusList = ["friend1", "friend2", "friend3"];
 
   const locationList = ["friend1", "friend2", "friend3"];
@@ -116,6 +135,15 @@ export default function Notifications({ navigation }) {
           </TouchableOpacity>
           <Text style={styles.title}>Notifications</Text>
         </View>
+        <Carousel
+          ref={carouselRef}
+          data={carouselData}
+          renderItem={renderItem}
+          sliderWidth={300}
+          itemWidth={300}
+          layout="default"
+          loop
+        />
         <View style={styles.sliderContainer}>
             <ColonySliderModal/>
           </View>
@@ -217,5 +245,26 @@ const styles = StyleSheet.create({
     marginTop: 13,
     marginBottom: -10,
     width: "110%",
+  },
+  carouselItem: {
+    backgroundColor: COLORS.secondary,
+    borderRadius: 10,
+    height: 200,
+    padding: 20,
+    marginLeft: 25,
+    marginRight: 25,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  carouselTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 10,
+    color: COLORS.primary,
+  },
+  carouselText: {
+    fontSize: 16,
+    color: COLORS.primary,
+    textAlign: "center",
   },
 });
