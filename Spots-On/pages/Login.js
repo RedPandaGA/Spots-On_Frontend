@@ -9,16 +9,34 @@ import {
   TouchableOpacity,
 } from "react-native";
 import COLORS from "../components/colors";
+import CustomAlert from '../components/alert';
 
 const Login = ({ navigation }) => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
+
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertTitle, setAlertTitle] = useState('');
+  const [alertMessage, setAlertMessage] = useState('');
+
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible(!isPasswordVisible);
+  };
 
   const handleLogin = () => {
     // Navigate to the main app screen
 
     // VALIDATE USER IS IN DATABASE AND LOGIN IF SUCCEED
     // THROW ERROR AND DISPLAY THAT USER IS NOT IN DATABSE OTHERWISE
+
+    if (!phoneNumber || !password) {
+      setAlertTitle('Incomplete Fields');
+      setAlertMessage('Please fill in all the fields.');
+      setShowAlert(true);
+      return;
+    }
 
     console.log(
       "Logged into account: " + phoneNumber + " with password: " + password
@@ -49,14 +67,22 @@ const Login = ({ navigation }) => {
         value={phoneNumber}
         onChangeText={(text) => setPhoneNumber(text)}
       />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        placeholderTextColor={COLORS.secondary}
-        value={password}
-        onChangeText={(text) => setPassword(text)}
-        secureTextEntry={true}
-      />
+      <View style={styles.passwordContainer}>
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          placeholderTextColor={COLORS.secondary}
+          value={password}
+          onChangeText={(text) => setPassword(text)}
+          secureTextEntry={!isPasswordVisible}
+        />
+        <TouchableOpacity onPress={togglePasswordVisibility} style={styles.eyeIcon}>
+          <Image
+            source={isPasswordVisible ? require("../assets/noeye.png") : require("../assets/eye.png")}
+            style={styles.eyecon}
+          />
+        </TouchableOpacity>
+      </View>
       <TouchableOpacity
         style={[styles.button, { alignSelf: "center", marginTop: 30 }]}
         onPress={handleLogin}
@@ -69,6 +95,14 @@ const Login = ({ navigation }) => {
       >
         <Text style={styles.buttonText}>Create Account</Text>
       </TouchableOpacity>
+      <View style={styles.container}>
+        <CustomAlert
+          visible={showAlert}
+          title={alertTitle}
+          message={alertMessage}
+          onClose={() => setShowAlert(false)}
+        />
+      </View>
     </View>
   );
 };
@@ -119,6 +153,20 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 1,
     borderRadius: 100,
+  },
+  passwordContainer: {
+    width: '100%',
+    alignItems: 'center'
+  },
+  eyecon: {
+    height: 30,
+    width: 30,
+    tintColor: COLORS.darkerprimary,
+  },
+  eyeIcon: {
+    position: 'absolute',
+    right: 30,
+    top: 20
   },
 });
 
