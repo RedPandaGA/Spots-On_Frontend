@@ -102,6 +102,17 @@ export default function MainMap({ navigation }) {
     };
 
     getLocation();
+
+    // Update user's location every 30 seconds
+    const locationInterval = setInterval(async () => {
+      console.log("Updating user's location...");
+      let location = await getCurrentLocation();
+      setUser({ ...user, currentLocation: location.coords });
+      console.log("Updated user's location!");
+    }, 30000); // 30 seconds
+
+    // Clean up the interval when the component is unmounted
+    return () => clearInterval(locationInterval);
   }, []);
 
   // GRAB LOCATION FROM USER AND STORE IN DATABASE
