@@ -9,8 +9,8 @@ import {
   ScrollView,
 } from "react-native";
 import COLORS from "../components/colors";
-import ColonySliderModal from "../components/colonySliderModal";
 import Carousel from "react-native-snap-carousel";
+import { Dropdown } from "react-native-element-dropdown";
 
 export default function Notifications({ navigation }) {
 
@@ -47,6 +47,15 @@ export default function Notifications({ navigation }) {
       </View>
     );
   };
+
+  const [selectedColony, setSelectedColony] = useState(null);
+
+  const colonies = [
+    { name: "Colony A", value: "colonyA" },
+    { name: "Colony B", value: "colonyB" },
+    { name: "Colony C", value: "colonyC" },
+    // Add more colonies as needed
+  ];
 
   const statusList = ["friend1", "friend2", "friend3"];
 
@@ -164,8 +173,23 @@ export default function Notifications({ navigation }) {
             snapToInterval={400}
           />
         </View>
-        <View style={styles.sliderContainer}>
-          <ColonySliderModal />
+        <View style={styles.inputContainer}>
+          <Dropdown
+            style={styles.dropdown}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.placeholderStyle}
+            itemTextStyle={styles.itemTextStyle}
+            iconStyle={styles.iconStyle}
+            data={colonies}
+            search={false}
+            maxHeight={300}
+            labelField="name"
+            valueField="value"
+            placeholder={selectedColony ? selectedColony.name : "Select Colony Name"}
+            onChange={(item) => {
+              setSelectedColony(item);
+            }}
+          />
         </View>
         <Text style={styles.subtitle}>Status notifications</Text>
         <View style={styles.settingsItems}>
@@ -263,9 +287,6 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     padding: 10,
   },
-  sliderContainer: {
-    width: "107%",
-  },
   carouselContainer: {
     marginVertical: 25,
     alignItems: 'center',
@@ -302,5 +323,31 @@ const styles = StyleSheet.create({
   textContent: {
     flex: 1, // Take the remaining space
     justifyContent: 'center',
+  },
+  inputContainer: {
+    width: "98%",
+    flex: 1,
+    marginTop: -10,
+    marginBottom: -10,
+    alignSelf: 'center',
+  },
+  dropdown: {
+    margin: 16,
+    height: 50,
+    borderColor: COLORS.secondary,
+    borderBottomWidth: 1,
+    padding: 10,
+  },
+  placeholderStyle: {
+    fontSize: 20,
+    marginLeft: -10,
+    color: COLORS.secondary,
+    fontWeight: "bold",
+  },
+  itemTextStyle: {
+    fontSize: 20,
+  },
+  iconStyle: {
+    tintColor: COLORS.secondary,
   },
 });

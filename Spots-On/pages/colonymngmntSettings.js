@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useState, useRef } from "react";
 import {
   View,
   Text,
@@ -8,7 +8,7 @@ import {
   ScrollView,
 } from "react-native";
 import COLORS from "../components/colors";
-import ColonySliderModal from "../components/colonySliderModal";
+import { Dropdown } from "react-native-element-dropdown";
 import Carousel from "react-native-snap-carousel";
 
 export default function ColonyManagement({ navigation }) {
@@ -41,6 +41,15 @@ export default function ColonyManagement({ navigation }) {
       </View>
     );
   };
+
+  const [selectedColony, setSelectedColony] = useState(null);
+
+  const colonies = [
+    { name: "Colony A", value: "colonyA" },
+    { name: "Colony B", value: "colonyB" },
+    { name: "Colony C", value: "colonyC" },
+    // Add more colonies as needed
+  ];
 
   const detailList = ["Edit Colony Name"];
 
@@ -139,8 +148,23 @@ export default function ColonyManagement({ navigation }) {
             snapToInterval={400}
           />
         </View>
-        <View style={styles.sliderContainer}>
-          <ColonySliderModal />
+        <View style={styles.inputContainer}>
+          <Dropdown
+            style={styles.dropdown}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.placeholderStyle}
+            itemTextStyle={styles.itemTextStyle}
+            iconStyle={styles.iconStyle}
+            data={colonies}
+            search={false}
+            maxHeight={300}
+            labelField="name"
+            valueField="value"
+            placeholder={selectedColony ? selectedColony.name : "Select Colony Name"}
+            onChange={(item) => {
+              setSelectedColony(item);
+            }}
+          />
         </View>
         <Text style={styles.subtitle}>Colony details</Text>
         <View style={styles.settingsItems}>
@@ -208,9 +232,6 @@ const styles = StyleSheet.create({
     color: COLORS.primary,
     fontWeight: "bold",
   },
-  sliderContainer: {
-    width: "110%",
-  },
   carouselContainer: {
     marginVertical: 25,
     alignItems: 'center',
@@ -247,5 +268,31 @@ const styles = StyleSheet.create({
   textContent: {
     flex: 1, // Take the remaining space
     justifyContent: 'center',
+  },
+  inputContainer: {
+    width: "98%",
+    flex: 1,
+    marginTop: -10,
+    marginBottom: -10,
+    alignSelf: 'center',
+  },
+  dropdown: {
+    margin: 16,
+    height: 50,
+    borderColor: COLORS.secondary,
+    borderBottomWidth: 1,
+    padding: 10,
+  },
+  placeholderStyle: {
+    fontSize: 20,
+    marginLeft: -10,
+    color: COLORS.secondary,
+    fontWeight: "bold",
+  },
+  itemTextStyle: {
+    fontSize: 20,
+  },
+  iconStyle: {
+    tintColor: COLORS.secondary,
   },
 });

@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     height: 48,
     width: "50%",
-    backgroundColor: COLORS.darkerprimary,
+    backgroundColor: COLORS.primary,
     alignItems: "center",
   },
   buttonText: {
