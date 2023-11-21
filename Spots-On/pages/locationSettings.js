@@ -10,14 +10,14 @@ import {
 } from "react-native";
 import COLORS from "../components/colors";
 import { Dropdown } from "react-native-element-dropdown";
-import Carousel from "react-native-snap-carousel";
+import Swiper from "react-native-swiper";
 
 export default function LocationSharing({ navigation }) {
 
   const carouselData = [
     {
       title: "Device Permissions",
-      text: "Spots-On! requires your device's location permissions to be ON for the app to work. Go into your phone's settings to allow this.",
+      text: "Spots-On! requires your device's location permissions to be ON for the app to work.",
       imagePath: require("../assets/phone.png"),
     },
     {
@@ -32,11 +32,11 @@ export default function LocationSharing({ navigation }) {
     },
   ];
 
-  const carouselRef = useRef(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-  const renderItem = ({ item }) => {
-    return (
-      <View style={styles.carouselItem}>
+  const renderCarouselItems = () => {
+    return carouselData.map((item, index) => (
+      <View style={styles.carouselItem} key={`carousel_item_${index}`}>
         <View style={styles.cardContainer}>
           <Image source={item.imagePath} style={styles.cardImage} />
           <View style={styles.textContent}>
@@ -45,7 +45,7 @@ export default function LocationSharing({ navigation }) {
           </View>
         </View>
       </View>
-    );
+    ));
   };
 
   const [selectedColony, setSelectedColony] = useState(null);
@@ -177,17 +177,16 @@ export default function LocationSharing({ navigation }) {
           </TouchableOpacity>
           <Text style={styles.title}>Sharing</Text>
         </View>
-        <View style={styles.carouselContainer}>
-          <Carousel
-            ref={carouselRef}
-            data={carouselData}
-            renderItem={renderItem}
-            sliderWidth={400}
-            itemWidth={370}
-            layout="default"
-            snapToAlignment="start"
-            snapToInterval={400}
-          />
+        <View style={[styles.carouselContainer, { height: 170 }]}>
+          <Swiper
+            loop={false}
+            index={currentIndex}
+            onIndexChanged={(index) => setCurrentIndex(index)}
+            dot={<View style={styles.dot} />}
+            activeDot={<View style={styles.activeDot} />}
+          >
+            {renderCarouselItems()}
+          </Swiper>
         </View>
         <View style={styles.inputContainer}>
           <Dropdown
@@ -338,7 +337,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     width: "98%",
     flex: 1,
-    marginTop: -10,
+    marginTop: -40,
     marginBottom: -10,
     alignSelf: 'center',
   },
@@ -360,5 +359,19 @@ const styles = StyleSheet.create({
   },
   iconStyle: {
     tintColor: COLORS.secondary,
+  },
+  dot: {
+    backgroundColor: COLORS.lighterprimary,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginHorizontal: 4,
+  },
+  activeDot: {
+    backgroundColor: COLORS.secondary,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginHorizontal: 4,
   },
 });
