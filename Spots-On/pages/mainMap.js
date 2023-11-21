@@ -238,6 +238,7 @@ export default function MainMap({ navigation }) {
     }
 
     // Filter users based on the selected colony
+    //Update to get a list of users from db
     const filteredUsers = users.filter((user) =>
       user.associatedColonies.includes(selectedColony.name)
     );

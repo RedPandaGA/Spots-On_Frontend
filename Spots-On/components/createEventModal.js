@@ -20,20 +20,32 @@ import Bar from "./bar";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import COLORS from "./colors";
 import * as Location from "expo-location";
+import { Dropdown } from "react-native-element-dropdown";
+import CheckBox from "expo-checkbox";
 
-const CreateEventModal = ({ isModalVisible, hideModal, showModal }) => {
+const CreateEventModal = ({
+  isModalVisible,
+  hideModal,
+  showModal,
+  colonies,
+  allSpots,
+}) => {
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
   const [dateText, setDateText] = useState("Date");
   const [timeText, setTimeText] = useState("Time");
 
+  const [isCustomAddress, setIsCustomAddress] = useState(false);
+  const [filteredSpots, setFilteredSpots] = useState([]);
+
   const [event, setEvent] = useState({
     colonyName: "",
     date: new Date(),
     time: "",
-    address: "",
+    customAddress: "",
     coordinate: {},
     description: "",
+    spotName: "",
   });
 
   const geocode = async () => {
@@ -45,9 +57,9 @@ const CreateEventModal = ({ isModalVisible, hideModal, showModal }) => {
 
   const onChange = (e, selectedDate) => {
     const currentDate = selectedDate || eventDate;
-    //setShow(Platform.OS === 'ios');
+    setShow(Platform.OS === "ios");
     setEvent({ ...event, ["date"]: selectedDate });
-    setShow(false);
+    // setShow(false);
     let tempDate = new Date(currentDate);
     let hours = tempDate.getHours();
     let minutes =
@@ -83,6 +95,17 @@ const CreateEventModal = ({ isModalVisible, hideModal, showModal }) => {
   const showMode = (currentMode) => {
     setShow(true);
     setMode(currentMode);
+  };
+
+  const onChangeColony = (item) => {
+    const selectedColonyName = item.name;
+    handleInputChange("colonyName", selectedColonyName);
+
+    // Filter spots based on the selected colony name
+    const spotsInColony = allSpots.filter(
+      (spot) => spot.colonyName === selectedColonyName
+    );
+    setFilteredSpots(spotsInColony);
   };
 
   const screenHeight = Dimensions.get("window").height;
@@ -186,26 +209,98 @@ const CreateEventModal = ({ isModalVisible, hideModal, showModal }) => {
                     textColor={COLORS.primary}
                     onChange={onChange}
                   />
-                  {/* <TouchableOpacity>
-                                            <Text>Confirm</Text>
-                                        </TouchableOpacity> */}
+                  {Platform.OS === "ios" && (
+                    <TouchableOpacity
+                      style={styles.confirmButton}
+                      onPress={() => setShow(false)}
+                    >
+                      <Text style={styles.confirmButtonText}>Confirm</Text>
+                    </TouchableOpacity>
+                  )}
                 </View>
               )}
               <View style={styles.inputContainer}>
-                <TextInput
+                {/* <TextInput
                   style={styles.input}
                   placeholder="Colony Name"
                   placeholderTextColor={COLORS.primary}
                   value={event.colonyName}
                   onChangeText={(text) => handleInputChange("colonyName", text)}
-                />
-                <TextInput
+                /> */}
+                <Dropdown
                   style={styles.input}
-                  placeholder="Address"
-                  placeholderTextColor={COLORS.primary}
-                  value={event.address}
-                  onChangeText={(text) => handleInputChange("address", text)}
+                  placeholderStyle={styles.placeholderStyle}
+                  selectedTextStyle={styles.placeholderStyle}
+                  itemTextStyle={styles.itemTextStyle}
+                  iconStyle={styles.iconStyle}
+                  data={colonies}
+                  search={false}
+                  maxHeight={300}
+                  labelField="name"
+                  valueField="value"
+                  placeholder={
+                    event.colonyName === "" ? "Colony Name *" : event.colonyName
+                  }
+                  value={event.colonyName}
+                  onChange={onChangeColony}
                 />
+                <View style={styles.checkboxContainer}>
+                  <CheckBox
+                    value={isCustomAddress}
+                    onValueChange={setIsCustomAddress}
+                    style={styles.checkbox}
+                    color={COLORS.primary}
+                  />
+                  <Text style={styles.checkboxLabel}>Use custom address?</Text>
+                </View>
+                {isCustomAddress ? (
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Custom Address * "
+                    placeholderTextColor={COLORS.primary}
+                    value={event.address}
+                    onChangeText={(text) => handleInputChange("address", text)}
+                  />
+                ) : (
+                  <Dropdown
+                    style={styles.input}
+                    placeholderStyle={styles.placeholderStyle}
+                    selectedTextStyle={styles.placeholderStyle}
+                    itemTextStyle={styles.itemTextStyle}
+                    iconStyle={styles.iconStyle}
+                    data={filteredSpots}
+                    search={false}
+                    maxHeight={300}
+                    labelField="name"
+                    valueField="coordinate"
+                    placeholder={
+                      event.spotName === "" ? "Spot *" : event.spotName
+                    }
+                    value={event.spotName}
+                    disable={filteredSpots.length < 1}
+                    onChange={(item) => {
+                      // const statusValue = item.value - 1;
+                      // setUser({ ...user, statusCode: statusValue });
+                      // console.log(statusIdentifiers[statusValue].label);
+                      handleInputChange("spotName", item.name);
+                      handleInputChange("coordinate", item.coordinate);
+                    }}
+                  />
+                )}
+                {!isCustomAddress &&
+                  filteredSpots.length < 1 &&
+                  event.colonyName !== "" && (
+                    <Text style={styles.errorMessage}>
+                      <Text>No spots found in colony </Text>
+                      <Text style={{ textDecorationLine: "underline" }}>
+                        {event.colonyName}
+                      </Text>
+                      <Text>
+                        . Please create a spot or use a custom address.
+                      </Text>
+                    </Text>
+                  )}
+
                 <TextInput
                   style={[
                     styles.input,
@@ -321,6 +416,55 @@ const styles = StyleSheet.create({
     color: COLORS.primary,
     fontWeight: "bold",
     fontSize: 16,
+  },
+  confirmButton: {
+    justifyContent: "center",
+    alignSelf: "center",
+    marginVertical: 10,
+    backgroundColor: COLORS.primary,
+    borderRadius: 50,
+    width: 200,
+  },
+  confirmButtonText: {
+    textAlign: "center",
+    color: COLORS.secondary,
+    padding: 10,
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  placeholderStyle: {
+    fontSize: 16,
+    color: COLORS.primary,
+    fontWeight: "bold",
+  },
+  itemTextStyle: {
+    fontSize: 16,
+  },
+  iconStyle: {
+    tintColor: COLORS.primary,
+  },
+  checkboxContainer: {
+    flexDirection: "row",
+    marginVertical: 10,
+    paddingLeft: 12,
+  },
+  checkbox: {
+    alignSelf: "center",
+    height: 25,
+    width: 25,
+  },
+  checkboxLabel: {
+    margin: 8,
+    color: COLORS.primary,
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+  errorMessage: {
+    color: COLORS.active,
+    fontSize: 14,
+    marginBottom: 10,
+    marginLeft: 10,
+    fontWeight: "bold",
   },
 });
 
