@@ -42,7 +42,7 @@ const ColonyChatList = ({ isModalVisible, hideModal, navigation }) => {
         <View>
           <Image
             style={styles.chatImage}
-            source={require("../assets/marker.png")}
+            source={require("../assets/groupprofile.png")}
           />
           <Text style={styles.chatName}>{item.name}</Text>
         </View>
