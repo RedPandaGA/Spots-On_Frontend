@@ -38,7 +38,7 @@ const LandingPage = ({ navigation }) => {
   />
   <Text style={styles.text}>Connect</Text>
   <View style={styles.bottomContent}>
-    <Text style={styles.smallText}>your colony, your rules</Text>
+    <Text style={styles.smallText}>Your colony, your rules.</Text>
     <TouchableOpacity style={styles.button} onPress={handleGetStarted}>
       <Text style={styles.buttonText}>Get Started</Text>
     </TouchableOpacity>
