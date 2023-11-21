@@ -37,10 +37,7 @@ const LandingPage = ({ navigation }) => {
           style={styles.image}
         />
         <Text style={styles.text}>Connect</Text>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={handleGetStarted}
-        >
+        <TouchableOpacity style={styles.button} onPress={handleGetStarted}>
           <Text style={styles.buttonText}>Get Started</Text>
         </TouchableOpacity>
       </View>
@@ -67,6 +64,9 @@ const styles = StyleSheet.create({
     width: "50%",
     backgroundColor: COLORS.darkerprimary,
     alignItems: "center",
+    position: "absolute",
+    // left: "50%",
+    bottom: "20%",
   },
   buttonText: {
     fontSize: 16,

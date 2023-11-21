@@ -28,6 +28,7 @@ import { isPointWithinRadius } from "geolib";
 import StatusModal from "../components/statusModal";
 import Config from '../.config.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import users from "../components/users";
 
 const papiUrl = Config.PAPI_URL;
 
@@ -57,6 +58,17 @@ export default function MainMap({ navigation }) {
     lastContact: "", // time
     picture: "../assets/profilePicture.png", // not sure how to store yet
     emergency: false,
+    premium: false,
+    associatedColonies: [
+      "SASE",
+      "lsu engineering",
+      "swim friends",
+      "ood group",
+      "best friends",
+      "volleyball",
+      "oopah",
+      "vsa",
+    ],
   });
 
   const logUser = () => {
@@ -114,6 +126,7 @@ export default function MainMap({ navigation }) {
       // setCurrentLocation(location.coords);
       setUser({ ...user, currentLocation: location.coords });
       console.log("Received current position!");
+      console.log(location.coords);
 
       const initialRegion = {
         latitude: location.coords.latitude,
@@ -128,6 +141,18 @@ export default function MainMap({ navigation }) {
 
     getLocation();
     updateUserLocation();
+
+    // Update user's location every 30 seconds
+    const locationInterval = setInterval(async () => {
+      console.log("Updating user's location...");
+      let location = await getCurrentLocation();
+      setUser({ ...user, currentLocation: location.coords });
+      console.log("Updated user's location!");
+      updateUserLocation();
+    }, 30000); // 30 seconds
+
+    // Clean up the interval when the component is unmounted
+    return () => clearInterval(locationInterval);
   }, []);
 
   // GRAB LOCATION FROM USER AND STORE IN DATABASE
@@ -197,6 +222,74 @@ export default function MainMap({ navigation }) {
         </Callout>
       </Marker>
     );
+  };
+
+  const findSelectedColony = (colonies) => {
+    return colonies.find((colony) => colony.selected);
+  };
+
+  const renderUsersOnMap = (users, colonies) => {
+    // Find the selected colony
+    const selectedColony = findSelectedColony(colonies);
+
+    // If no colony is selected, return an empty array
+    if (!selectedColony) {
+      return [];
+    }
+
+    // Filter users based on the selected colony
+    const filteredUsers = users.filter((user) =>
+      user.associatedColonies.includes(selectedColony.name)
+    );
+
+    return filteredUsers.map((user) => (
+      <Marker
+        key={user.uid}
+        coordinate={{
+          latitude: user.currentLocation.latitude,
+          longitude: user.currentLocation.longitude,
+        }}
+      >
+        <Image
+          source={require("../assets/profile-user.png")}
+          style={{
+            width: 40,
+            height: 40,
+            borderRadius: 100,
+            borderWidth: 2,
+            borderColor: COLORS.primary,
+            tintColor: getStatusColor(user),
+          }}
+        />
+        <Callout>
+          <View style={{ minWidth: 150 }}>
+            <Text
+              style={{
+                fontSize: 20,
+                fontWeight: "bold",
+                color: COLORS.primary,
+              }}
+            >
+              {user.nickname}
+            </Text>
+            {user.status === "" && (
+              <Text
+                style={[styles.statusLabel, { color: getStatusColor(user) }]}
+              >
+                {statusIdentifiers[user.statusCode].label}
+              </Text>
+            )}
+            {user.status !== "" && (
+              <Text
+                style={[styles.statusLabel, { color: getStatusColor(user) }]}
+              >
+                {user.status}
+              </Text>
+            )}
+          </View>
+        </Callout>
+      </Marker>
+    ));
   };
 
   const getStatusColor = (user) => {
@@ -327,32 +420,57 @@ export default function MainMap({ navigation }) {
     setSpots(updatedSpots);
   };
 
+  // const displayAllSpots = () => {
+  //   return spots.map((spot) => (
+  //     <Spot
+  //       key={spot.id}
+  //       coordinate={spot.coordinate}
+  //       spotName={spot.name}
+  //       colonyName={spot.colonyName}
+  //       spotRadius={spot.radius}
+  //       isSafe={spot.safe}
+  //       onDrag={(e) => handleSpotDrag(e, spot.id)}
+  //       onDragEnd={(e) => handleSpotDragEnd(e, spot.id)}
+  //     />
+  //   ));
+  // };
+
   const displayAllSpots = () => {
-    return spots.map((spot) => (
-      <Spot
-        key={spot.id}
-        coordinate={spot.coordinate}
-        spotName={spot.name}
-        colonyName={spot.colonyName}
-        spotRadius={spot.radius}
-        isSafe={spot.safe}
-        onDrag={(e) => handleSpotDrag(e, spot.id)}
-        onDragEnd={(e) => handleSpotDragEnd(e, spot.id)}
-      />
-    ));
+    return spots
+      .filter((spot) => {
+        // Find the associated colony
+        const associatedColony = colonies.find(
+          (colony) => colony.name === spot.colonyName
+        );
+
+        // Display the spot only if the associated colony is selected
+        return associatedColony && associatedColony.selected;
+      })
+      .map((spot) => (
+        <Spot
+          key={spot.id}
+          coordinate={spot.coordinate}
+          spotName={spot.name}
+          colonyName={spot.colonyName}
+          spotRadius={spot.radius}
+          isSafe={spot.safe}
+          onDrag={(e) => handleSpotDrag(e, spot.id)}
+          onDragEnd={(e) => handleSpotDragEnd(e, spot.id)}
+        />
+      ));
   };
 
   // GET ALL COLONIES FROM DATABASE AND STORE INTO VARIABLES TO USE AND DISPLAY
   // USE THE SELECTED VALUE OR SOMETHING SIMILAR TO GRAB SPECIFIC MEMBERS/SPOTS BASED ON THE SELECTED COLONY
   const [colonies, setColonies] = useState([
-    { name: "SASE", selected: true },
-    { name: "lsu engineering", selected: false },
-    { name: "swim friends", selected: false },
-    { name: "ood group", selected: false },
-    { name: "best friends", selected: false },
-    { name: "volleyball", selected: false },
-    { name: "oopah", selected: false },
-    { name: "vsa", selected: false },
+    { name: "SASE", selected: true, value: 1 },
+    { name: "lsu engineering", selected: false, value: 1 },
+    { name: "swim friends", selected: false, value: 2 },
+    { name: "ood group", selected: false, value: 3 },
+    { name: "best friends", selected: false, value: 4 },
+    { name: "volleyball", selected: false, value: 5 },
+    { name: "oopah", selected: false, value: 6 },
+    { name: "vsa", selected: false, value: 7 },
   ]);
 
   // CREATE FUNCTION TO GET ALL MEMBERS WITHIN A SELECTED COLONY AND DISPLAY THEM ON THE MAP
@@ -382,6 +500,7 @@ export default function MainMap({ navigation }) {
             >
               {/* FUNCTION TO DISPLAY ALL MEMBERS WITHIN SELECTED COLONY */}
               {displayAllSpots()}
+              {renderUsersOnMap(users, colonies)}
               {user.currentLocation && showCurrentLocation()}
               <Circle
                 center={{
@@ -474,6 +593,7 @@ export default function MainMap({ navigation }) {
                 isModalVisible={modals.createColony}
                 hideModal={() => hideModal("createColony")}
                 showModal={showModal}
+                user={user}
               />
             )}
             {/* Chats Button */}
@@ -576,6 +696,7 @@ export default function MainMap({ navigation }) {
                   latitudeDelta: 0.005,
                   longitudeDelta: 0.005,
                 }}
+                colonies={colonies}
               />
             )}
             {/* Settings Button */}

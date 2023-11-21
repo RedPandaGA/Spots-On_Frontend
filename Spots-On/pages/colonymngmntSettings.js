@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import {
   View,
   Text,
@@ -9,8 +9,39 @@ import {
 } from "react-native";
 import COLORS from "../components/colors";
 import ColonySliderModal from "../components/colonySliderModal";
+import Carousel from "react-native-snap-carousel";
 
 export default function ColonyManagement({ navigation }) {
+
+  const carouselData = [
+    {
+      title: "Colony Details",
+      text: "Changes you make here apply only to the selected Colony.",
+      imagePath: require("../assets/details.png"),
+    },
+    {
+      title: "Colony Management",
+      text: "Only admins can edit Colony names, delete Colony members, and change admin status.",
+      imagePath: require("../assets/management.png"),
+    },
+  ];
+
+  const carouselRef = useRef(null);
+
+  const renderItem = ({ item }) => {
+    return (
+      <View style={styles.carouselItem}>
+        <View style={styles.cardContainer}>
+          <Image source={item.imagePath} style={styles.cardImage} />
+          <View style={styles.textContent}>
+            <Text style={styles.carouselTitle}>{item.title}</Text>
+            <Text style={styles.carouselText}>{item.text}</Text>
+          </View>
+        </View>
+      </View>
+    );
+  };
+
   const detailList = ["Edit Colony Name"];
 
   const detailButtonActions = [
@@ -96,9 +127,21 @@ export default function ColonyManagement({ navigation }) {
           </TouchableOpacity>
           <Text style={styles.title}>ColonyName</Text>
         </View>
+        <View style={styles.carouselContainer}>
+          <Carousel
+            ref={carouselRef}
+            data={carouselData}
+            renderItem={renderItem}
+            sliderWidth={400}
+            itemWidth={370}
+            layout="default"
+            snapToAlignment="start"
+            snapToInterval={400}
+          />
+        </View>
         <View style={styles.sliderContainer}>
-            <ColonySliderModal/>
-          </View>
+          <ColonySliderModal />
+        </View>
         <Text style={styles.subtitle}>Colony details</Text>
         <View style={styles.settingsItems}>
           {detailList.map((buttonText, index) =>
@@ -149,6 +192,7 @@ const styles = StyleSheet.create({
   },
   settingsItems: {
     marginTop: 20,
+    marginBottom: 10,
     backgroundColor: COLORS.secondary,
     width: "90%",
     alignSelf: "center",
@@ -165,8 +209,43 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   sliderContainer: {
-    marginTop: 13,
-    marginBottom: -10,
     width: "110%",
+  },
+  carouselContainer: {
+    marginVertical: 25,
+    alignItems: 'center',
+  },
+  carouselItem: {
+    backgroundColor: COLORS.secondary,
+    borderRadius: 10,
+    height: 120,
+    padding: 15,
+    marginLeft: 25,
+    marginRight: 25,
+    justifyContent: "center",
+  },
+  carouselTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: COLORS.primary,
+    textAlign: 'left',
+  },
+  carouselText: {
+    fontSize: 16,
+    color: COLORS.primary,
+  },
+  cardContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  cardImage: {
+    width: 40,
+    height: 40,
+    marginRight: 15,
+    tintColor: COLORS.gold
+  },
+  textContent: {
+    flex: 1, // Take the remaining space
+    justifyContent: 'center',
   },
 });
