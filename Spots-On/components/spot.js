@@ -11,7 +11,18 @@ const Spot = ({
   spotRadius,
   onDrag,
   onDragEnd,
+  showModal,
+  setCurrentSpot,
+  isEditSpotVisible,
 }) => {
+  const chosenSpot = {
+    spotName: spotName,
+    coordinate: coordinate,
+    colonyName: colonyName,
+    safe: isSafe,
+    radius: spotRadius,
+  };
+
   return (
     <View>
       <Marker
@@ -21,6 +32,9 @@ const Spot = ({
         description={colonyName}
         onDrag={onDrag}
         onDragEnd={onDragEnd}
+        onPress={() => {
+          if (!isEditSpotVisible) setCurrentSpot(chosenSpot);
+        }}
       >
         <Image
           source={require("../assets/marker.png")}
@@ -28,7 +42,11 @@ const Spot = ({
         />
         <Callout
           style={styles.callout}
-          onPress={() => console.log("Clicked description/spot info")}
+          onPress={() => {
+            if (!isEditSpotVisible) showModal("editSpot");
+            console.log("Clicked description/spot info");
+            console.log("Chosen spot:", chosenSpot);
+          }}
         >
           <View style={styles.calloutTextContainer}>
             <Text style={styles.spotName}>{spotName}</Text>

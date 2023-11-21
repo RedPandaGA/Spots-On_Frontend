@@ -14,7 +14,13 @@ import {
 import Bar from "./bar";
 import COLORS from "./colors";
 
-const ViewEventsModal = ({ isModalVisible, hideModal, showModal }) => {
+const ViewEventsModal = ({
+  isModalVisible,
+  hideModal,
+  showModal,
+  eventsToday,
+  eventsUpcoming,
+}) => {
   const [isTodayPressed, setIsTodayPressed] = useState(true);
   const [isUpcomingPressed, setIsUpcomingPressed] = useState(false);
 
@@ -45,66 +51,6 @@ const ViewEventsModal = ({ isModalVisible, hideModal, showModal }) => {
 
   const modalPosition = new Animated.Value(0);
 
-  // CREATE FUNCTION TO GRAB EVENTS FROM DATABASE AND PUT THEM INTO TODAY AND UPCOMING FLATLISTS
-
-  // Today's events
-  const eventsToday = [
-    {
-      title: "VSA 2nd General Body Meeting",
-      location: "Himes Hall Room 216",
-      time: "6:00pm",
-    },
-    {
-      title: "OOD meeting",
-      location: "Teatery on College",
-      time: "12:00pm",
-    },
-    {
-      title: "Team Building Workshop",
-      location: "Conference Room A",
-      time: "3:30pm",
-    },
-    {
-      title: "Tech Conference Keynote",
-      location: "Convention Center Hall B",
-      time: "9:00am",
-    },
-    {
-      title: "Art Exhibition Opening",
-      location: "City Art Gallery",
-      time: "7:30pm",
-    },
-  ];
-
-  // Upcoming events
-  const eventsUpcoming = [
-    {
-      title: "Music Festival",
-      location: "City Park",
-      time: "2:00pm",
-    },
-    {
-      title: "Book Launch Party",
-      location: "Local Bookstore",
-      time: "7:00pm",
-    },
-    {
-      title: "Food Truck Rally",
-      location: "Downtown Square",
-      time: "5:30pm",
-    },
-    {
-      title: "Movie Night Under the Stars",
-      location: "Community Park",
-      time: "8:00pm",
-    },
-    {
-      title: "Charity Run",
-      location: "Riverfront Trail",
-      time: "9:00am",
-    },
-  ];
-
   const renderItem = ({ item }) => (
     <View style={styles.eventItem}>
       <View styles={styles.infoContainer}>
@@ -112,10 +58,10 @@ const ViewEventsModal = ({ isModalVisible, hideModal, showModal }) => {
           style={styles.eventImage}
           source={require("../assets/marker.png")}
         />
-        <Text style={styles.eventTitle}>{item.title}</Text>
+        <Text style={styles.eventTitle}>{item.name}</Text>
       </View>
       <Text style={styles.eventLocation}>
-        {item.location} @ {item.time}
+        {item.address} @ {item.time}
       </Text>
     </View>
   );
