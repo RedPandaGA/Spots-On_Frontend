@@ -26,6 +26,10 @@ import Spot from "../components/spot";
 import Splash from "./splash";
 import { isPointWithinRadius } from "geolib";
 import StatusModal from "../components/statusModal";
+import Config from '../.config.js';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const papiUrl = Config.PAPI_URL;
 
 export default function MainMap({ navigation }) {
   // Manage the location of the map
@@ -59,6 +63,40 @@ export default function MainMap({ navigation }) {
     console.log(user);
   };
 
+  const updateUserLocation = async () => {
+    try {
+        // Get the authorization token from AsyncStorage
+        const authToken = await AsyncStorage.getItem('token');
+    
+        if (!authToken) {
+          // Handle the case where the token is not available
+          console.error('Authorization token not found.');
+          return;
+        }
+    
+        const response = await fetch(`${papiUrl}/updateUserLocation`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authToken}`, // Attach the token to the Authorization header
+          },
+          body: JSON.stringify({ location: user.currentLocation }),
+        });
+    
+        if (!response.ok) {
+          // Handle error, e.g., display an error message
+          console.error('Error updating user location:', response.status);
+          return;
+        }
+    
+        // Successfully updated user location
+        console.log('User location updated successfully ' + JSON.stringify(response));
+      } catch (error) {
+        console.error('Error:', error);
+        // Handle other errors as needed
+      }
+  };
+
   // GRAB LOCATION FROM USER AND STORE IN DATABASE
   useEffect(() => {
     const getLocation = async () => {
@@ -89,6 +127,7 @@ export default function MainMap({ navigation }) {
     };
 
     getLocation();
+    updateUserLocation();
   }, []);
 
   // GRAB LOCATION FROM USER AND STORE IN DATABASE

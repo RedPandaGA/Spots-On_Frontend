@@ -102,19 +102,18 @@ const Signup = ({ navigation }) => {
 
         const data = await response.json();
         const receivedToken = data.token;
+        const newuid = data.uid;
 
         // Store the token in AsyncStorage
         await AsyncStorage.setItem('token', receivedToken);
+        await AsyncStorage.setItem('uid', newuid);
 
-        // You may want to perform additional actions with the token here
-        console.log('Created an Account: ' + await AsyncStorage.getItem('token'));
+        console.log('Created an Account: ' + await AsyncStorage.getItem('token') + " uid: " + await AsyncStorage.getItem('uid'));
         navigation.navigate('Home');
     } catch (error) {
         console.error('Error:', error);
         // Handle other errors as needed
     }
-
-
   };
 
   const handleLogin = () => {
