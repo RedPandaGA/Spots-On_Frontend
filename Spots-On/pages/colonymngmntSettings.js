@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useState, useRef } from "react";
 import {
   View,
   Text,
@@ -8,8 +8,8 @@ import {
   ScrollView,
 } from "react-native";
 import COLORS from "../components/colors";
-import ColonySliderModal from "../components/colonySliderModal";
-import Carousel from "react-native-snap-carousel";
+import { Dropdown } from "react-native-element-dropdown";
+import Swiper from "react-native-swiper";
 
 export default function ColonyManagement({ navigation }) {
 
@@ -26,11 +26,11 @@ export default function ColonyManagement({ navigation }) {
     },
   ];
 
-  const carouselRef = useRef(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-  const renderItem = ({ item }) => {
-    return (
-      <View style={styles.carouselItem}>
+  const renderCarouselItems = () => {
+    return carouselData.map((item, index) => (
+      <View style={styles.carouselItem} key={`carousel_item_${index}`}>
         <View style={styles.cardContainer}>
           <Image source={item.imagePath} style={styles.cardImage} />
           <View style={styles.textContent}>
@@ -39,8 +39,17 @@ export default function ColonyManagement({ navigation }) {
           </View>
         </View>
       </View>
-    );
+    ));
   };
+
+  const [selectedColony, setSelectedColony] = useState(null);
+
+  const colonies = [
+    { name: "Colony A", value: "colonyA" },
+    { name: "Colony B", value: "colonyB" },
+    { name: "Colony C", value: "colonyC" },
+    // Add more colonies as needed
+  ];
 
   const detailList = ["Edit Colony Name"];
 
@@ -127,20 +136,34 @@ export default function ColonyManagement({ navigation }) {
           </TouchableOpacity>
           <Text style={styles.title}>ColonyName</Text>
         </View>
-        <View style={styles.carouselContainer}>
-          <Carousel
-            ref={carouselRef}
-            data={carouselData}
-            renderItem={renderItem}
-            sliderWidth={400}
-            itemWidth={370}
-            layout="default"
-            snapToAlignment="start"
-            snapToInterval={400}
-          />
+        <View style={[styles.carouselContainer, { height: 170 }]}>
+          <Swiper
+            loop={false}
+            index={currentIndex}
+            onIndexChanged={(index) => setCurrentIndex(index)}
+            dot={<View style={styles.dot} />}
+            activeDot={<View style={styles.activeDot} />}
+          >
+            {renderCarouselItems()}
+          </Swiper>
         </View>
-        <View style={styles.sliderContainer}>
-          <ColonySliderModal />
+        <View style={styles.inputContainer}>
+          <Dropdown
+            style={styles.dropdown}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.placeholderStyle}
+            itemTextStyle={styles.itemTextStyle}
+            iconStyle={styles.iconStyle}
+            data={colonies}
+            search={false}
+            maxHeight={300}
+            labelField="name"
+            valueField="value"
+            placeholder={selectedColony ? selectedColony.name : "Select Colony Name"}
+            onChange={(item) => {
+              setSelectedColony(item);
+            }}
+          />
         </View>
         <Text style={styles.subtitle}>Colony details</Text>
         <View style={styles.settingsItems}>
@@ -208,9 +231,6 @@ const styles = StyleSheet.create({
     color: COLORS.primary,
     fontWeight: "bold",
   },
-  sliderContainer: {
-    width: "110%",
-  },
   carouselContainer: {
     marginVertical: 25,
     alignItems: 'center',
@@ -247,5 +267,45 @@ const styles = StyleSheet.create({
   textContent: {
     flex: 1, // Take the remaining space
     justifyContent: 'center',
+  },
+  inputContainer: {
+    width: "98%",
+    flex: 1,
+    marginTop: -40,
+    marginBottom: -10,
+    alignSelf: 'center',
+  },
+  dropdown: {
+    margin: 16,
+    height: 50,
+    borderColor: COLORS.secondary,
+    borderBottomWidth: 1,
+    padding: 10,
+  },
+  placeholderStyle: {
+    fontSize: 20,
+    marginLeft: -10,
+    color: COLORS.secondary,
+    fontWeight: "bold",
+  },
+  itemTextStyle: {
+    fontSize: 20,
+  },
+  iconStyle: {
+    tintColor: COLORS.secondary,
+  },
+  dot: {
+    backgroundColor: COLORS.lighterprimary,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginHorizontal: 4,
+  },
+  activeDot: {
+    backgroundColor: COLORS.secondary,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginHorizontal: 4,
   },
 });
