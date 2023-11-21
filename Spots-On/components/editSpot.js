@@ -40,28 +40,21 @@ const EditSpot = ({
 }) => {
   // const [showAddSpot, setShowAddSpot] = useState(false);
   const [showSpotList, setShowSpotList] = useState(true);
-  const [circleRadius, setCircleRadius] = useState(50);
+  const [circleRadius, setCircleRadius] = useState(currentSpot.radius);
   const [circleCenter, setCircleCenter] = useState(currentSpot.coordinate);
   const [region, setRegion] = useState(mapRegion);
-  const [newSpot, setNewSpot] = useState({
-    name: "",
-    colonyName: "",
-    radius: 250,
-    coordinate: {},
-    address: "",
-    safe: true,
-  });
+  const [newSpot, setNewSpot] = useState(currentSpot);
 
-  const resetNewSpot = () => {
-    setNewSpot({
-      name: "",
-      colonyName: "",
-      radius: 250,
-      coordinate: {},
-      address: "",
-      safe: true,
-    });
-  };
+  //   const resetNewSpot = () => {
+  //     setNewSpot({
+  //       name: "",
+  //       colonyName: "",
+  //       radius: 250,
+  //       coordinate: {},
+  //       address: "",
+  //       safe: true,
+  //     });
+  //   };
 
   // const colonyList = colonies.map((colony, index) => [
   //   {
@@ -73,12 +66,6 @@ const EditSpot = ({
 
   const [spotNameError, setSpotNameError] = useState(null);
   const [colonyNameError, setColonyNameError] = useState(null);
-
-  // // Animated values
-  // const spotListOpacity = new Animated.Value(1);
-  // const addSpotOpacity = new Animated.Value(0);
-  // const addSpotTranslateX = new Animated.Value(300);
-  // const spotListTranslateX = new Animated.Value(-300);
 
   const handleInputChange = (key, value) => {
     setNewSpot({ ...newSpot, [key]: value });
@@ -97,13 +84,13 @@ const EditSpot = ({
     setShowSpotList(true);
     setSpotNameError(false);
     setColonyNameError(false);
-    resetNewSpot();
+    // resetNewSpot();
   };
 
   const validateInputs = () => {
     let isValid = true;
 
-    if (!newSpot.name.trim()) {
+    if (!newSpot.spotName.trim()) {
       setSpotNameError("Spot Name is required");
       isValid = false;
     }
@@ -122,63 +109,6 @@ const EditSpot = ({
       safe: !prevSpot.safe,
     }));
   };
-
-  // useEffect(() => {
-  //   // Animate the content switch
-  //   if (showAddSpot) {
-  //     // Spot list slides out to the left
-  //     Animated.timing(spotListTranslateX, {
-  //       toValue: -300,
-  //       duration: 500,
-  //       useNativeDriver: false,
-  //     }).start();
-
-  //     // Add spot form fades in and slides in from the right
-  //     Animated.parallel([
-  //       Animated.timing(addSpotOpacity, {
-  //         toValue: 1,
-  //         duration: 500,
-  //         useNativeDriver: false,
-  //       }),
-  //       Animated.spring(addSpotTranslateX, {
-  //         toValue: 0,
-  //         useNativeDriver: false,
-  //       }),
-  //     ]).start();
-  //   } else {
-  //     // Spot list slides in from the left
-  //     Animated.timing(spotListTranslateX, {
-  //       toValue: 0,
-  //       duration: 200,
-  //       useNativeDriver: false,
-  //     }).start();
-
-  //     // Add spot form fades out and slides out to the right
-  //     Animated.parallel([
-  //       Animated.timing(addSpotOpacity, {
-  //         toValue: 0,
-  //         duration: 500,
-  //         useNativeDriver: false,
-  //       }),
-  //       Animated.spring(addSpotTranslateX, {
-  //         toValue: 300,
-  //         useNativeDriver: false,
-  //       }),
-  //     ]).start();
-  //   }
-  // }, [showAddSpot]);
-
-  // const renderSpotItem = ({ item }) => {
-  //   return (
-  //     <TouchableOpacity style={styles.addSpotButton}>
-  //       <Image
-  //         style={styles.spotListImage}
-  //         source={require("../assets/marker.png")}
-  //       />
-  //       <Text style={styles.addSpotText}>{item.name}</Text>
-  //     </TouchableOpacity>
-  //   );
-  // };
 
   const renderSpotItem = ({ item }) => {
     // Find the associated colony
@@ -230,6 +160,89 @@ const EditSpot = ({
 
   let feetValue = metersToFeet(circleRadius);
 
+  const updateSpot = () => {
+    // Validate inputs before proceeding
+    // if (validateInputs()) {
+    // Find the index of the current spot in the allSpots array
+
+    console.log(
+      allSpots.map((item) => {
+        console.log(item.name);
+        console.log(item.colonyName);
+        console.log(item.coordinate);
+      })
+    );
+    console.log("CURRENT SPOT:");
+    console.log(currentSpot.spotName);
+    console.log(currentSpot.colonyName);
+    console.log(currentSpot.coordinate);
+    const spotIndex = allSpots.findIndex(
+      (spot) => spot.name === currentSpot.spotName
+    );
+    console.log(spotIndex);
+
+    if (spotIndex !== -1) {
+      // Create a copy of allSpots
+      const updatedSpots = [...allSpots];
+
+      // Update the spot at the identified index with the new values
+      updatedSpots[spotIndex] = {
+        ...currentSpot,
+        name: newSpot.spotName,
+        colonyName: newSpot.colonyName,
+        address: newSpot.address,
+        safe: newSpot.safe,
+        radius: circleRadius,
+        coordinate: circleCenter,
+      };
+
+      // Set the state with the updated array
+      setAllSpots(updatedSpots);
+
+      // Hide the modal and reset values
+      hideModal();
+      resetValues();
+
+      console.log("Spot Edited:\n", currentSpot, "to", updatedSpots[spotIndex]);
+    }
+    // }
+  };
+
+  const deleteSpot = () => {
+    // Find the index of the current spot in the allSpots array
+    console.log(
+      allSpots.map((item) => {
+        console.log(item.name);
+        console.log(item.colonyName);
+        console.log(item.coordinate);
+      })
+    );
+    console.log("CURRENT SPOT:");
+    console.log(currentSpot.spotName);
+    console.log(currentSpot.colonyName);
+    console.log(currentSpot.coordinate);
+    const spotIndex = allSpots.findIndex(
+      (spot) => spot.name === currentSpot.spotName
+    );
+
+    if (spotIndex !== -1) {
+      // Create a copy of allSpots
+      const updatedSpots = [...allSpots];
+
+      // Remove the spot at the identified index
+      updatedSpots.splice(spotIndex, 1);
+
+      // Set the state with the updated array
+      setAllSpots(updatedSpots);
+
+      // Hide the modal and reset values
+      hideModal();
+      resetValues();
+
+      console.log("Spot Deleted:\n", currentSpot);
+    }
+  };
+
   return (
     <Modal
       animationIn="slideInUp"
@@ -257,49 +270,14 @@ const EditSpot = ({
       <KeyboardAvoidingView behavior="padding" style={styles.modalContainer}>
         <View style={styles.modalContent}>
           <Bar style={styles.bar} color={COLORS.secondary} />
-          {/* {showSpotList ? (
-            <View
-              style={{
-                flex: 1,
-              }}
-            >
-              <View style={styles.header}>
-                <Text style={styles.modalTitle}>{currentSpot.spotName}</Text>
-              </View>
-              <View style={styles.spotContainer}>
-                <TouchableOpacity
-                  style={styles.addSpotButton}
-                  onPress={() => {
-                    // setShowAddSpot(true);
-                    setShowSpotList(false);
-                    console.log(mapRegion);
-                  }}
-                >
-                  <AntDesign
-                    style={styles.addSpotImage}
-                    name="pluscircle"
-                    size={40}
-                    color={COLORS.secondary}
-                  />
-                  <Text style={styles.addSpotText}>Add a new Spot</Text>
-                </TouchableOpacity>
-                <FlatList
-                  data={allSpots}
-                  keyExtractor={(item, index) => index.toString()}
-                  renderItem={renderSpotItem}
-                  style={styles.spotList}
-                />
-              </View>
-            </View> */}
-          {/* ) : ( */}
           <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
             <View
               style={{
                 flex: 1,
               }}
             >
-              <View style={styles.addSpotHeader}>
-                {/* <TouchableOpacity
+              {/* <View style={styles.addSpotHeader}>
+                <TouchableOpacity
                   onPress={() => {
                     hideModal();
                     resetValues();
@@ -309,10 +287,10 @@ const EditSpot = ({
                     source={require("../assets/back-button-secondary-color.png")}
                     style={styles.backButton}
                   />
-                </TouchableOpacity> */}
+                </TouchableOpacity>
                 <Text style={styles.addSpotTitle}>{currentSpot.spotName}</Text>
-              </View>
-              <Text
+              </View> */}
+              {/* <Text
                 style={{
                   justifyContent: "center",
                   textAlign: "center",
@@ -322,31 +300,36 @@ const EditSpot = ({
                 }}
               >
                 {currentSpot.colonyName}
-              </Text>
+              </Text> */}
               <View style={styles.infoContainer}>
-                <View style={styles.inputContainer}>
+                <View style={styles.addSpotHeader}>
                   <TextInput
-                    style={[styles.input, spotNameError && styles.inputError]}
+                    style={[
+                      styles.addSpotTitle,
+                      spotNameError && styles.inputError,
+                    ]}
                     placeholder="Edit Spot Name"
                     placeholderTextColor={COLORS.secondary}
-                    value={newSpot.name}
-                    onChangeText={(text) => handleInputChange("name", text)}
+                    value={newSpot.spotName}
+                    onChangeText={(text) => handleInputChange("spotName", text)}
                   />
-                  {spotNameError && (
+                  <Image
+                    source={require("../assets/pencil.png")}
+                    style={{
+                      tintColor: COLORS.secondary,
+                      width: 25,
+                      height: 25,
+                      resizeMode: "contain",
+                      justifyContent: "center",
+                      marginLeft: 20,
+                      marginTop: 10,
+                    }}
+                  />
+                </View>
+                <View style={styles.inputContainer}>
+                  {/* {spotNameError && (
                     <Text style={styles.errorMessage}>{spotNameError}</Text>
-                  )}
-                  {/* <TextInput
-                      style={[
-                        styles.input,
-                        colonyNameError && styles.inputError,
-                      ]}
-                      placeholder="Colony Name *"
-                      placeholderTextColor={COLORS.secondary}
-                      value={newSpot.colonyName}
-                      onChangeText={(text) =>
-                        handleInputChange("colonyName", text)
-                      }
-                    /> */}
+                  )} */}
                   <Dropdown
                     style={styles.input}
                     placeholderStyle={styles.placeholderStyle}
@@ -406,7 +389,6 @@ const EditSpot = ({
                   style={styles.map}
                   region={currentSpot.coordinate}
                   userInterfaceStyle="light"
-                  // onPress={handleMapPress}
                   onRegionChange={(newRegion) => {
                     setCircleCenter(newRegion);
                   }}
@@ -414,36 +396,11 @@ const EditSpot = ({
                     setCircleCenter(newRegion);
                   }}
                 >
-                  {/* <View
-                      style={{
-                        position: "absolute",
-                        top: "50%",
-                        left: "50%",
-                      }}
-                    >
-                      <Marker coordinate={circleCenter}>
-                        <Image
-                          source={require("../assets/marker.png")}
-                          style={{ width: 30, height: 30 }}
-                        />
-                      </Marker>
-                      <Circle
-                        center={circleCenter}
-                        radius={circleRadius}
-                        strokeWidth={1}
-                        strokeColor={newSpot.safe ? "#2C6765" : "#FF5555"}
-                        fillColor={
-                          newSpot.safe
-                            ? "rgba(44, 103, 101, .3)"
-                            : "rgba(255, 85, 85, .3)"
-                        } // transparent versions of COLORS.primary/COLORS.active
-                      />
-                    </View> */}
                   <Spot
                     coordinate={circleCenter}
-                    spotName={currentSpot.spotName}
-                    colonyName={currentSpot.colonyName}
-                    isSafe={currentSpot.safe}
+                    spotName={newSpot.spotName}
+                    colonyName={newSpot.colonyName}
+                    isSafe={newSpot.safe}
                     spotRadius={circleRadius}
                     isEditSpotVisible={isModalVisible}
                   />
@@ -463,44 +420,46 @@ const EditSpot = ({
                 </View>
 
                 <View style={styles.buttonContainer}>
-                  {/* <TouchableOpacity
-                    style={styles.buttonNormal}
-                    onPress={() => {
-                      hideModal();
-                      cancelCreateSpot();
-                      resetNewSpot();
-                    }}
-                  >
-                    <Text style={styles.buttonText}>Cancel</Text>
-                  </TouchableOpacity> */}
                   <TouchableOpacity
                     style={styles.buttonNormal}
                     onPress={() => {
-                      // Validate inputs before proceeding
-                      if (validateInputs()) {
-                        // Save the event object or perform other actions here
-                        const updatedSpot = {
-                          ...newSpot,
-                          id: Date.now(),
-                          radius: circleRadius,
-                          coordinate: circleCenter,
-                        };
-                        setAllSpots([...allSpots, updatedSpot]);
-                        // setShowAddSpot(false);
-                        setShowSpotList(true);
-                        // hideModal();
-                        console.log(
-                          "Spot Edited:\n",
-                          currentSpot,
-                          "to",
-                          newSpot
-                        );
-                        hideModal();
-                        resetValues();
-                      }
+                      hideModal();
+                      //   cancelCreateSpot();
+                      //   resetNewSpot();
+                      deleteSpot();
                     }}
                   >
-                    <Text style={styles.buttonText}>Edit</Text>
+                    <Text style={styles.buttonText}>Delete</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.buttonNormal}
+                    onPress={() => updateSpot()}
+                    // onPress={() => {
+                    //   // Validate inputs before proceeding
+                    //   if (validateInputs()) {
+                    //     // Save the event object or perform other actions here
+                    //     const updatedSpot = {
+                    //       ...newSpot,
+                    //       id: Date.now(),
+                    //       radius: circleRadius,
+                    //       coordinate: circleCenter,
+                    //     };
+                    //     setAllSpots([...allSpots, updatedSpot]);
+                    //     // setShowAddSpot(false);
+                    //     setShowSpotList(true);
+                    //     // hideModal();
+                    //     console.log(
+                    //       "Spot Edited:\n",
+                    //       currentSpot,
+                    //       "to",
+                    //       newSpot
+                    //     );
+                    //     hideModal();
+                    //     resetValues();
+                    //   }
+                    // }}
+                  >
+                    <Text style={styles.buttonText}>Save</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -572,9 +531,10 @@ const styles = StyleSheet.create({
   buttonNormal: {
     borderRadius: 30,
     width: "45%",
-    borderWidth: 1.5,
-    borderColor: "#ccc",
-    marginVertical: 10,
+    // borderWidth: 1.5,
+    // borderColor: "#ccc",
+    marginVertical: 20,
+    marginHorizontal: 10,
     alignItems: "center",
     backgroundColor: COLORS.secondary,
   },
@@ -654,7 +614,7 @@ const styles = StyleSheet.create({
     marginBottom: 0,
   },
   map: {
-    height: "30%",
+    height: "40%",
     width: "100%",
     borderWidth: 1,
     borderColor: COLORS.secondary,

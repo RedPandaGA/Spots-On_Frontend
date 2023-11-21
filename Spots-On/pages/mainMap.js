@@ -792,21 +792,21 @@ export default function MainMap({ navigation }) {
               width={45}
               height={45}
             />
-            {modals.spots && (
-              <CreateSpotModal
-                isModalVisible={modals.spots}
-                hideModal={() => hideModal("spots")}
-                allSpots={spots}
-                setAllSpots={setSpots}
-                mapRegion={{
-                  latitude: user.currentLocation.latitude,
-                  longitude: user.currentLocation.longitude,
-                  latitudeDelta: 0.005,
-                  longitudeDelta: 0.005,
-                }}
-                colonies={colonies}
-              />
-            )}
+            <CreateSpotModal
+              isModalVisible={modals.spots}
+              hideModal={() => hideModal("spots")}
+              allSpots={spots}
+              setAllSpots={setSpots}
+              mapRegion={{
+                latitude: user.currentLocation.latitude,
+                longitude: user.currentLocation.longitude,
+                latitudeDelta: 0.005,
+                longitudeDelta: 0.005,
+              }}
+              colonies={colonies}
+              showModal={showModal}
+              setCurrentSpot={setCurrentSpot}
+            />
             {/* Settings Button */}
             <MapButton
               imageSource={require("../assets/setting.png")}

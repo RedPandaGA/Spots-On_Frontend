@@ -36,6 +36,8 @@ const CreateSpotModal = ({
   setAllSpots,
   mapRegion,
   colonies,
+  showModal,
+  setCurrentSpot,
 }) => {
   // const [showAddSpot, setShowAddSpot] = useState(false);
   const [showSpotList, setShowSpotList] = useState(true);
@@ -83,7 +85,7 @@ const CreateSpotModal = ({
   // const spotListTranslateX = new Animated.Value(-300);
 
   const handleInputChange = (key, value) => {
-    setNewSpot({ ...newSpot, [key]: value });
+    setNewSpot((newSpot) => ({ ...newSpot, [key]: value }));
     // Clear the error when the user starts typing
     key === "name" && setSpotNameError(null);
     key === "colonyName" && setColonyNameError(null);
@@ -192,7 +194,12 @@ const CreateSpotModal = ({
     if (associatedColony && associatedColony.selected) {
       return (
         <TouchableOpacity
-          onPress={() => console.log(item.coordinate)}
+          onPress={() => {
+            hideModal();
+            setCurrentSpot(item);
+
+            console.log(item.coordinate);
+          }}
           style={styles.addSpotButton}
         >
           <Image
@@ -237,6 +244,7 @@ const CreateSpotModal = ({
       animationIn="slideInUp"
       animationOut="slideOutDown"
       isVisible={isModalVisible}
+      onModalHide={() => showModal("editSpot")}
       onBackdropPress={() => {
         // setShowAddSpot(false);
         setShowSpotList(true);
@@ -555,12 +563,13 @@ const styles = StyleSheet.create({
   buttonNormal: {
     borderRadius: 30,
     width: "45%",
-    borderWidth: 1.5,
-    borderColor: "#ccc",
+    // borderWidth: 1.5,
+    // borderColor: "#ccc",
     marginVertical: 10,
     alignItems: "center",
     backgroundColor: COLORS.secondary,
   },
+
   buttonText: {
     fontSize: 20,
     color: COLORS.primary,
