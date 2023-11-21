@@ -587,6 +587,8 @@ export default function MainMap({ navigation }) {
                 isModalVisible={modals.createEvent}
                 hideModal={() => hideModal("createEvent")}
                 showModal={showModal}
+                colonies={colonies}
+                allSpots={spots}
               />
             )}
             {modals.createColony && (
@@ -627,6 +629,8 @@ export default function MainMap({ navigation }) {
               style={styles.colonySlider}
               colonies={colonies}
               setColonies={setColonies}
+              spots={spots}
+              setSpots={setSpots}
             />
 
             {/* ------ SIDE BUTTONS ------ */}
