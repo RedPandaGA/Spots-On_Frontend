@@ -173,8 +173,25 @@ export default function MainMap({ navigation }) {
     );
   };
 
-  const renderUsersOnMap = (users) => {
-    return users.map((user) => (
+  const findSelectedColony = (colonies) => {
+    return colonies.find((colony) => colony.selected);
+  };
+
+  const renderUsersOnMap = (users, colonies) => {
+    // Find the selected colony
+    const selectedColony = findSelectedColony(colonies);
+
+    // If no colony is selected, return an empty array
+    if (!selectedColony) {
+      return [];
+    }
+
+    // Filter users based on the selected colony
+    const filteredUsers = users.filter((user) =>
+      user.associatedColonies.includes(selectedColony.name)
+    );
+
+    return filteredUsers.map((user) => (
       <Marker
         key={user.uid}
         coordinate={{
@@ -432,7 +449,7 @@ export default function MainMap({ navigation }) {
             >
               {/* FUNCTION TO DISPLAY ALL MEMBERS WITHIN SELECTED COLONY */}
               {displayAllSpots()}
-              {renderUsersOnMap(users)}
+              {renderUsersOnMap(users, colonies)}
               {user.currentLocation && showCurrentLocation()}
               <Circle
                 center={{
