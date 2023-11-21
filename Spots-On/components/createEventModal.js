@@ -19,6 +19,7 @@ import {
 import Bar from "./bar";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import COLORS from "./colors";
+import * as Location from "expo-location";
 
 const CreateEventModal = ({ isModalVisible, hideModal, showModal }) => {
   const [mode, setMode] = useState("date");
@@ -28,16 +29,24 @@ const CreateEventModal = ({ isModalVisible, hideModal, showModal }) => {
 
   const [event, setEvent] = useState({
     colonyName: "",
-    eventDate: new Date(),
-    eventTime: "",
-    eventLocation: "",
-    eventDescription: "",
+    date: new Date(),
+    time: "",
+    address: "",
+    coordinate: {},
+    description: "",
   });
+
+  const geocode = async () => {
+    const geocodedLocation = await Location.geocodeAsync(event.address);
+    console.log("Geocoded Address: \n", geocodedLocation);
+    Keyboard.dismiss();
+    return geocodedLocation;
+  };
 
   const onChange = (e, selectedDate) => {
     const currentDate = selectedDate || eventDate;
     //setShow(Platform.OS === 'ios');
-    setEvent({ ...event, ["eventDate"]: selectedDate });
+    setEvent({ ...event, ["date"]: selectedDate });
     setShow(false);
     let tempDate = new Date(currentDate);
     let hours = tempDate.getHours();
@@ -66,7 +75,7 @@ const CreateEventModal = ({ isModalVisible, hideModal, showModal }) => {
 
     setDateText(fDate);
     setTimeText(fTime);
-    setEvent({ ...event, ["eventTime"]: fTime });
+    setEvent({ ...event, ["time"]: fTime });
 
     console.log(fDate + " (" + fTime + ")");
   };
@@ -170,7 +179,7 @@ const CreateEventModal = ({ isModalVisible, hideModal, showModal }) => {
                 <View>
                   <DateTimePicker
                     testId="dateTimePicker"
-                    value={event.eventDate}
+                    value={event.date}
                     mode={mode}
                     is24Hour={false}
                     display="spinner"
@@ -192,12 +201,10 @@ const CreateEventModal = ({ isModalVisible, hideModal, showModal }) => {
                 />
                 <TextInput
                   style={styles.input}
-                  placeholder="Location"
+                  placeholder="Address"
                   placeholderTextColor={COLORS.primary}
-                  value={event.eventLocation}
-                  onChangeText={(text) =>
-                    handleInputChange("eventLocation", text)
-                  }
+                  value={event.address}
+                  onChangeText={(text) => handleInputChange("address", text)}
                 />
                 <TextInput
                   style={[
@@ -208,9 +215,9 @@ const CreateEventModal = ({ isModalVisible, hideModal, showModal }) => {
                   placeholderTextColor={COLORS.primary}
                   multiline
                   numberOfLines={4}
-                  value={event.eventDescription}
+                  value={event.description}
                   onChangeText={(text) =>
-                    handleInputChange("eventDescription", text)
+                    handleInputChange("description", text)
                   }
                 />
               </View>
@@ -229,6 +236,8 @@ const CreateEventModal = ({ isModalVisible, hideModal, showModal }) => {
                   style={styles.buttonNormal}
                   onPress={() => {
                     // Save the event object or perform other actions here
+                    const geocodedLocation = geocode();
+                    setEvent({ ...event, ["coordinate"]: geocodedLocation });
                     hideModal();
                     console.log("Event Created", event);
                   }}
@@ -255,7 +264,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
     padding: 20,
-    height: 400,
+    height: 500,
     alignItems: "center",
   },
   modalTitle: {
@@ -297,7 +306,7 @@ const styles = StyleSheet.create({
     width: 50,
     position: "absolute",
     left: -60,
-    tintColor: COLORS.primary
+    tintColor: COLORS.primary,
   },
   inputContainer: {
     width: "100%",
