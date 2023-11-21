@@ -79,7 +79,7 @@ export default function MainMap({ navigation }) {
     try {
         // Get the authorization token from AsyncStorage
         const authToken = await AsyncStorage.getItem('token');
-    
+        //console.log(JSON.stringify({ location: user.currentLocation }))
         if (!authToken) {
           // Handle the case where the token is not available
           console.error('Authorization token not found.');
@@ -111,7 +111,8 @@ export default function MainMap({ navigation }) {
 
   const getUserColonies = async () => {
     try {
-        const response = await fetch(`${papiUrl}/usersColonies/${AsyncStorage.getItem('uid')}`, {
+        const authToken = await AsyncStorage.getItem('token');
+        const response = await fetch(`${papiUrl}/usersColonies/${await AsyncStorage.getItem('uid')}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -126,8 +127,12 @@ export default function MainMap({ navigation }) {
         }
     
         const data = await response.json();
-        console.log(data);
+        console.log("DATAHERE: " + JSON.stringify(data));
         // Assuming the API returns an array of JSONs
+        data.forEach((colony) => {
+            colony.selected = false;
+        });
+        console.log("DATAHERE2: " + JSON.stringify(data));
         return data;
     } catch (error) {
         console.error('Error:', error);
@@ -153,7 +158,8 @@ export default function MainMap({ navigation }) {
       // setCurrentLocation(location.coords);
       setUser({ ...user, currentLocation: location.coords });
       console.log("Received current position!");
-      console.log(location.coords);
+      user.currentLocation = location.coords;
+
 
       const initialRegion = {
         latitude: location.coords.latitude,
@@ -164,19 +170,21 @@ export default function MainMap({ navigation }) {
 
       setInitialRegion(initialRegion);
       setCurrentRegion(initialRegion);
+      updateUserLocation();
+      setColonies(await getUserColonies());
     };
 
-    // setColonies(await getUserColonies)()
     getLocation();
-    updateUserLocation();
 
     // Update user's location every 30 seconds
     const locationInterval = setInterval(async () => {
       console.log("Updating user's location...");
       let location = await getCurrentLocation();
       setUser({ ...user, currentLocation: location.coords });
+      user.currentLocation = location.coords;
       console.log("Updated user's location!");
       updateUserLocation();
+      setColonies(await getUserColonies());
     }, 30000); // 30 seconds
 
     // Clean up the interval when the component is unmounted
@@ -253,7 +261,12 @@ export default function MainMap({ navigation }) {
   };
 
   const findSelectedColony = (colonies) => {
-    return colonies.find((colony) => colony.selected);
+    if(colonies.length > 0){
+        console.log("inhere: "+ JSON.stringify(colonies));
+        return colonies.find((colony) => colony.selected);
+    } else {
+        return [];
+    }
   };
 
   const renderUsersOnMap = (users, colonies) => {
@@ -468,9 +481,9 @@ export default function MainMap({ navigation }) {
     return spots
       .filter((spot) => {
         // Find the associated colony
-        const associatedColony = colonies.find(
-          (colony) => colony.name === spot.colonyName
-        );
+        // const associatedColony = colonies.find(
+        //   (colony) => colony.name === spot.colonyName
+        // );
 
         // Display the spot only if the associated colony is selected
         return associatedColony && associatedColony.selected;
