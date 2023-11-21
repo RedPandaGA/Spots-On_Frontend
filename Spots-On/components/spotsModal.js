@@ -24,6 +24,10 @@ import Slider from "@react-native-community/slider";
 import Spot from "./spot";
 import * as Location from "expo-location";
 import { Dropdown } from "react-native-element-dropdown";
+import Config from '../.config.js';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const apiUrl = Config.API_URL;
 
 const CreateSpotModal = ({
   isModalVisible,
@@ -48,16 +52,60 @@ const CreateSpotModal = ({
   const [newSpot, setNewSpot] = useState({
     name: "",
     colonyName: "",
+    colonyId: "",
     radius: 250,
     coordinate: {},
     address: "",
     safe: true,
   });
 
+  const createSpot = async () => {
+    try {
+        // Get the authorization token from AsyncStorage
+        const authToken = await AsyncStorage.getItem('token');
+    
+        if (!authToken) {
+          // Handle the case where the token is not available
+          console.error('Authorization token not found.');
+          return;
+        }
+    
+        const spotData = {
+          sname: newSpot.name,
+          location: newSpot.location,
+          danger: newSpot.safe,
+          cid: newSpot.colonyId,
+          radius: newSpot.radius,
+        };
+    
+        const response = await fetch(`${apiUrl}/createSpot`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authToken}`, // Attach the token to the Authorization header
+          },
+          body: JSON.stringify(spotData),
+        });
+    
+        if (!response.ok) {
+          // Handle error, e.g., display an error message
+          console.error('Error creating spot:', response.status);
+          return;
+        }
+    
+        // Successfully created spot
+        console.log('Spot created successfully: ' + responese.json());
+      } catch (error) {
+        console.error('Error:', error);
+        // Handle other errors as needed
+      }
+  }
+
   const resetNewSpot = () => {
     setNewSpot({
       name: "",
       colonyName: "",
+      colonyId: "",
       radius: 250,
       coordinate: {},
       address: "",
@@ -358,7 +406,10 @@ const CreateSpotModal = ({
                         // const statusValue = item.value - 1;
                         // setUser({ ...user, statusCode: statusValue });
                         // console.log(statusIdentifiers[statusValue].label);
+                        console.log(item);
                         handleInputChange("colonyName", item.name);
+                        handleInputChange("colonyId", item.cid);
+                        console.log(item);
                       }}
                     />
                     {colonyNameError && (
@@ -467,19 +518,20 @@ const CreateSpotModal = ({
                       onPress={() => {
                         // Validate inputs before proceeding
                         if (validateInputs()) {
-                          // Save the event object or perform other actions here
-                          const updatedSpot = {
-                            ...newSpot,
-                            id: Date.now(),
-                            radius: circleRadius,
-                            coordinate: circleCenter,
-                          };
-                          setAllSpots([...allSpots, updatedSpot]);
-                          // setShowAddSpot(false);
-                          setShowSpotList(true);
-                          // hideModal();
-                          console.log("Spot Created:\n", newSpot);
-                          resetValues();
+                            
+                            // Save the event object or perform other actions here
+                            const updatedSpot = {
+                                ...newSpot,
+                                id: Date.now(),
+                                radius: circleRadius,
+                                coordinate: circleCenter,
+                            };
+                            setAllSpots([...allSpots, updatedSpot]);
+                            // setShowAddSpot(false);
+                            setShowSpotList(true);
+                            // hideModal();
+                            console.log("Spot Created:\n", newSpot);
+                            resetValues();
                         }
                       }}
                     >
