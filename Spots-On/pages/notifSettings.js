@@ -15,9 +15,21 @@ import Carousel from "react-native-snap-carousel";
 export default function Notifications({ navigation }) {
 
   const carouselData = [
-    { title: "Slide 1", text: "Content of Slide 1" },
-    { title: "Slide 2", text: "Content of Slide 2" },
-    { title: "Slide 3", text: "Content of Slide 3" },
+    {
+      title: "Status Notifications",
+      text: "Receive notifications when a Colony member's status is updated.",
+      imagePath: require("../assets/sensor.png"),
+    },
+    {
+      title: "Location Notifications",
+      text: "Receive notifications when a Colony member's location is updated.",
+      imagePath: require("../assets/marker.png"),
+    },
+    {
+      title: "Colony Notifications",
+      text: "Receive notifications when Colony members arrive or leave a Spot- like home, school, or work.",
+      imagePath: require("../assets/spots.png"),
+    },
   ];
 
   const carouselRef = useRef(null);
@@ -25,8 +37,13 @@ export default function Notifications({ navigation }) {
   const renderItem = ({ item }) => {
     return (
       <View style={styles.carouselItem}>
-        <Text style={styles.carouselTitle}>{item.title}</Text>
-        <Text style={styles.carouselText}>{item.text}</Text>
+        <View style={styles.cardContainer}>
+          <Image source={item.imagePath} style={styles.cardImage} />
+          <View style={styles.textContent}>
+            <Text style={styles.carouselTitle}>{item.title}</Text>
+            <Text style={styles.carouselText}>{item.text}</Text>
+          </View>
+        </View>
       </View>
     );
   };
@@ -135,18 +152,21 @@ export default function Notifications({ navigation }) {
           </TouchableOpacity>
           <Text style={styles.title}>Notifications</Text>
         </View>
-        <Carousel
-          ref={carouselRef}
-          data={carouselData}
-          renderItem={renderItem}
-          sliderWidth={300}
-          itemWidth={300}
-          layout="default"
-          loop
-        />
+        <View style={styles.carouselContainer}>
+          <Carousel
+            ref={carouselRef}
+            data={carouselData}
+            renderItem={renderItem}
+            sliderWidth={400}
+            itemWidth={370}
+            layout="default"
+            snapToAlignment="start"
+            snapToInterval={400}
+          />
+        </View>
         <View style={styles.sliderContainer}>
-            <ColonySliderModal/>
-          </View>
+          <ColonySliderModal />
+        </View>
         <Text style={styles.subtitle}>Status notifications</Text>
         <View style={styles.settingsItems}>
           {statusList.map((buttonText, index) =>
@@ -209,9 +229,11 @@ const styles = StyleSheet.create({
     width: 50,
     position: "absolute",
     left: 20,
+    top: 3
   },
   settingsItems: {
     marginTop: 20,
+    marginBottom: 10,
     backgroundColor: COLORS.secondary,
     width: "90%",
     alignSelf: "center",
@@ -242,29 +264,43 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   sliderContainer: {
-    marginTop: 13,
-    marginBottom: -10,
-    width: "110%",
+    width: "107%",
+  },
+  carouselContainer: {
+    marginVertical: 25,
+    alignItems: 'center',
   },
   carouselItem: {
     backgroundColor: COLORS.secondary,
     borderRadius: 10,
-    height: 200,
-    padding: 20,
+    height: 120,
+    padding: 15,
     marginLeft: 25,
     marginRight: 25,
     justifyContent: "center",
-    alignItems: "center",
   },
   carouselTitle: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: "bold",
-    marginBottom: 10,
     color: COLORS.primary,
+    textAlign: 'left',
   },
   carouselText: {
     fontSize: 16,
     color: COLORS.primary,
-    textAlign: "center",
+  },
+  cardContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  cardImage: {
+    width: 40,
+    height: 40,
+    marginRight: 15,
+    tintColor: COLORS.gold
+  },
+  textContent: {
+    flex: 1, // Take the remaining space
+    justifyContent: 'center',
   },
 });
