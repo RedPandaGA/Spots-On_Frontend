@@ -307,7 +307,7 @@ const CreateSpotModal = ({
                     }}
                   >
                     <Image
-                      source={require("../assets/back-button-secondary-color.png")}
+                      source={require("../assets/backButton.png")}
                       style={styles.backButton}
                     />
                   </TouchableOpacity>
@@ -579,6 +579,7 @@ const styles = StyleSheet.create({
     height: 50,
     marginHorizontal: 20,
     marginTop: 5,
+    tintColor: COLORS.secondary
   },
   inputContainer: {
     width: "100%",
