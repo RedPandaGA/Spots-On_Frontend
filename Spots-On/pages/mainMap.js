@@ -109,6 +109,33 @@ export default function MainMap({ navigation }) {
       }
   };
 
+  const getUserColonies = async () => {
+    try {
+        const response = await fetch(`${papiUrl}/usersColonies/${AsyncStorage.getItem('uid')}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authToken}`
+          },
+        });
+    
+        if (!response.ok) {
+          // Handle error, e.g., display an error message
+          console.error('Error fetching user colonies:', response.status);
+          return [];
+        }
+    
+        const data = await response.json();
+        console.log(data);
+        // Assuming the API returns an array of JSONs
+        return data;
+    } catch (error) {
+        console.error('Error:', error);
+        // Handle other errors as needed
+        return [];
+    }
+  }
+
   // GRAB LOCATION FROM USER AND STORE IN DATABASE
   useEffect(() => {
     const getLocation = async () => {
@@ -139,6 +166,7 @@ export default function MainMap({ navigation }) {
       setCurrentRegion(initialRegion);
     };
 
+    // setColonies(await getUserColonies)()
     getLocation();
     updateUserLocation();
 
@@ -463,7 +491,9 @@ export default function MainMap({ navigation }) {
 
   // GET ALL COLONIES FROM DATABASE AND STORE INTO VARIABLES TO USE AND DISPLAY
   // USE THE SELECTED VALUE OR SOMETHING SIMILAR TO GRAB SPECIFIC MEMBERS/SPOTS BASED ON THE SELECTED COLONY
-  const [colonies, setColonies] = useState([
+  const [colonies, setColonies] = useState([]);
+
+  /*[
     { name: "SASE", selected: true, value: 1 },
     { name: "lsu engineering", selected: false, value: 1 },
     { name: "swim friends", selected: false, value: 2 },
@@ -472,7 +502,7 @@ export default function MainMap({ navigation }) {
     { name: "volleyball", selected: false, value: 5 },
     { name: "oopah", selected: false, value: 6 },
     { name: "vsa", selected: false, value: 7 },
-  ]);
+  ]*/
 
   // CREATE FUNCTION TO GET ALL MEMBERS WITHIN A SELECTED COLONY AND DISPLAY THEM ON THE MAP
 
