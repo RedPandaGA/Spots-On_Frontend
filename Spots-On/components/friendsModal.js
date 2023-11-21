@@ -89,7 +89,7 @@ const FriendsModal = ({ isModalVisible, hideModal, navigation }) => {
         <View styles={styles.infoContainer}>
           <Image
             style={styles.friendImage}
-            source={require("../assets/marker.png")}
+            source={require("../assets/profile-user.png")}
           />
           <Text style={styles.friendName}>{item.name}</Text>
         </View>
