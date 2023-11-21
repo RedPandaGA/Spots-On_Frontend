@@ -29,6 +29,7 @@ import StatusModal from "../components/statusModal";
 import Config from '../.config.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import users from "../components/users";
+import EditSpot from "../components/editSpot";
 
 const papiUrl = Config.PAPI_URL;
 
@@ -71,6 +72,14 @@ export default function MainMap({ navigation }) {
     ],
   });
 
+  const [currentSpot, setCurrentSpot] = useState({
+    spotName: "",
+    coordinate: {},
+    safe: "",
+    colonyName: "",
+    radius: 250,
+  });
+
   const logUser = () => {
     console.log(user);
   };
@@ -79,7 +88,7 @@ export default function MainMap({ navigation }) {
     try {
         // Get the authorization token from AsyncStorage
         const authToken = await AsyncStorage.getItem('token');
-    
+        //console.log(JSON.stringify({ location: user.currentLocation }))
         if (!authToken) {
           // Handle the case where the token is not available
           console.error('Authorization token not found.');
@@ -111,7 +120,8 @@ export default function MainMap({ navigation }) {
 
   const getUserColonies = async () => {
     try {
-        const response = await fetch(`${papiUrl}/usersColonies/${AsyncStorage.getItem('uid')}`, {
+        const authToken = await AsyncStorage.getItem('token');
+        const response = await fetch(`${papiUrl}/usersColonies/${await AsyncStorage.getItem('uid')}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -126,8 +136,12 @@ export default function MainMap({ navigation }) {
         }
     
         const data = await response.json();
-        console.log(data);
+        console.log("DATAHERE: " + JSON.stringify(data));
         // Assuming the API returns an array of JSONs
+        data.forEach((colony) => {
+            colony.selected = false;
+        });
+        console.log("DATAHERE2: " + JSON.stringify(data));
         return data;
     } catch (error) {
         console.error('Error:', error);
@@ -153,7 +167,8 @@ export default function MainMap({ navigation }) {
       // setCurrentLocation(location.coords);
       setUser({ ...user, currentLocation: location.coords });
       console.log("Received current position!");
-      console.log(location.coords);
+      user.currentLocation = location.coords;
+
 
       const initialRegion = {
         latitude: location.coords.latitude,
@@ -164,19 +179,21 @@ export default function MainMap({ navigation }) {
 
       setInitialRegion(initialRegion);
       setCurrentRegion(initialRegion);
+      updateUserLocation();
+      setColonies(await getUserColonies());
     };
 
-    // setColonies(await getUserColonies)()
     getLocation();
-    updateUserLocation();
 
     // Update user's location every 30 seconds
     const locationInterval = setInterval(async () => {
       console.log("Updating user's location...");
       let location = await getCurrentLocation();
       setUser({ ...user, currentLocation: location.coords });
+      user.currentLocation = location.coords;
       console.log("Updated user's location!");
       updateUserLocation();
+      setColonies(await getUserColonies());
     }, 30000); // 30 seconds
 
     // Clean up the interval when the component is unmounted
@@ -253,7 +270,12 @@ export default function MainMap({ navigation }) {
   };
 
   const findSelectedColony = (colonies) => {
-    return colonies.find((colony) => colony.selected);
+    if(colonies.length > 0){
+        console.log("inhere: "+ JSON.stringify(colonies));
+        return colonies.find((colony) => colony.selected);
+    } else {
+        return [];
+    }
   };
 
   const renderUsersOnMap = (users, colonies) => {
@@ -401,6 +423,7 @@ export default function MainMap({ navigation }) {
     spots: false,
     chat: false,
     status: false,
+    editSpot: false,
   });
 
   // Function to show a specific modal
@@ -468,9 +491,9 @@ export default function MainMap({ navigation }) {
     return spots
       .filter((spot) => {
         // Find the associated colony
-        const associatedColony = colonies.find(
-          (colony) => colony.name === spot.colonyName
-        );
+        // const associatedColony = colonies.find(
+        //   (colony) => colony.name === spot.colonyName
+        // );
 
         // Display the spot only if the associated colony is selected
         return associatedColony && associatedColony.selected;
@@ -485,6 +508,9 @@ export default function MainMap({ navigation }) {
           isSafe={spot.safe}
           onDrag={(e) => handleSpotDrag(e, spot.id)}
           onDragEnd={(e) => handleSpotDragEnd(e, spot.id)}
+          showModal={showModal}
+          setCurrentSpot={setCurrentSpot}
+          isEditSpotVisible={modals.editSpot}
         />
       ));
   };
@@ -503,6 +529,114 @@ export default function MainMap({ navigation }) {
     { name: "oopah", selected: false, value: 6 },
     { name: "vsa", selected: false, value: 7 },
   ]*/
+
+  // CREATE FUNCTION TO GRAB EVENTS FROM DATABASE AND PUT THEM INTO TODAY AND UPCOMING FLATLISTS
+  // Today's events
+  const [eventsToday, setEventsToday] = useState([
+    {
+      name: "VSA 2nd General Body Meeting",
+      colonyName: "vsa",
+      address: "Himes Hall Room 216",
+      time: "6:00pm",
+      date: new Date(),
+      coordinate: {},
+      description: "",
+      spotName: "",
+    },
+    {
+      name: "OOD meeting",
+      colonyName: "", // No corresponding property in the first object, so leaving it empty
+      address: "Teatery on College",
+      time: "12:00pm",
+      date: new Date(), // Assuming you want to include the date property
+      coordinate: {}, // Assuming you want to include the coordinate property
+      description: "", // Assuming you want to include the description property
+      spotName: "", // Assuming you want to include the spotName property
+    },
+    {
+      name: "Team Building Workshop",
+      colonyName: "",
+      address: "Conference Room A",
+      time: "3:30pm",
+      date: new Date(),
+      coordinate: {},
+      description: "",
+      spotName: "",
+    },
+    {
+      name: "Tech Conference Keynote",
+      colonyName: "",
+      address: "Convention Center Hall B",
+      time: "9:00am",
+      date: new Date(),
+      coordinate: {},
+      description: "",
+      spotName: "",
+    },
+    {
+      name: "Art Exhibition Opening",
+      colonyName: "",
+      address: "City Art Gallery",
+      time: "7:30pm",
+      date: new Date(),
+      coordinate: {},
+      description: "",
+      spotName: "",
+    },
+  ]);
+
+  const [eventsUpcoming, setEventsUpcoming] = useState([
+    {
+      name: "Music Festival",
+      colonyName: "",
+      address: "City Park",
+      time: "2:00pm",
+      date: new Date(),
+      coordinate: {},
+      description: "",
+      spotName: "",
+    },
+    {
+      name: "Book Launch Party",
+      colonyName: "",
+      address: "Local Bookstore",
+      time: "7:00pm",
+      date: new Date(),
+      coordinate: {},
+      description: "",
+      spotName: "",
+    },
+    {
+      name: "Food Truck Rally",
+      colonyName: "",
+      address: "Downtown Square",
+      time: "5:30pm",
+      date: new Date(),
+      coordinate: {},
+      description: "",
+      spotName: "",
+    },
+    {
+      name: "Movie Night Under the Stars",
+      colonyName: "",
+      address: "Community Park",
+      time: "8:00pm",
+      date: new Date(),
+      coordinate: {},
+      description: "",
+      spotName: "",
+    },
+    {
+      name: "Charity Run",
+      colonyName: "",
+      address: "Riverfront Trail",
+      time: "9:00am",
+      date: new Date(),
+      coordinate: {},
+      description: "",
+      spotName: "",
+    },
+  ]);
 
   // CREATE FUNCTION TO GET ALL MEMBERS WITHIN A SELECTED COLONY AND DISPLAY THEM ON THE MAP
 
@@ -610,6 +744,8 @@ export default function MainMap({ navigation }) {
                 isModalVisible={modals.viewEvents}
                 hideModal={() => hideModal("viewEvents")}
                 showModal={showModal}
+                eventsToday={eventsToday}
+                eventsUpcoming={eventsUpcoming}
               />
             )}
             {modals.createEvent && (
@@ -619,6 +755,10 @@ export default function MainMap({ navigation }) {
                 showModal={showModal}
                 colonies={colonies}
                 allSpots={spots}
+                eventsToday={eventsToday}
+                eventsUpcoming={eventsUpcoming}
+                setEventsToday={setEventsToday}
+                setEventsUpcoming={setEventsUpcoming}
               />
             )}
             {modals.createColony && (
@@ -709,6 +849,23 @@ export default function MainMap({ navigation }) {
               width={45}
               height={45}
             />
+            {modals.editSpot && (
+              <EditSpot
+                isModalVisible={modals.editSpot}
+                hideModal={() => hideModal("editSpot")}
+                allSpots={spots}
+                setAllSpots={setSpots}
+                mapRegion={{
+                  latitude: user.currentLocation.latitude,
+                  longitude: user.currentLocation.longitude,
+                  latitudeDelta: 0.005,
+                  longitudeDelta: 0.005,
+                }}
+                colonies={colonies}
+                currentSpot={currentSpot}
+              />
+            )}
+
             {/* Spots Modal Button */}
             <MapButton
               imageSource={require("../assets/spots.png")}

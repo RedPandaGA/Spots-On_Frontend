@@ -24,12 +24,8 @@ import Slider from "@react-native-community/slider";
 import Spot from "./spot";
 import * as Location from "expo-location";
 import { Dropdown } from "react-native-element-dropdown";
-import Config from '../.config.js';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const apiUrl = Config.API_URL;
-
-const CreateSpotModal = ({
+const EditSpot = ({
   isModalVisible,
   hideModal,
   // cancelCreateSpot,
@@ -40,72 +36,26 @@ const CreateSpotModal = ({
   setAllSpots,
   mapRegion,
   colonies,
+  currentSpot,
 }) => {
   // const [showAddSpot, setShowAddSpot] = useState(false);
   const [showSpotList, setShowSpotList] = useState(true);
   const [circleRadius, setCircleRadius] = useState(50);
-  const [circleCenter, setCircleCenter] = useState({
-    latitude: mapRegion.latitude,
-    longitude: mapRegion.longitude,
-  });
+  const [circleCenter, setCircleCenter] = useState(currentSpot.coordinate);
   const [region, setRegion] = useState(mapRegion);
   const [newSpot, setNewSpot] = useState({
     name: "",
     colonyName: "",
-    colonyId: "",
     radius: 250,
     coordinate: {},
     address: "",
     safe: true,
   });
 
-  const createSpot = async () => {
-    try {
-        // Get the authorization token from AsyncStorage
-        const authToken = await AsyncStorage.getItem('token');
-    
-        if (!authToken) {
-          // Handle the case where the token is not available
-          console.error('Authorization token not found.');
-          return;
-        }
-    
-        const spotData = {
-          sname: newSpot.name,
-          location: newSpot.location,
-          danger: newSpot.safe,
-          cid: newSpot.colonyId,
-          radius: newSpot.radius,
-        };
-    
-        const response = await fetch(`${apiUrl}/createSpot`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${authToken}`, // Attach the token to the Authorization header
-          },
-          body: JSON.stringify(spotData),
-        });
-    
-        if (!response.ok) {
-          // Handle error, e.g., display an error message
-          console.error('Error creating spot:', response.status);
-          return;
-        }
-    
-        // Successfully created spot
-        console.log('Spot created successfully: ' + responese.json());
-      } catch (error) {
-        console.error('Error:', error);
-        // Handle other errors as needed
-      }
-  }
-
   const resetNewSpot = () => {
     setNewSpot({
       name: "",
       colonyName: "",
-      colonyId: "",
       radius: 250,
       coordinate: {},
       address: "",
@@ -307,14 +257,14 @@ const CreateSpotModal = ({
       <KeyboardAvoidingView behavior="padding" style={styles.modalContainer}>
         <View style={styles.modalContent}>
           <Bar style={styles.bar} color={COLORS.secondary} />
-          {showSpotList ? (
+          {/* {showSpotList ? (
             <View
               style={{
                 flex: 1,
               }}
             >
               <View style={styles.header}>
-                <Text style={styles.modalTitle}>Spots</Text>
+                <Text style={styles.modalTitle}>{currentSpot.spotName}</Text>
               </View>
               <View style={styles.spotContainer}>
                 <TouchableOpacity
@@ -340,40 +290,52 @@ const CreateSpotModal = ({
                   style={styles.spotList}
                 />
               </View>
-            </View>
-          ) : (
-            <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-              <View
+            </View> */}
+          {/* ) : ( */}
+          <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+            <View
+              style={{
+                flex: 1,
+              }}
+            >
+              <View style={styles.addSpotHeader}>
+                {/* <TouchableOpacity
+                  onPress={() => {
+                    hideModal();
+                    resetValues();
+                  }}
+                >
+                  <Image
+                    source={require("../assets/back-button-secondary-color.png")}
+                    style={styles.backButton}
+                  />
+                </TouchableOpacity> */}
+                <Text style={styles.addSpotTitle}>{currentSpot.spotName}</Text>
+              </View>
+              <Text
                 style={{
-                  flex: 1,
+                  justifyContent: "center",
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  color: COLORS.secondary,
+                  fontSize: 16,
                 }}
               >
-                <View style={styles.addSpotHeader}>
-                  <TouchableOpacity
-                    onPress={() => {
-                      resetValues();
-                    }}
-                  >
-                    <Image
-                      source={require("../assets/back-button-secondary-color.png")}
-                      style={styles.backButton}
-                    />
-                  </TouchableOpacity>
-                  <Text style={styles.addSpotTitle}>Add a Spot</Text>
-                </View>
-                <View style={styles.infoContainer}>
-                  <View style={styles.inputContainer}>
-                    <TextInput
-                      style={[styles.input, spotNameError && styles.inputError]}
-                      placeholder="Spot Name *"
-                      placeholderTextColor={COLORS.secondary}
-                      value={newSpot.name}
-                      onChangeText={(text) => handleInputChange("name", text)}
-                    />
-                    {spotNameError && (
-                      <Text style={styles.errorMessage}>{spotNameError}</Text>
-                    )}
-                    {/* <TextInput
+                {currentSpot.colonyName}
+              </Text>
+              <View style={styles.infoContainer}>
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    style={[styles.input, spotNameError && styles.inputError]}
+                    placeholder="Edit Spot Name"
+                    placeholderTextColor={COLORS.secondary}
+                    value={newSpot.name}
+                    onChangeText={(text) => handleInputChange("name", text)}
+                  />
+                  {spotNameError && (
+                    <Text style={styles.errorMessage}>{spotNameError}</Text>
+                  )}
+                  {/* <TextInput
                       style={[
                         styles.input,
                         colonyNameError && styles.inputError,
@@ -385,77 +347,74 @@ const CreateSpotModal = ({
                         handleInputChange("colonyName", text)
                       }
                     /> */}
-                    <Dropdown
-                      style={styles.input}
-                      placeholderStyle={styles.placeholderStyle}
-                      selectedTextStyle={styles.placeholderStyle}
-                      itemTextStyle={styles.itemTextStyle}
-                      iconStyle={styles.iconStyle}
-                      data={colonies}
-                      search={false}
-                      maxHeight={300}
-                      labelField="name"
-                      valueField="value"
-                      placeholder={
-                        newSpot.colonyName === ""
-                          ? "Colony Name *"
-                          : newSpot.colonyName
+                  <Dropdown
+                    style={styles.input}
+                    placeholderStyle={styles.placeholderStyle}
+                    selectedTextStyle={styles.placeholderStyle}
+                    itemTextStyle={styles.itemTextStyle}
+                    iconStyle={styles.iconStyle}
+                    data={colonies}
+                    search={false}
+                    maxHeight={300}
+                    labelField="name"
+                    valueField="value"
+                    placeholder={
+                      newSpot.colonyName === ""
+                        ? "Edit Associated Colony"
+                        : newSpot.colonyName
+                    }
+                    value={newSpot.colonyName}
+                    onChange={(item) => {
+                      // const statusValue = item.value - 1;
+                      // setUser({ ...user, statusCode: statusValue });
+                      // console.log(statusIdentifiers[statusValue].label);
+                      handleInputChange("colonyName", item.name);
+                    }}
+                  />
+                  {colonyNameError && (
+                    <Text style={styles.errorMessage}>{colonyNameError}</Text>
+                  )}
+                  <View style={styles.findLocationContainer}>
+                    <TextInput
+                      style={[styles.input, { width: "80%" }]}
+                      placeholder="Find Address"
+                      placeholderTextColor={COLORS.secondary}
+                      value={newSpot.address}
+                      onChangeText={(text) =>
+                        handleInputChange("address", text)
                       }
-                      value={newSpot.colonyName}
-                      onChange={(item) => {
-                        // const statusValue = item.value - 1;
-                        // setUser({ ...user, statusCode: statusValue });
-                        // console.log(statusIdentifiers[statusValue].label);
-                        console.log(item);
-                        handleInputChange("colonyName", item.name);
-                        handleInputChange("colonyId", item.cid);
-                        console.log(item);
-                      }}
                     />
-                    {colonyNameError && (
-                      <Text style={styles.errorMessage}>{colonyNameError}</Text>
-                    )}
-                    <View style={styles.findLocationContainer}>
-                      <TextInput
-                        style={[styles.input, { width: "80%" }]}
-                        placeholder="Find Address"
-                        placeholderTextColor={COLORS.secondary}
-                        value={newSpot.address}
-                        onChangeText={(text) =>
-                          handleInputChange("address", text)
-                        }
-                      />
-                      <TouchableOpacity
-                        onPress={geocode}
-                        style={styles.findLocationButton}
-                      >
-                        <Text style={styles.findLocationText}>Find</Text>
-                      </TouchableOpacity>
-                    </View>
+                    <TouchableOpacity
+                      onPress={geocode}
+                      style={styles.findLocationButton}
+                    >
+                      <Text style={styles.findLocationText}>Find</Text>
+                    </TouchableOpacity>
                   </View>
-                  <View style={styles.switchContainer}>
-                    <Text style={styles.switchText}>Safe Spot?</Text>
-                    <Switch
-                      trackColor={{ false: "#767577", true: "#E7EFCA" }}
-                      thumbColor={newSpot.safe ? "#2C6765" : "#f4f3f4"}
-                      ios_backgroundColor="#3e3e3e"
-                      onValueChange={toggleSafety}
-                      value={newSpot.safe}
-                    />
-                  </View>
-                  <MapView
-                    style={styles.map}
-                    region={region}
-                    userInterfaceStyle="light"
-                    // onPress={handleMapPress}
-                    onRegionChange={(newRegion) => {
-                      setCircleCenter(newRegion);
-                    }}
-                    onRegionChangeComplete={(newRegion) => {
-                      setCircleCenter(newRegion);
-                    }}
-                  >
-                    {/* <View
+                </View>
+                <View style={styles.switchContainer}>
+                  <Text style={styles.switchText}>Safe Spot?</Text>
+                  <Switch
+                    trackColor={{ false: "#767577", true: "#E7EFCA" }}
+                    thumbColor={newSpot.safe ? "#2C6765" : "#f4f3f4"}
+                    ios_backgroundColor="#3e3e3e"
+                    onValueChange={toggleSafety}
+                    value={newSpot.safe}
+                  />
+                </View>
+                <MapView
+                  style={styles.map}
+                  region={currentSpot.coordinate}
+                  userInterfaceStyle="light"
+                  // onPress={handleMapPress}
+                  onRegionChange={(newRegion) => {
+                    setCircleCenter(newRegion);
+                  }}
+                  onRegionChangeComplete={(newRegion) => {
+                    setCircleCenter(newRegion);
+                  }}
+                >
+                  {/* <View
                       style={{
                         position: "absolute",
                         top: "50%",
@@ -480,30 +439,31 @@ const CreateSpotModal = ({
                         } // transparent versions of COLORS.primary/COLORS.active
                       />
                     </View> */}
-                    <Spot
-                      coordinate={circleCenter}
-                      spotName={newSpot.name}
-                      colonyName={newSpot.colonyName}
-                      isSafe={newSpot.safe}
-                      spotRadius={circleRadius}
-                    />
-                  </MapView>
+                  <Spot
+                    coordinate={circleCenter}
+                    spotName={currentSpot.spotName}
+                    colonyName={currentSpot.colonyName}
+                    isSafe={currentSpot.safe}
+                    spotRadius={circleRadius}
+                    isEditSpotVisible={isModalVisible}
+                  />
+                </MapView>
 
-                  <View style={styles.sliderContainer}>
-                    <Slider
-                      minimumValue={46}
-                      maximumValue={3810}
-                      step={1}
-                      value={circleRadius}
-                      onValueChange={(value) => setCircleRadius(value)}
-                      minimumTrackTintColor={COLORS.secondary}
-                      style={{ width: "70%" }}
-                    />
-                    <Text style={styles.sliderText}>{feetValue} feet</Text>
-                  </View>
+                <View style={styles.sliderContainer}>
+                  <Slider
+                    minimumValue={46}
+                    maximumValue={3810}
+                    step={1}
+                    value={circleRadius}
+                    onValueChange={(value) => setCircleRadius(value)}
+                    minimumTrackTintColor={COLORS.secondary}
+                    style={{ width: "70%" }}
+                  />
+                  <Text style={styles.sliderText}>{feetValue} feet</Text>
+                </View>
 
-                  <View style={styles.buttonContainer}>
-                    {/* <TouchableOpacity
+                <View style={styles.buttonContainer}>
+                  {/* <TouchableOpacity
                     style={styles.buttonNormal}
                     onPress={() => {
                       hideModal();
@@ -513,35 +473,40 @@ const CreateSpotModal = ({
                   >
                     <Text style={styles.buttonText}>Cancel</Text>
                   </TouchableOpacity> */}
-                    <TouchableOpacity
-                      style={styles.buttonNormal}
-                      onPress={() => {
-                        // Validate inputs before proceeding
-                        if (validateInputs()) {
-                            
-                            // Save the event object or perform other actions here
-                            const updatedSpot = {
-                                ...newSpot,
-                                id: Date.now(),
-                                radius: circleRadius,
-                                coordinate: circleCenter,
-                            };
-                            setAllSpots([...allSpots, updatedSpot]);
-                            // setShowAddSpot(false);
-                            setShowSpotList(true);
-                            // hideModal();
-                            console.log("Spot Created:\n", newSpot);
-                            resetValues();
-                        }
-                      }}
-                    >
-                      <Text style={styles.buttonText}>Create</Text>
-                    </TouchableOpacity>
-                  </View>
+                  <TouchableOpacity
+                    style={styles.buttonNormal}
+                    onPress={() => {
+                      // Validate inputs before proceeding
+                      if (validateInputs()) {
+                        // Save the event object or perform other actions here
+                        const updatedSpot = {
+                          ...newSpot,
+                          id: Date.now(),
+                          radius: circleRadius,
+                          coordinate: circleCenter,
+                        };
+                        setAllSpots([...allSpots, updatedSpot]);
+                        // setShowAddSpot(false);
+                        setShowSpotList(true);
+                        // hideModal();
+                        console.log(
+                          "Spot Edited:\n",
+                          currentSpot,
+                          "to",
+                          newSpot
+                        );
+                        hideModal();
+                        resetValues();
+                      }
+                    }}
+                  >
+                    <Text style={styles.buttonText}>Edit</Text>
+                  </TouchableOpacity>
                 </View>
               </View>
-            </TouchableWithoutFeedback>
-          )}
+            </View>
+          </TouchableWithoutFeedback>
+          {/* )} */}
         </View>
       </KeyboardAvoidingView>
     </Modal>
@@ -625,6 +590,7 @@ const styles = StyleSheet.create({
   addSpotHeader: {
     flexDirection: "row",
     alignItems: "center",
+    alignSelf: "center",
   },
   backButton: {
     width: 50,
@@ -746,4 +712,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CreateSpotModal;
+export default EditSpot;
