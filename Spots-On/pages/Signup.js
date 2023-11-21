@@ -9,6 +9,11 @@ import {
 } from "react-native";
 import COLORS from "../components/colors";
 import CustomAlert from '../components/alert';
+import Config from '../.config.js';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
+const apiUrl = Config.API_URL;
 
 const Signup = ({ navigation }) => {
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -42,7 +47,7 @@ const Signup = ({ navigation }) => {
     return emailRegex.test(email);
   };
 
-  const handleSignup = () => {
+  const handleSignup = async () => {
     if (!phoneNumber || !email || !password || !confirmPassword) {
       setAlertTitle('Incomplete Fields');
       setAlertMessage('Please fill in all the fields.');
@@ -71,8 +76,45 @@ const Signup = ({ navigation }) => {
       return;
     }
 
-    console.log('Created an Account: ' + phoneNumber + ' with password: ' + password);
-    navigation.navigate('Home');
+    const atIndex = email.indexOf('@');
+    const nickname = email.slice(0, atIndex)
+
+    const userData = {
+        email: email,
+        pass: password,
+        pnum: phoneNumber,
+        nickname: nickname
+    };
+
+    try {
+        const response = await fetch(`${apiUrl}/createUser`, {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userData),
+        });
+
+        if (!response.ok) {
+            console.error('Error creating user:', response.status);
+            return;
+        }
+
+        const data = await response.json();
+        const receivedToken = data.token;
+
+        // Store the token in AsyncStorage
+        await AsyncStorage.setItem('token', receivedToken);
+
+        // You may want to perform additional actions with the token here
+        console.log('Created an Account: ' + await AsyncStorage.getItem('token'));
+        navigation.navigate('Home');
+    } catch (error) {
+        console.error('Error:', error);
+        // Handle other errors as needed
+    }
+
+
   };
 
   const handleLogin = () => {
