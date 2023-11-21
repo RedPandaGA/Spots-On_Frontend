@@ -15,7 +15,7 @@ import {
 import Bar from "./bar";
 import COLORS from "./colors";
 
-const CreateColonyModal = ({ isModalVisible, hideModal, showModal }) => {
+const CreateColonyModal = ({ isModalVisible, hideModal, showModal, user }) => {
   const [isPrivateColony, setIsPrivateColony] = useState(true);
   const [isPublicColony, setIsPublicColony] = useState(false);
 
@@ -100,13 +100,21 @@ const CreateColonyModal = ({ isModalVisible, hideModal, showModal }) => {
               </TouchableOpacity>
               <TouchableOpacity
                 style={
-                  isPublicColony ? styles.buttonPressed : styles.buttonNormal
+                  isPublicColony
+                    ? user.premium
+                      ? styles.buttonPressed
+                      : [styles.buttonPressed, styles.disabledButton]
+                    : user.premium
+                    ? styles.buttonNormal
+                    : [styles.buttonNormal, styles.disabledButton]
                 }
                 onPress={() => {
+                  // Your onPress logic here
                   setIsPrivateColony(false);
                   setIsPublicColony(true);
                   console.log("Pressed Public");
                 }}
+                disabled={!user.premium} // Disable TouchableOpacity if user.premium is false
               >
                 <Text style={styles.buttonText}>Public</Text>
               </TouchableOpacity>
@@ -203,7 +211,7 @@ const styles = StyleSheet.create({
     width: 46,
     position: "absolute",
     left: -60,
-    tintColor: COLORS.primary
+    tintColor: COLORS.primary,
   },
   input: {
     height: 60,
@@ -215,6 +223,9 @@ const styles = StyleSheet.create({
     color: COLORS.primary,
     fontWeight: "bold",
     fontSize: 18,
+  },
+  disabledButton: {
+    opacity: 0.5,
   },
 });
 
