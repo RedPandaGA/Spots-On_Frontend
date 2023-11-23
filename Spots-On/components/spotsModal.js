@@ -244,7 +244,7 @@ const CreateSpotModal = ({
       animationIn="slideInUp"
       animationOut="slideOutDown"
       isVisible={isModalVisible}
-      onModalHide={() => showModal("editSpot")}
+      // onModalHide={() => showModal("editSpot")}
       onBackdropPress={() => {
         // setShowAddSpot(false);
         setShowSpotList(true);
@@ -315,7 +315,7 @@ const CreateSpotModal = ({
                     }}
                   >
                     <Image
-                      source={require("../assets/back-button-secondary-color.png")}
+                      source={require("../assets/backButton.png")}
                       style={styles.backButton}
                     />
                   </TouchableOpacity>
@@ -588,6 +588,7 @@ const styles = StyleSheet.create({
     height: 50,
     marginHorizontal: 20,
     marginTop: 5,
+    tintColor: COLORS.secondary,
   },
   inputContainer: {
     width: "100%",
@@ -636,6 +637,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     marginRight: 15,
+    tintColor: COLORS.red,
   },
   bar: {
     justifyContent: "center",
