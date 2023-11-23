@@ -1,15 +1,10 @@
 import React, { useState } from "react";
 import {
-  Modal,
-  Dimensions,
   StyleSheet,
   View,
   Text,
   Image,
-  Animated,
-  PanResponder,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   TextInput,
   Keyboard,
   KeyboardAvoidingView,
@@ -22,6 +17,7 @@ import COLORS from "./colors";
 import * as Location from "expo-location";
 import { Dropdown } from "react-native-element-dropdown";
 import CheckBox from "expo-checkbox";
+import Modal from "react-native-modal";
 
 const CreateEventModal = ({
   isModalVisible,
@@ -205,34 +201,6 @@ const CreateEventModal = ({
     setErrors({ ...errors, ["colonyName"]: "" });
   };
 
-  const screenHeight = Dimensions.get("window").height;
-  const percentageThreshold = 0.3; // Adjust the percentage as needed
-
-  const panResponder = PanResponder.create({
-    onStartShouldSetPanResponder: (e, gestureState) => {
-      // Calculate the threshold based on a percentage of the screen height
-      // const threshold = screenHeight * percentageThreshold;
-      // return e.nativeEvent.pageY > threshold && e.nativeEvent.pageY < screenHeight * (percentageThreshold + .1);
-      return true;
-    },
-    onPanResponderMove: (event, gestureState) => {
-      if (gestureState.dy > 0) {
-        if (gestureState.dy < screenHeight * percentageThreshold) {
-          modalPosition.setValue(gestureState.dy);
-        }
-      }
-    },
-    onPanResponderRelease: (event, gestureState) => {
-      if (gestureState.dy > 200) {
-        hideModal();
-      } else {
-        modalPosition.setValue(0);
-      }
-    },
-  });
-
-  const modalPosition = new Animated.Value(0);
-
   const handleInputChange = (key, value) => {
     setEvent((prevEvent) => {
       const updatedEvent = { ...prevEvent, [key]: value };
@@ -243,233 +211,232 @@ const CreateEventModal = ({
 
   return (
     <Modal
-      animationType="slide"
-      transparent
+      animationIn="slideInUp"
+      animationOut="slideOutDown"
       visible={isModalVisible}
-      onRequestClose={hideModal}
+      onBackdropPress={hideModal}
+      onSwipeComplete={hideModal}
+      swipeDirection="down"
+      backdropOpacity={0}
+      propagateSwipe
+      style={styles.modalContainer}
     >
       <KeyboardAvoidingView
-        style={{ flex: 1 }}
+        style={styles.modalContainer}
         behavior={Platform.OS === "ios" ? "padding" : "height"} // Adjust this as needed
       >
-        <View style={styles.modalContainer} {...panResponder.panHandlers}>
-          <Animated.View
-            style={[
-              styles.modalContent,
-              { transform: [{ translateY: modalPosition }] },
-            ]}
-          >
-            <Bar color={COLORS.primary} />
-            <View style={styles.header}>
-              <TouchableOpacity
-                onPress={() => {
-                  hideModal();
+        <View style={[styles.modalContent, styles.shadow]}>
+          <Bar color={COLORS.primary} />
+          <View style={styles.header}>
+            <TouchableOpacity
+              onPress={() => {
+                hideModal();
+                setTimeout(() => {
                   showModal("social");
-                  console.log("Pressed back button to social");
+                }, 500);
+                // showModal("social");
+                console.log("Pressed back button to social");
 
-                  // CREATE EVENT AND UDPDATE DATABASE WITH ALL THE INFO RECEIVED FROM THIS MODAL
-                  // DATE, TIME, ASSOCIATED COLONY NAME, LOCATION, DESCRIPTION, ETC.
+                // CREATE EVENT AND UDPDATE DATABASE WITH ALL THE INFO RECEIVED FROM THIS MODAL
+                // DATE, TIME, ASSOCIATED COLONY NAME, LOCATION, DESCRIPTION, ETC.
+              }}
+            >
+              <Image
+                source={require("../assets/backButton.png")}
+                style={styles.backButton}
+              />
+            </TouchableOpacity>
+            <Text style={styles.modalTitle}>Create Event</Text>
+          </View>
+          <ScrollView style={{ width: "100%" }}>
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                style={styles.buttonNormal}
+                onPress={() => {
+                  showMode("date");
+                  console.log("Pressed Date");
                 }}
               >
-                <Image
-                  source={require("../assets/backButton.png")}
-                  style={styles.backButton}
-                />
+                <Text style={styles.buttonText}>{dateText}</Text>
               </TouchableOpacity>
-              <Text style={styles.modalTitle}>Create Event</Text>
+
+              <TouchableOpacity
+                style={styles.buttonNormal}
+                onPress={() => {
+                  showMode("time");
+                  console.log("Pressed Time");
+                }}
+              >
+                <Text style={styles.buttonText}>{timeText}</Text>
+              </TouchableOpacity>
             </View>
-            <ScrollView style={{ width: "100%" }}>
-              <View style={styles.buttonContainer}>
-                <TouchableOpacity
-                  style={styles.buttonNormal}
-                  onPress={() => {
-                    showMode("date");
-                    console.log("Pressed Date");
-                  }}
-                >
-                  <Text style={styles.buttonText}>{dateText}</Text>
-                </TouchableOpacity>
 
-                <TouchableOpacity
-                  style={styles.buttonNormal}
-                  onPress={() => {
-                    showMode("time");
-                    console.log("Pressed Time");
-                  }}
-                >
-                  <Text style={styles.buttonText}>{timeText}</Text>
-                </TouchableOpacity>
+            {show && (
+              <View>
+                <DateTimePicker
+                  testId="dateTimePicker"
+                  value={event.date}
+                  mode={mode}
+                  is24Hour={false}
+                  display="spinner"
+                  textColor={COLORS.primary}
+                  onChange={onChange}
+                />
+                {Platform.OS === "ios" && (
+                  <TouchableOpacity
+                    style={styles.confirmButton}
+                    onPress={() => {
+                      setShow(false);
+                      setErrors({ ...errors, ["dateTime"]: "" });
+                    }}
+                  >
+                    <Text style={styles.confirmButtonText}>Confirm</Text>
+                  </TouchableOpacity>
+                )}
               </View>
-
-              {show && (
-                <View>
-                  <DateTimePicker
-                    testId="dateTimePicker"
-                    value={event.date}
-                    mode={mode}
-                    is24Hour={false}
-                    display="spinner"
-                    textColor={COLORS.primary}
-                    onChange={onChange}
-                  />
-                  {Platform.OS === "ios" && (
-                    <TouchableOpacity
-                      style={styles.confirmButton}
-                      onPress={() => {
-                        setShow(false);
-                        setErrors({ ...errors, ["dateTime"]: "" });
-                      }}
-                    >
-                      <Text style={styles.confirmButtonText}>Confirm</Text>
-                    </TouchableOpacity>
-                  )}
-                </View>
-              )}
-              {errors.dateTime ? (
-                <Text style={styles.errorMessage}>{errors.dateTime}</Text>
+            )}
+            {errors.dateTime ? (
+              <Text style={styles.errorMessage}>{errors.dateTime}</Text>
+            ) : null}
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.input}
+                placeholder="Event Name *"
+                placeholderTextColor={COLORS.primary}
+                value={event.name}
+                onChangeText={(text) => {
+                  handleInputChange("name", text);
+                  setErrors({ ...errors, ["name"]: "" });
+                }}
+              />
+              {errors.name ? (
+                <Text style={styles.errorMessage}>{errors.name}</Text>
               ) : null}
-              <View style={styles.inputContainer}>
+              <Dropdown
+                style={styles.input}
+                placeholderStyle={styles.placeholderStyle}
+                selectedTextStyle={styles.placeholderStyle}
+                itemTextStyle={styles.itemTextStyle}
+                iconStyle={styles.iconStyle}
+                data={colonies}
+                search={false}
+                maxHeight={300}
+                labelField="name"
+                valueField="value"
+                placeholder={
+                  event.colonyName === "" ? "Colony Name *" : event.colonyName
+                }
+                value={event.colonyName}
+                onChange={onChangeColony}
+              />
+              {errors.colonyName ? (
+                <Text style={styles.errorMessage}>{errors.colonyName}</Text>
+              ) : null}
+              <View style={styles.checkboxContainer}>
+                <CheckBox
+                  value={isCustomAddress}
+                  onValueChange={setIsCustomAddress}
+                  style={styles.checkbox}
+                  color={COLORS.primary}
+                />
+                <Text style={styles.checkboxLabel}>Use custom address?</Text>
+              </View>
+              {isCustomAddress ? (
                 <TextInput
                   style={styles.input}
-                  placeholder="Event Name *"
+                  placeholder="Custom Address * "
                   placeholderTextColor={COLORS.primary}
-                  value={event.name}
+                  value={event.address}
                   onChangeText={(text) => {
-                    handleInputChange("name", text);
-                    setErrors({ ...errors, ["name"]: "" });
+                    handleInputChange("address", text);
+                    setErrors({ ...errors, ["address"]: "" });
+                    // setErrors({ ...errors, ["spotName"]: "" });
+                    console.log(errors);
                   }}
                 />
-                {errors.name ? (
-                  <Text style={styles.errorMessage}>{errors.name}</Text>
-                ) : null}
+              ) : (
                 <Dropdown
                   style={styles.input}
                   placeholderStyle={styles.placeholderStyle}
                   selectedTextStyle={styles.placeholderStyle}
                   itemTextStyle={styles.itemTextStyle}
                   iconStyle={styles.iconStyle}
-                  data={colonies}
+                  data={filteredSpots}
                   search={false}
                   maxHeight={300}
                   labelField="name"
-                  valueField="value"
+                  valueField="coordinate"
                   placeholder={
-                    event.colonyName === "" ? "Colony Name *" : event.colonyName
+                    // event.spotName === "" ? "Spot *" : event.spotName
+                    "Spot *"
                   }
-                  value={event.colonyName}
-                  onChange={onChangeColony}
+                  value={event.spotName}
+                  disable={filteredSpots.length < 1}
+                  onChange={(item) => {
+                    // setErrors({ ...errors, ["spotName"]: "" });
+                    console.log("Selected spot:", item.name);
+                    handleInputChange("spotName", item.name);
+                    handleInputChange("coordinate", item.coordinate);
+                    setErrors({ ...errors, ["spotName"]: "" });
+                  }}
                 />
-                {errors.colonyName ? (
-                  <Text style={styles.errorMessage}>{errors.colonyName}</Text>
-                ) : null}
-                <View style={styles.checkboxContainer}>
-                  <CheckBox
-                    value={isCustomAddress}
-                    onValueChange={setIsCustomAddress}
-                    style={styles.checkbox}
-                    color={COLORS.primary}
-                  />
-                  <Text style={styles.checkboxLabel}>Use custom address?</Text>
-                </View>
-                {isCustomAddress ? (
-                  <TextInput
-                    style={styles.input}
-                    placeholder="Custom Address * "
-                    placeholderTextColor={COLORS.primary}
-                    value={event.address}
-                    onChangeText={(text) => {
-                      handleInputChange("address", text);
-                      setErrors({ ...errors, ["address"]: "" });
-                      // setErrors({ ...errors, ["spotName"]: "" });
-                      console.log(errors);
-                    }}
-                  />
-                ) : (
-                  <Dropdown
-                    style={styles.input}
-                    placeholderStyle={styles.placeholderStyle}
-                    selectedTextStyle={styles.placeholderStyle}
-                    itemTextStyle={styles.itemTextStyle}
-                    iconStyle={styles.iconStyle}
-                    data={filteredSpots}
-                    search={false}
-                    maxHeight={300}
-                    labelField="name"
-                    valueField="coordinate"
-                    placeholder={
-                      // event.spotName === "" ? "Spot *" : event.spotName
-                      "Spot *"
-                    }
-                    value={event.spotName}
-                    disable={filteredSpots.length < 1}
-                    onChange={(item) => {
-                      // setErrors({ ...errors, ["spotName"]: "" });
-                      console.log("Selected spot:", item.name);
-                      handleInputChange("spotName", item.name);
-                      handleInputChange("coordinate", item.coordinate);
-                      setErrors({ ...errors, ["spotName"]: "" });
-                    }}
-                  />
-                )}
-                {!isCustomAddress &&
-                  filteredSpots.length < 1 &&
-                  event.colonyName !== "" && (
-                    <Text style={styles.errorMessage}>
-                      <Text>No spots found in colony </Text>
-                      <Text style={{ textDecorationLine: "underline" }}>
-                        {event.colonyName}
-                      </Text>
-                      <Text>
-                        . Please create a spot or use a custom address.
-                      </Text>
+              )}
+              {!isCustomAddress &&
+                filteredSpots.length < 1 &&
+                event.colonyName !== "" && (
+                  <Text style={styles.errorMessage}>
+                    <Text>No spots found in colony </Text>
+                    <Text style={{ textDecorationLine: "underline" }}>
+                      {event.colonyName}
                     </Text>
-                  )}
-                {!isCustomAddress && errors.spotName ? (
-                  <Text style={styles.errorMessage}>{errors.spotName}</Text>
-                ) : null}
-                {isCustomAddress && errors.address ? (
-                  <Text style={styles.errorMessage}>{errors.address}</Text>
-                ) : null}
+                    <Text>. Please create a spot or use a custom address.</Text>
+                  </Text>
+                )}
+              {!isCustomAddress && errors.spotName ? (
+                <Text style={styles.errorMessage}>{errors.spotName}</Text>
+              ) : null}
+              {isCustomAddress && errors.address ? (
+                <Text style={styles.errorMessage}>{errors.address}</Text>
+              ) : null}
 
-                <TextInput
-                  style={[
-                    styles.input,
-                    { height: 150, textAlignVertical: "top" },
-                  ]}
-                  placeholder="Description"
-                  placeholderTextColor={COLORS.primary}
-                  multiline
-                  numberOfLines={4}
-                  value={event.description}
-                  onChangeText={(text) => {
-                    handleInputChange("description", text);
-                    setErrors({ ...errors, ["description"]: "" });
-                  }}
-                />
-                {errors.description ? (
-                  <Text style={styles.errorMessage}>{errors.description}</Text>
-                ) : null}
-              </View>
-              <View style={styles.buttonContainer}>
-                <TouchableOpacity
-                  style={styles.buttonNormal}
-                  onPress={() => {
-                    hideModal();
-                    setSocialModal(true);
-                    console.log("Event Canceled");
-                  }}
-                >
-                  <Text style={styles.buttonText}>Cancel</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.buttonNormal}
-                  onPress={handleCreateEvent}
-                >
-                  <Text style={styles.buttonText}>Create</Text>
-                </TouchableOpacity>
-              </View>
-            </ScrollView>
-          </Animated.View>
+              <TextInput
+                style={[
+                  styles.input,
+                  { height: 200, textAlignVertical: "top" },
+                ]}
+                placeholder="Description"
+                placeholderTextColor={COLORS.primary}
+                multiline
+                numberOfLines={4}
+                value={event.description}
+                onChangeText={(text) => {
+                  handleInputChange("description", text);
+                  setErrors({ ...errors, ["description"]: "" });
+                }}
+              />
+              {errors.description ? (
+                <Text style={styles.errorMessage}>{errors.description}</Text>
+              ) : null}
+            </View>
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                style={styles.buttonNormal}
+                onPress={() => {
+                  hideModal();
+                  showModal("social");
+                  console.log("Event Canceled");
+                }}
+              >
+                <Text style={styles.buttonText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.buttonNormal}
+                onPress={handleCreateEvent}
+              >
+                <Text style={styles.buttonText}>Create</Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
         </View>
       </KeyboardAvoidingView>
     </Modal>
@@ -478,17 +445,16 @@ const CreateEventModal = ({
 
 const styles = StyleSheet.create({
   modalContainer: {
-    flex: 1,
     justifyContent: "flex-end",
-    backgroundColor: "transparent",
+    margin: 0,
   },
   modalContent: {
     backgroundColor: COLORS.secondary,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
     padding: 20,
-    height: 500,
     alignItems: "center",
+    height: "80%",
   },
   modalTitle: {
     fontSize: 40,
@@ -593,6 +559,13 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     marginLeft: 10,
     fontWeight: "bold",
+  },
+  shadow: {
+    elevation: 20,
+    shadowColor: COLORS.black,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.5,
+    shadowRadius: 10,
   },
 });
 

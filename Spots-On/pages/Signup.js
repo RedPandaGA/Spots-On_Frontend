@@ -6,9 +6,11 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import COLORS from "../components/colors";
-import CustomAlert from '../components/alert';
+import CustomAlert from "../components/alert";
 
 const Signup = ({ navigation }) => {
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -28,8 +30,8 @@ const Signup = ({ navigation }) => {
   };
 
   const [showAlert, setShowAlert] = useState(false);
-  const [alertTitle, setAlertTitle] = useState('');
-  const [alertMessage, setAlertMessage] = useState('');
+  const [alertTitle, setAlertTitle] = useState("");
+  const [alertMessage, setAlertMessage] = useState("");
 
   // Function to check if the phone number is already used (mock implementation)
   const isPhoneNumberUsed = (phoneNumber) => {
@@ -44,35 +46,37 @@ const Signup = ({ navigation }) => {
 
   const handleSignup = () => {
     if (!phoneNumber || !email || !password || !confirmPassword) {
-      setAlertTitle('Incomplete Fields');
-      setAlertMessage('Please fill in all the fields.');
+      setAlertTitle("Incomplete Fields");
+      setAlertMessage("Please fill in all the fields.");
       setShowAlert(true);
       return;
     }
 
     if (!isValidEmail(email)) {
-      setAlertTitle('Invalid Email');
-      setAlertMessage('Please enter a valid email address.');
+      setAlertTitle("Invalid Email");
+      setAlertMessage("Please enter a valid email address.");
       setShowAlert(true);
       return;
     }
 
     if (password !== confirmPassword) {
-      setAlertTitle('Passwords Mismatch');
-      setAlertMessage('Please match the passwords.');
+      setAlertTitle("Passwords Mismatch");
+      setAlertMessage("Please match the passwords.");
       setShowAlert(true);
       return;
     }
 
     if (isPhoneNumberUsed(phoneNumber)) {
-      setAlertTitle('Phone Number Exists');
-      setAlertMessage('This phone number is already in use.');
+      setAlertTitle("Phone Number Exists");
+      setAlertMessage("This phone number is already in use.");
       setShowAlert(true);
       return;
     }
 
-    console.log('Created an Account: ' + phoneNumber + ' with password: ' + password);
-    navigation.navigate('Home');
+    console.log(
+      "Created an Account: " + phoneNumber + " with password: " + password
+    );
+    navigation.navigate("Home");
   };
 
   const handleLogin = () => {
@@ -82,87 +86,103 @@ const Signup = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.shadow}>
-        <Image
-          source={require("../assets/ladybugfixed.png")}
-          style={styles.icon}
-        />
-      </View>
-
-      <TextInput
-        style={[styles.input, { marginTop: 30 }]}
-        keyboardType="numeric"
-        placeholder="Phone #"
-        placeholderTextColor={COLORS.secondary}
-        value={phoneNumber}
-        onChangeText={(text) => setPhoneNumber(text)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        placeholderTextColor={COLORS.secondary}
-        value={email}
-        keyboardType="email-address"
-        onChangeText={(text) => setEmail(text)}
-      />
-      <View style={styles.passwordContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          placeholderTextColor={COLORS.secondary}
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-          secureTextEntry={!isPasswordVisible}
-        />
-        <TouchableOpacity onPress={togglePasswordVisibility} style={styles.eyeIcon}>
-          <Image
-            source={isPasswordVisible ? require("../assets/noeye.png") : require("../assets/eye.png")}
-            style={styles.eyecon}
-          />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.passwordContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Confirm Password"
-          placeholderTextColor={COLORS.secondary}
-          value={confirmPassword}
-          onChangeText={(text) => setConfirmPassword(text)}
-          secureTextEntry={!isPasswordVisible1}
-        />
-        <TouchableOpacity onPress={togglePasswordVisibility1} style={styles.eyeIcon}>
-          <Image
-            source={isPasswordVisible1 ? require("../assets/noeye.png") : require("../assets/eye.png")}
-            style={styles.eyecon}
-          />
-        </TouchableOpacity>
-      </View>
-      <TouchableOpacity
-        style={[styles.button, { alignSelf: "center", marginTop: 30 }]}
-        onPress={handleSignup}
-      >
-        <Text style={styles.buttonText}>Signup</Text>
-      </TouchableOpacity>
-      <Text style={[styles.buttonText, { marginTop: 20 }]}>
-        Already have an account?
-      </Text>
-      <TouchableOpacity
-        style={[styles.button, { alignSelf: "center" }]}
-        onPress={handleLogin}
-      >
-        <Text style={styles.buttonText}>Login</Text>
-      </TouchableOpacity>
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
-        {/* ... (rest of your code remains the same) */}
-        <CustomAlert
-          visible={showAlert}
-          title={alertTitle}
-          message={alertMessage}
-          onClose={() => setShowAlert(false)}
+        <View style={styles.shadow}>
+          <Image
+            source={require("../assets/ladybugfixed.png")}
+            style={styles.icon}
+          />
+        </View>
+
+        <TextInput
+          style={[styles.input, { marginTop: 30 }]}
+          keyboardType="numeric"
+          placeholder="Phone #"
+          placeholderTextColor={COLORS.secondary}
+          value={phoneNumber}
+          onChangeText={(text) => setPhoneNumber(text)}
         />
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          placeholderTextColor={COLORS.secondary}
+          value={email}
+          keyboardType="email-address"
+          onChangeText={(text) => setEmail(text)}
+        />
+        <View style={styles.passwordContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            placeholderTextColor={COLORS.secondary}
+            value={password}
+            onChangeText={(text) => setPassword(text)}
+            secureTextEntry={!isPasswordVisible}
+          />
+          <TouchableOpacity
+            onPress={togglePasswordVisibility}
+            style={styles.eyeIcon}
+          >
+            <Image
+              source={
+                isPasswordVisible
+                  ? require("../assets/noeye.png")
+                  : require("../assets/eye.png")
+              }
+              style={styles.eyecon}
+            />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.passwordContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Confirm Password"
+            placeholderTextColor={COLORS.secondary}
+            value={confirmPassword}
+            onChangeText={(text) => setConfirmPassword(text)}
+            secureTextEntry={!isPasswordVisible1}
+          />
+          <TouchableOpacity
+            onPress={togglePasswordVisibility1}
+            style={styles.eyeIcon}
+          >
+            <Image
+              source={
+                isPasswordVisible1
+                  ? require("../assets/noeye.png")
+                  : require("../assets/eye.png")
+              }
+              style={styles.eyecon}
+            />
+          </TouchableOpacity>
+        </View>
+        <TouchableOpacity
+          style={[styles.button, { alignSelf: "center", marginTop: 30 }]}
+          onPress={handleSignup}
+        >
+          <Text style={styles.buttonText}>Signup</Text>
+        </TouchableOpacity>
+        <Text style={[styles.buttonText, { marginTop: 20 }]}>
+          Already have an account?
+        </Text>
+        <TouchableOpacity
+          style={[styles.button, { alignSelf: "center" }]}
+          onPress={handleLogin}
+        >
+          <Text style={styles.buttonText}>Login</Text>
+        </TouchableOpacity>
+        <View style={styles.container}>
+          {/* ... (rest of your code remains the same) */}
+          <CustomAlert
+            visible={showAlert}
+            title={alertTitle}
+            message={alertMessage}
+            onClose={() => setShowAlert(false)}
+          />
+        </View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -214,8 +234,8 @@ const styles = StyleSheet.create({
     borderRadius: 100,
   },
   passwordContainer: {
-    width: '100%',
-    alignItems: 'center'
+    width: "100%",
+    alignItems: "center",
   },
   eyecon: {
     height: 30,
@@ -223,9 +243,9 @@ const styles = StyleSheet.create({
     tintColor: COLORS.darkerprimary,
   },
   eyeIcon: {
-    position: 'absolute',
+    position: "absolute",
     right: 30,
-    top: 20
+    top: 20,
   },
 });
 

@@ -390,21 +390,6 @@ export default function MainMap({ navigation }) {
     setSpots(updatedSpots);
   };
 
-  // const displayAllSpots = () => {
-  //   return spots.map((spot) => (
-  //     <Spot
-  //       key={spot.id}
-  //       coordinate={spot.coordinate}
-  //       spotName={spot.name}
-  //       colonyName={spot.colonyName}
-  //       spotRadius={spot.radius}
-  //       isSafe={spot.safe}
-  //       onDrag={(e) => handleSpotDrag(e, spot.id)}
-  //       onDragEnd={(e) => handleSpotDragEnd(e, spot.id)}
-  //     />
-  //   ));
-  // };
-
   const displayAllSpots = () => {
     return spots
       .filter((spot) => {
@@ -648,43 +633,37 @@ export default function MainMap({ navigation }) {
                 />
               </View>
             </TouchableOpacity>
-            {modals.social && (
-              <SocialModal
-                isModalVisible={modals.social}
-                hideModal={() => hideModal("social")}
-                showModal={showModal}
-              />
-            )}
-            {modals.viewEvents && (
-              <ViewEventsModal
-                isModalVisible={modals.viewEvents}
-                hideModal={() => hideModal("viewEvents")}
-                showModal={showModal}
-                eventsToday={eventsToday}
-                eventsUpcoming={eventsUpcoming}
-              />
-            )}
-            {modals.createEvent && (
-              <CreateEventModal
-                isModalVisible={modals.createEvent}
-                hideModal={() => hideModal("createEvent")}
-                showModal={showModal}
-                colonies={colonies}
-                allSpots={spots}
-                eventsToday={eventsToday}
-                eventsUpcoming={eventsUpcoming}
-                setEventsToday={setEventsToday}
-                setEventsUpcoming={setEventsUpcoming}
-              />
-            )}
-            {modals.createColony && (
-              <CreateColonyModal
-                isModalVisible={modals.createColony}
-                hideModal={() => hideModal("createColony")}
-                showModal={showModal}
-                user={user}
-              />
-            )}
+            <SocialModal
+              isModalVisible={modals.social}
+              hideModal={() => hideModal("social")}
+              showModal={showModal}
+            />
+            <ViewEventsModal
+              isModalVisible={modals.viewEvents}
+              hideModal={() => hideModal("viewEvents")}
+              showModal={showModal}
+              eventsToday={eventsToday}
+              eventsUpcoming={eventsUpcoming}
+            />
+
+            <CreateEventModal
+              isModalVisible={modals.createEvent}
+              hideModal={() => hideModal("createEvent")}
+              showModal={showModal}
+              colonies={colonies}
+              allSpots={spots}
+              eventsToday={eventsToday}
+              eventsUpcoming={eventsUpcoming}
+              setEventsToday={setEventsToday}
+              setEventsUpcoming={setEventsUpcoming}
+            />
+
+            <CreateColonyModal
+              isModalVisible={modals.createColony}
+              hideModal={() => hideModal("createColony")}
+              showModal={showModal}
+              user={user}
+            />
             {/* Chats Button */}
             <MapButton
               imageSource={require("../assets/speech-bubble.png")}
@@ -805,6 +784,7 @@ export default function MainMap({ navigation }) {
               }}
               colonies={colonies}
               showModal={showModal}
+              currentSpot={currentSpot}
               setCurrentSpot={setCurrentSpot}
             />
             {/* Settings Button */}

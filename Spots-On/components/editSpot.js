@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  // Modal,
   Switch,
   StyleSheet,
   View,
@@ -28,41 +27,17 @@ import { Dropdown } from "react-native-element-dropdown";
 const EditSpot = ({
   isModalVisible,
   hideModal,
-  // cancelCreateSpot,
-  // newSpot,
-  // setNewSpot,
-  // resetNewSpot,
   allSpots,
   setAllSpots,
   mapRegion,
   colonies,
   currentSpot,
 }) => {
-  // const [showAddSpot, setShowAddSpot] = useState(false);
   const [showSpotList, setShowSpotList] = useState(true);
   const [circleRadius, setCircleRadius] = useState(currentSpot.radius);
   const [circleCenter, setCircleCenter] = useState(currentSpot.coordinate);
   const [region, setRegion] = useState(mapRegion);
   const [newSpot, setNewSpot] = useState(currentSpot);
-
-  //   const resetNewSpot = () => {
-  //     setNewSpot({
-  //       name: "",
-  //       colonyName: "",
-  //       radius: 250,
-  //       coordinate: {},
-  //       address: "",
-  //       safe: true,
-  //     });
-  //   };
-
-  // const colonyList = colonies.map((colony, index) => [
-  //   {
-  //     label: colony.name,
-  //     value: index + 1,
-  //   },
-  // ]);
-  // console.log(colonyList);
 
   const [spotNameError, setSpotNameError] = useState(null);
   const [colonyNameError, setColonyNameError] = useState(null);
@@ -80,11 +55,9 @@ const EditSpot = ({
       longitude: mapRegion.longitude,
     });
     setCircleRadius(50);
-    // setShowAddSpot(false);
     setShowSpotList(true);
     setSpotNameError(false);
     setColonyNameError(false);
-    // resetNewSpot();
   };
 
   const validateInputs = () => {
@@ -161,8 +134,6 @@ const EditSpot = ({
   let feetValue = metersToFeet(circleRadius);
 
   const updateSpot = () => {
-    // Validate inputs before proceeding
-    // if (validateInputs()) {
     // Find the index of the current spot in the allSpots array
 
     console.log(
@@ -249,22 +220,17 @@ const EditSpot = ({
       animationOut="slideOutDown"
       isVisible={isModalVisible}
       onBackdropPress={() => {
-        // setShowAddSpot(false);
         setShowSpotList(true);
         hideModal();
-        // cancelCreateSpot();
-        // resetNewSpot();
       }}
       onSwipeComplete={() => {
-        // setShowAddSpot(false);
         setShowSpotList(true);
         hideModal();
-        // cancelCreateSpot();
-        // resetNewSpot();
       }}
       swipeThreshold={200}
       swipeDirection={showSpotList ? "down" : null}
       propagateSwipe
+      backdropOpacity={0}
       style={styles.modalContainer}
     >
       <KeyboardAvoidingView behavior="padding" style={styles.modalContainer}>
@@ -276,31 +242,6 @@ const EditSpot = ({
                 flex: 1,
               }}
             >
-              {/* <View style={styles.addSpotHeader}>
-                <TouchableOpacity
-                  onPress={() => {
-                    hideModal();
-                    resetValues();
-                  }}
-                >
-                  <Image
-                    source={require("../assets/back-button-secondary-color.png")}
-                    style={styles.backButton}
-                  />
-                </TouchableOpacity>
-                <Text style={styles.addSpotTitle}>{currentSpot.spotName}</Text>
-              </View> */}
-              {/* <Text
-                style={{
-                  justifyContent: "center",
-                  textAlign: "center",
-                  fontWeight: "bold",
-                  color: COLORS.secondary,
-                  fontSize: 16,
-                }}
-              >
-                {currentSpot.colonyName}
-              </Text> */}
               <View style={styles.infoContainer}>
                 <View style={styles.addSpotHeader}>
                   <TextInput
@@ -327,9 +268,6 @@ const EditSpot = ({
                   />
                 </View>
                 <View style={styles.inputContainer}>
-                  {/* {spotNameError && (
-                    <Text style={styles.errorMessage}>{spotNameError}</Text>
-                  )} */}
                   <Dropdown
                     style={styles.input}
                     placeholderStyle={styles.placeholderStyle}
@@ -348,9 +286,6 @@ const EditSpot = ({
                     }
                     value={newSpot.colonyName}
                     onChange={(item) => {
-                      // const statusValue = item.value - 1;
-                      // setUser({ ...user, statusCode: statusValue });
-                      // console.log(statusIdentifiers[statusValue].label);
                       handleInputChange("colonyName", item.name);
                     }}
                   />
@@ -424,8 +359,6 @@ const EditSpot = ({
                     style={styles.buttonNormal}
                     onPress={() => {
                       hideModal();
-                      //   cancelCreateSpot();
-                      //   resetNewSpot();
                       deleteSpot();
                     }}
                   >
@@ -434,30 +367,6 @@ const EditSpot = ({
                   <TouchableOpacity
                     style={styles.buttonNormal}
                     onPress={() => updateSpot()}
-                    // onPress={() => {
-                    //   // Validate inputs before proceeding
-                    //   if (validateInputs()) {
-                    //     // Save the event object or perform other actions here
-                    //     const updatedSpot = {
-                    //       ...newSpot,
-                    //       id: Date.now(),
-                    //       radius: circleRadius,
-                    //       coordinate: circleCenter,
-                    //     };
-                    //     setAllSpots([...allSpots, updatedSpot]);
-                    //     // setShowAddSpot(false);
-                    //     setShowSpotList(true);
-                    //     // hideModal();
-                    //     console.log(
-                    //       "Spot Edited:\n",
-                    //       currentSpot,
-                    //       "to",
-                    //       newSpot
-                    //     );
-                    //     hideModal();
-                    //     resetValues();
-                    //   }
-                    // }}
                   >
                     <Text style={styles.buttonText}>Save</Text>
                   </TouchableOpacity>
@@ -465,7 +374,6 @@ const EditSpot = ({
               </View>
             </View>
           </TouchableWithoutFeedback>
-          {/* )} */}
         </View>
       </KeyboardAvoidingView>
     </Modal>
@@ -474,21 +382,15 @@ const EditSpot = ({
 
 const styles = StyleSheet.create({
   modalContainer: {
-    // flex: 1,
     justifyContent: "flex-end",
-    // // alignItems: "center",
     margin: 0,
-    // backgroundColor: COLORS.primary,
-    // height: "50%",
   },
   modalContent: {
     backgroundColor: COLORS.primary,
     borderTopRightRadius: 50,
     borderTopLeftRadius: 50,
-    // padding: 20,
     height: "95%",
     width: "100%",
-    // alignItems: "center",
   },
   modalTitle: {
     fontSize: 40,
@@ -531,8 +433,7 @@ const styles = StyleSheet.create({
   buttonNormal: {
     borderRadius: 30,
     width: "45%",
-    // borderWidth: 1.5,
-    // borderColor: "#ccc",
+
     marginVertical: 20,
     marginHorizontal: 10,
     alignItems: "center",
@@ -568,7 +469,6 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     marginBottom: 10,
     paddingBottom: 0,
-    // borderRadius: 10,
     color: COLORS.secondary,
     fontWeight: "bold",
     fontSize: 20,
@@ -649,13 +549,9 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 18,
   },
-  // inputError: {
-  //   borderColor: "red",
-  // },
   errorMessage: {
     color: COLORS.active,
     fontSize: 14,
-    // marginTop: 5,
     marginLeft: 10,
     fontWeight: "bold",
   },
