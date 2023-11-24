@@ -46,7 +46,12 @@ const CreateSpotModal = ({
     name: "",
     colonyName: "",
     radius: 250,
-    coordinate: {},
+    coordinate: {
+      latitude: mapRegion.latitude,
+      longitude: mapRegion.longitude,
+      longitudeDelta: 0.005,
+      latitudeDelta: 0.005,
+    },
     address: "",
     safe: true,
   });
@@ -179,17 +184,17 @@ const CreateSpotModal = ({
     Keyboard.dismiss();
   };
 
-  useEffect(() => {
-    // geocode();
-    console.log(newSpot.coordinate);
-    setRegion({
-      latitude: newSpot.coordinate.latitude,
-      longitude: newSpot.coordinate.longitude,
-      latitudeDelta: 0.005,
-      longitudeDelta: 0.005,
-    });
-    Keyboard.dismiss();
-  }, [newSpot.address]);
+  // useEffect(() => {
+  //   // geocode();
+  //   console.log(newSpot.coordinate);
+  //   setRegion({
+  //     latitude: newSpot.coordinate.latitude,
+  //     longitude: newSpot.coordinate.longitude,
+  //     latitudeDelta: 0.005,
+  //     longitudeDelta: 0.005,
+  //   });
+  //   Keyboard.dismiss();
+  // }, [newSpot.address]);
 
   const metersToFeet = (meters) => {
     // 1 meter is approximately 3.28084 feet
@@ -208,7 +213,6 @@ const CreateSpotModal = ({
       animationIn="slideInUp"
       animationOut="slideOutDown"
       isVisible={isModalVisible}
-      // onModalHide={() => showModal("editSpot")}
       onBackdropPress={() => {
         setShowSpotList(true);
         hideModal();
@@ -334,6 +338,7 @@ const CreateSpotModal = ({
                       <GooglePlacesInput
                         placeholderText="Find address on map"
                         placeholderTextColor={COLORS.secondary}
+                        changeMapRegion={true}
                         textInputStyle={[
                           styles.input,
                           {
@@ -342,8 +347,6 @@ const CreateSpotModal = ({
                             borderRadius: 0,
                           },
                         ]}
-                        addressValue={newSpot.address}
-                        coordinateValue={newSpot.coordinate}
                         handleInputChange={handleInputChange}
                       />
                     </View>
@@ -360,7 +363,16 @@ const CreateSpotModal = ({
                   </View>
                   <MapView
                     style={styles.map}
-                    region={region}
+                    region={
+                      newSpot.coordinate
+                        ? {
+                            latitude: newSpot.coordinate.latitude,
+                            longitude: newSpot.coordinate.longitude,
+                            latitudeDelta: 0.005,
+                            longitudeDelta: 0.005,
+                          }
+                        : mapRegion
+                    }
                     userInterfaceStyle="light"
                     onRegionChange={(newRegion) => {
                       setCircleCenter(newRegion);

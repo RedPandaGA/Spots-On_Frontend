@@ -27,7 +27,7 @@ const ViewEventsModal = ({
 
   const renderItem = ({ item }) => (
     <View style={styles.eventItem}>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => console.log(item)}>
         <View styles={styles.infoContainer}>
           <Image
             style={styles.eventImage}
