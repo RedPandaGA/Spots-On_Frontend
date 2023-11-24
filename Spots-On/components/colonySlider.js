@@ -17,17 +17,17 @@ export default function ColonySlider({
   setSpots,
 }) {
   const onPress = async (name) => {
-    console.log("beforeUpdated: " + JSON.stringify(colonies));
+    //console.log("beforeUpdated: " + JSON.stringify(colonies));
     // Update the selected state for each colony
     const updatedColony = colonies.map((item) => ({
       ...item,
       selected: item.name === name,
     }));
-    console.log("updated: " + JSON.stringify(updatedColony));
+    //console.log("updated: " + JSON.stringify(updatedColony));
     setColonies(updatedColony);
-    console.log("afterUpdated: " + JSON.stringify(colonies));
+    //console.log("afterUpdated: " + JSON.stringify(colonies));
     setSpots(await getSpots());
-    console.log("wot: " + JSON.stringify(spots));
+    //console.log("wot: " + JSON.stringify(spots));
   };
 
   return (
