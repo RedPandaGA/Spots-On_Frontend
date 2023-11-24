@@ -98,6 +98,20 @@ const CreateEventModal = ({
     spotName: "",
   });
 
+  const resetEventState = () => {
+    const reset = {
+      name: "",
+      colonyName: "",
+      date: new Date(),
+      time: "",
+      address: "",
+      coordinate: {},
+      description: "",
+      spotName: "",
+    };
+    setEvent(reset);
+  };
+
   const handleCreateEvent = () => {
     const isValid = validateForm();
     // console.log(errors);
@@ -231,6 +245,7 @@ const CreateEventModal = ({
             <TouchableOpacity
               onPress={() => {
                 hideModal();
+                resetEventState();
                 setTimeout(() => {
                   showModal("social");
                 }, 500);
@@ -423,7 +438,11 @@ const CreateEventModal = ({
                 style={styles.buttonNormal}
                 onPress={() => {
                   hideModal();
-                  showModal("social");
+                  resetEventState();
+                  setTimeout(() => {
+                    showModal("social");
+                  }, 500);
+                  // showModal("social");
                   console.log("Event Canceled");
                 }}
               >
