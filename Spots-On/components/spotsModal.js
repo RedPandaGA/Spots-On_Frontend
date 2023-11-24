@@ -22,6 +22,7 @@ import Slider from "@react-native-community/slider";
 import Spot from "./spot";
 import * as Location from "expo-location";
 import { Dropdown } from "react-native-element-dropdown";
+import GooglePlacesInput from "./googlePlacesInput";
 
 const CreateSpotModal = ({
   isModalVisible,
@@ -55,7 +56,10 @@ const CreateSpotModal = ({
       name: "",
       colonyName: "",
       radius: 250,
-      coordinate: {},
+      coordinate: {
+        latitude: mapRegion.latitude,
+        longitude: mapRegion.longitude,
+      },
       address: "",
       safe: true,
     });
@@ -174,6 +178,18 @@ const CreateSpotModal = ({
     });
     Keyboard.dismiss();
   };
+
+  useEffect(() => {
+    // geocode();
+    console.log(newSpot.coordinate);
+    setRegion({
+      latitude: newSpot.coordinate.latitude,
+      longitude: newSpot.coordinate.longitude,
+      latitudeDelta: 0.005,
+      longitudeDelta: 0.005,
+    });
+    Keyboard.dismiss();
+  }, [newSpot.address]);
 
   const metersToFeet = (meters) => {
     // 1 meter is approximately 3.28084 feet
@@ -300,7 +316,7 @@ const CreateSpotModal = ({
                       <Text style={styles.errorMessage}>{colonyNameError}</Text>
                     )}
                     <View style={styles.findLocationContainer}>
-                      <TextInput
+                      {/* <TextInput
                         style={[styles.input, { width: "80%" }]}
                         placeholder="Find Address"
                         placeholderTextColor={COLORS.secondary}
@@ -314,7 +330,22 @@ const CreateSpotModal = ({
                         style={styles.findLocationButton}
                       >
                         <Text style={styles.findLocationText}>Find</Text>
-                      </TouchableOpacity>
+                      </TouchableOpacity> */}
+                      <GooglePlacesInput
+                        placeholderText="Find address on map"
+                        placeholderTextColor={COLORS.secondary}
+                        textInputStyle={[
+                          styles.input,
+                          {
+                            backgroundColor: "transparent",
+                            paddingHorizontal: 0,
+                            borderRadius: 0,
+                          },
+                        ]}
+                        addressValue={newSpot.address}
+                        coordinateValue={newSpot.coordinate}
+                        handleInputChange={handleInputChange}
+                      />
                     </View>
                   </View>
                   <View style={styles.switchContainer}>

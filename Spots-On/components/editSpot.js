@@ -23,6 +23,7 @@ import Slider from "@react-native-community/slider";
 import Spot from "./spot";
 import * as Location from "expo-location";
 import { Dropdown } from "react-native-element-dropdown";
+import GooglePlacesInput from "./googlePlacesInput";
 
 const EditSpot = ({
   isModalVisible,
@@ -36,7 +37,7 @@ const EditSpot = ({
   const [showSpotList, setShowSpotList] = useState(true);
   const [circleRadius, setCircleRadius] = useState(currentSpot.radius);
   const [circleCenter, setCircleCenter] = useState(currentSpot.coordinate);
-  const [region, setRegion] = useState(mapRegion);
+  const [region, setRegion] = useState(currentSpot.coordinate);
   const [newSpot, setNewSpot] = useState(currentSpot);
 
   const [spotNameError, setSpotNameError] = useState(null);
@@ -59,6 +60,18 @@ const EditSpot = ({
     setSpotNameError(false);
     setColonyNameError(false);
   };
+
+  useEffect(() => {
+    // geocode();
+    console.log(newSpot.coordinate);
+    setRegion({
+      latitude: newSpot.coordinate.latitude,
+      longitude: newSpot.coordinate.longitude,
+      latitudeDelta: 0.005,
+      longitudeDelta: 0.005,
+    });
+    Keyboard.dismiss();
+  }, [newSpot.address]);
 
   const validateInputs = () => {
     let isValid = true;
@@ -293,7 +306,7 @@ const EditSpot = ({
                     <Text style={styles.errorMessage}>{colonyNameError}</Text>
                   )}
                   <View style={styles.findLocationContainer}>
-                    <TextInput
+                    {/* <TextInput
                       style={[styles.input, { width: "80%" }]}
                       placeholder="Find Address"
                       placeholderTextColor={COLORS.secondary}
@@ -307,7 +320,22 @@ const EditSpot = ({
                       style={styles.findLocationButton}
                     >
                       <Text style={styles.findLocationText}>Find</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
+                    <GooglePlacesInput
+                      placeholderText="Find address on map"
+                      placeholderTextColor={COLORS.secondary}
+                      textInputStyle={[
+                        styles.input,
+                        {
+                          backgroundColor: "transparent",
+                          paddingHorizontal: 0,
+                          borderRadius: 0,
+                        },
+                      ]}
+                      addressValue={newSpot.address}
+                      coordinateValue={newSpot.coordinate}
+                      handleInputChange={handleInputChange}
+                    />
                   </View>
                 </View>
                 <View style={styles.switchContainer}>
@@ -322,7 +350,7 @@ const EditSpot = ({
                 </View>
                 <MapView
                   style={styles.map}
-                  region={currentSpot.coordinate}
+                  region={region}
                   userInterfaceStyle="light"
                   onRegionChange={(newRegion) => {
                     setCircleCenter(newRegion);
@@ -433,9 +461,8 @@ const styles = StyleSheet.create({
   buttonNormal: {
     borderRadius: 30,
     width: "45%",
-
-    marginVertical: 20,
     marginHorizontal: 10,
+    marginVertical: 10,
     alignItems: "center",
     backgroundColor: COLORS.secondary,
   },
@@ -500,6 +527,7 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     paddingHorizontal: 20,
+    flex: 1,
   },
   spotListImage: {
     width: 40,
@@ -514,18 +542,20 @@ const styles = StyleSheet.create({
     marginBottom: 0,
   },
   map: {
-    height: "40%",
+    height: "35%",
     width: "100%",
     borderWidth: 1,
     borderColor: COLORS.secondary,
     borderRadius: 10,
     marginVertical: 10,
+    overflow: "hidden",
   },
   sliderContainer: {
     flex: 1,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    padding: 10,
   },
   sliderText: {
     color: COLORS.secondary,

@@ -110,6 +110,8 @@ const CreateEventModal = ({
       spotName: "",
     };
     setEvent(reset);
+    setDateText("Date");
+    setTimeText("Time");
   };
 
   const handleCreateEvent = () => {
@@ -148,7 +150,11 @@ const CreateEventModal = ({
       // console.log(event);
       // console.log(newEvents);
 
+      resetEventState();
       hideModal();
+      setTimeout(() => {
+        showModal("viewEvents");
+      }, 500);
       console.log("Event Created", event);
     }
   };
