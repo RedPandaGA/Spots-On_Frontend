@@ -172,9 +172,10 @@ const styles = StyleSheet.create({
   },
   title: {
     color: COLORS.secondary,
-    fontSize: 30,
+    fontSize: 25,
     fontWeight: "bold",
     alignSelf: "center",
+    top: -5
   },
   backButton: {
     height: 50,
