@@ -399,6 +399,55 @@ const CreateEventModal = ({
                   <Text style={styles.errorMessage}>{errors.address}</Text>
                 ) : null}
 
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity
+                    style={styles.buttonDateTime}
+                    onPress={() => {
+                      showMode("date");
+                      console.log("Pressed Date");
+                    }}
+                  >
+                    <Text style={styles.buttonDateTimeText}>{dateText}</Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    style={styles.buttonDateTime}
+                    onPress={() => {
+                      showMode("time");
+                      console.log("Pressed Time");
+                    }}
+                  >
+                    <Text style={styles.buttonDateTimeText}>{timeText}</Text>
+                  </TouchableOpacity>
+                  {show && (
+                    <View>
+                      <DateTimePicker
+                        testId="dateTimePicker"
+                        value={event.date}
+                        mode={mode}
+                        is24Hour={false}
+                        display="spinner"
+                        textColor={COLORS.primary}
+                        onChange={onChange}
+                      />
+                      {Platform.OS === "ios" && (
+                        <TouchableOpacity
+                          style={styles.confirmButton}
+                          onPress={() => {
+                            setShow(false);
+                            setErrors({ ...errors, ["dateTime"]: "" });
+                          }}
+                        >
+                          <Text style={styles.confirmButtonText}>Confirm</Text>
+                        </TouchableOpacity>
+                      )}
+                    </View>
+                  )}
+                </View>
+                {errors.dateTime ? (
+                  <Text style={styles.errorMessage}>{errors.dateTime}</Text>
+                ) : null}
+
                 <TextInput
                   style={[
                     styles.input,
@@ -419,54 +468,6 @@ const CreateEventModal = ({
                 ) : null}
               </View>
 
-              <View style={styles.buttonContainer}>
-                <TouchableOpacity
-                  style={styles.buttonDateTime}
-                  onPress={() => {
-                    showMode("date");
-                    console.log("Pressed Date");
-                  }}
-                >
-                  <Text style={styles.buttonDateTimeText}>{dateText}</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={styles.buttonDateTime}
-                  onPress={() => {
-                    showMode("time");
-                    console.log("Pressed Time");
-                  }}
-                >
-                  <Text style={styles.buttonDateTimeText}>{timeText}</Text>
-                </TouchableOpacity>
-                {show && (
-                  <View>
-                    <DateTimePicker
-                      testId="dateTimePicker"
-                      value={event.date}
-                      mode={mode}
-                      is24Hour={false}
-                      display="spinner"
-                      textColor={COLORS.primary}
-                      onChange={onChange}
-                    />
-                    {Platform.OS === "ios" && (
-                      <TouchableOpacity
-                        style={styles.confirmButton}
-                        onPress={() => {
-                          setShow(false);
-                          setErrors({ ...errors, ["dateTime"]: "" });
-                        }}
-                      >
-                        <Text style={styles.confirmButtonText}>Confirm</Text>
-                      </TouchableOpacity>
-                    )}
-                  </View>
-                )}
-              </View>
-              {errors.dateTime ? (
-                <Text style={styles.errorMessage}>{errors.dateTime}</Text>
-              ) : null}
               <View style={styles.buttonContainer}>
                 <TouchableOpacity
                   style={styles.buttonNormal}
@@ -548,7 +549,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   buttonDateTimeText: {
-    fontSize: 20,
+    fontSize: 16,
     color: COLORS.primary,
     textAlign: "center",
     fontWeight: "bold",
