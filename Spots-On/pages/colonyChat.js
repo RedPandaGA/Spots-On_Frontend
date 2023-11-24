@@ -163,13 +163,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.primary,
+    paddingBottom: 10
   },
   header: {
-    marginTop: 50,
+    paddingTop: 50,
+    backgroundColor: COLORS.lighterprimary,
+    height: 120,
   },
   title: {
     color: COLORS.secondary,
-    fontSize: 35,
+    fontSize: 30,
     fontWeight: "bold",
     alignSelf: "center",
   },
@@ -192,10 +195,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 10,
-    backgroundColor: COLORS.primary,
+    paddingHorizontal: 20,
+    paddingTop: 10,
     marginTop: -10,
-    marginHorizontal: 10,
   },
   input: {
     flex: 1,
