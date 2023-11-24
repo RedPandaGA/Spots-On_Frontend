@@ -60,6 +60,7 @@ const ViewEventsModal = ({
           <TouchableOpacity
             onPress={() => {
               hideModal();
+              resetEventState();
               setTimeout(() => {
                 showModal("social");
               }, 500);
@@ -209,7 +210,7 @@ const styles = StyleSheet.create({
     width: 40,
     position: "absolute",
     left: -50,
-    tintColor: COLORS.red
+    tintColor: COLORS.red,
   },
   shadow: {
     elevation: 20,
@@ -217,7 +218,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.5,
     shadowRadius: 10,
-    borderRadius: 50,
+    // borderRadius: 50,
   },
 });
 
