@@ -14,12 +14,51 @@ import {
 } from "react-native";
 import Bar from "./bar";
 import COLORS from "./colors";
+import Config from '../.config.js';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const papiUrl = Config.PAPI_URL;
 
 const SocialModal = ({ isModalVisible, hideModal, showModal }) => {
   const [joinColonyCode, setJoinColonyCode] = useState("");
 
   const [isJoinColonyInputFocused, setIsJoinColonyInputFocused] =
     useState(false);
+
+  const joinColony = async () => {
+    try {
+        // Get the authorization token from AsyncStorage
+        const authToken = await AsyncStorage.getItem('token');
+        if (!authToken) {
+        // Handle the case where the token is not available
+        console.error('Authorization token not found.');
+        return;
+        }
+
+        const response = await fetch(`${papiUrl}/joinColony`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authToken}`, // Attach the token to the Authorization header
+        },
+        body: JSON.stringify({
+            invite: joinColonyCode,
+        }),
+        });
+
+        if (!response.ok) {
+        // Handle error, e.g., display an error message
+        console.error('Error joining colony:', response.status);
+        return;
+        }
+
+        // Successfully joined colony
+        console.log('Successfully joined colony:', response);
+    } catch (error) {
+        console.error('Error:', error);
+        // Handle other errors as needed
+    }
+  }
 
   const handleJoinColonyFocus = () => {
     setIsJoinColonyInputFocused(true);
@@ -86,10 +125,6 @@ const SocialModal = ({ isModalVisible, hideModal, showModal }) => {
     () => {
       console.log("Join Colony clicked");
       // Handle specific action for Button 4
-
-      // CHECK IF CODE IS ASSOCIATED WITH COLONY IN DATABASE
-      // IF SO, UPDATE DATABASE TO ENTER USER IN COLONY
-      // ELSE, THROW ERROR AND SAY INVALID CODE OR SOMETHING
     },
     () => {
       hideModal();
@@ -136,8 +171,9 @@ const SocialModal = ({ isModalVisible, hideModal, showModal }) => {
               onPress={() => {
                 handleUnfocus();
                 setJoinColonyCode("");
+                joinColony();
                 // handleStatusBlur();
-                console.log("Joined colony with code: " + joinColonyCode);
+                // console.log("Joined colony with code: " + joinColonyCode);
               }}
             >
               <Image
