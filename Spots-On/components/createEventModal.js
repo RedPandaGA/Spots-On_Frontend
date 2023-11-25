@@ -250,7 +250,7 @@ const CreateEventModal = ({
     <Modal
       animationIn="slideInUp"
       animationOut="slideOutDown"
-      visible={isModalVisible}
+      isVisible={isModalVisible}
       onBackdropPress={hideModal}
       onSwipeComplete={hideModal}
       swipeDirection="down"
