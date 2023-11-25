@@ -10,6 +10,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  TouchableWithoutFeedback,
 } from "react-native";
 import Bar from "./bar";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -18,6 +19,7 @@ import * as Location from "expo-location";
 import { Dropdown } from "react-native-element-dropdown";
 import CheckBox from "expo-checkbox";
 import Modal from "react-native-modal";
+import GooglePlacesInput from "./googlePlacesInput";
 
 const CreateEventModal = ({
   isModalVisible,
@@ -47,6 +49,17 @@ const CreateEventModal = ({
     spotName: "",
     description: "",
   });
+
+  const resetErrors = () => {
+    setErrors({
+      name: "",
+      colonyName: "",
+      dateTime: "",
+      address: "",
+      spotName: "",
+      description: "",
+    });
+  };
 
   const validateForm = () => {
     const newErrors = {
@@ -110,6 +123,9 @@ const CreateEventModal = ({
       spotName: "",
     };
     setEvent(reset);
+    setDateText("Date");
+    setTimeText("Time");
+    resetErrors();
   };
 
   const handleCreateEvent = () => {
@@ -148,7 +164,11 @@ const CreateEventModal = ({
       // console.log(event);
       // console.log(newEvents);
 
+      resetEventState();
       hideModal();
+      setTimeout(() => {
+        showModal("viewEvents");
+      }, 500);
       console.log("Event Created", event);
     }
   };
@@ -221,6 +241,9 @@ const CreateEventModal = ({
       console.log("Updated Event:", updatedEvent);
       return updatedEvent;
     });
+    if (key === "address") {
+      setErrors({ ...errors, ["address"]: "" });
+    }
   };
 
   return (
@@ -240,222 +263,235 @@ const CreateEventModal = ({
         behavior={Platform.OS === "ios" ? "padding" : "height"} // Adjust this as needed
       >
         <View style={[styles.modalContent, styles.shadow]}>
-          <Bar color={COLORS.primary} />
-          <View style={styles.header}>
-            <TouchableOpacity
-              onPress={() => {
-                hideModal();
-                resetEventState();
-                setTimeout(() => {
-                  showModal("social");
-                }, 500);
-                // showModal("social");
-                console.log("Pressed back button to social");
+          <Bar style={styles.bar} color={COLORS.primary} />
+          <TouchableWithoutFeedback
+            touchSoundDisabled
+            onPress={() => Keyboard.dismiss()}
+          >
+            <View style={{ flex: 1 }}>
+              <View style={styles.header}>
+                <TouchableOpacity
+                  onPress={() => {
+                    hideModal();
+                    resetEventState();
+                    setTimeout(() => {
+                      showModal("social");
+                    }, 500);
+                    // showModal("social");
+                    console.log("Pressed back button to social");
 
-                // CREATE EVENT AND UDPDATE DATABASE WITH ALL THE INFO RECEIVED FROM THIS MODAL
-                // DATE, TIME, ASSOCIATED COLONY NAME, LOCATION, DESCRIPTION, ETC.
-              }}
-            >
-              <Image
-                source={require("../assets/backButton.png")}
-                style={styles.backButton}
-              />
-            </TouchableOpacity>
-            <Text style={styles.modalTitle}>Create Event</Text>
-          </View>
-          <ScrollView style={{ width: "100%" }}>
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                style={styles.buttonNormal}
-                onPress={() => {
-                  showMode("date");
-                  console.log("Pressed Date");
-                }}
-              >
-                <Text style={styles.buttonText}>{dateText}</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.buttonNormal}
-                onPress={() => {
-                  showMode("time");
-                  console.log("Pressed Time");
-                }}
-              >
-                <Text style={styles.buttonText}>{timeText}</Text>
-              </TouchableOpacity>
-            </View>
-
-            {show && (
-              <View>
-                <DateTimePicker
-                  testId="dateTimePicker"
-                  value={event.date}
-                  mode={mode}
-                  is24Hour={false}
-                  display="spinner"
-                  textColor={COLORS.primary}
-                  onChange={onChange}
-                />
-                {Platform.OS === "ios" && (
-                  <TouchableOpacity
-                    style={styles.confirmButton}
-                    onPress={() => {
-                      setShow(false);
-                      setErrors({ ...errors, ["dateTime"]: "" });
-                    }}
-                  >
-                    <Text style={styles.confirmButtonText}>Confirm</Text>
-                  </TouchableOpacity>
-                )}
+                    // CREATE EVENT AND UDPDATE DATABASE WITH ALL THE INFO RECEIVED FROM THIS MODAL
+                    // DATE, TIME, ASSOCIATED COLONY NAME, LOCATION, DESCRIPTION, ETC.
+                  }}
+                >
+                  <Image
+                    source={require("../assets/backButton.png")}
+                    style={styles.backButton}
+                  />
+                </TouchableOpacity>
+                <Text style={styles.modalTitle}>Create Event</Text>
               </View>
-            )}
-            {errors.dateTime ? (
-              <Text style={styles.errorMessage}>{errors.dateTime}</Text>
-            ) : null}
-            <View style={styles.inputContainer}>
-              <TextInput
-                style={styles.input}
-                placeholder="Event Name *"
-                placeholderTextColor={COLORS.primary}
-                value={event.name}
-                onChangeText={(text) => {
-                  handleInputChange("name", text);
-                  setErrors({ ...errors, ["name"]: "" });
-                }}
-              />
-              {errors.name ? (
-                <Text style={styles.errorMessage}>{errors.name}</Text>
-              ) : null}
-              <Dropdown
-                style={styles.input}
-                placeholderStyle={styles.placeholderStyle}
-                selectedTextStyle={styles.placeholderStyle}
-                itemTextStyle={styles.itemTextStyle}
-                iconStyle={styles.iconStyle}
-                data={colonies}
-                search={false}
-                maxHeight={300}
-                labelField="name"
-                valueField="value"
-                placeholder={
-                  event.colonyName === "" ? "Colony Name *" : event.colonyName
-                }
-                value={event.colonyName}
-                onChange={onChangeColony}
-              />
-              {errors.colonyName ? (
-                <Text style={styles.errorMessage}>{errors.colonyName}</Text>
-              ) : null}
-              <View style={styles.checkboxContainer}>
-                <CheckBox
-                  value={isCustomAddress}
-                  onValueChange={setIsCustomAddress}
-                  style={styles.checkbox}
-                  color={COLORS.primary}
-                />
-                <Text style={styles.checkboxLabel}>Use custom address?</Text>
-              </View>
-              {isCustomAddress ? (
+
+              <View style={styles.inputContainer}>
                 <TextInput
                   style={styles.input}
-                  placeholder="Custom Address * "
+                  placeholder="Event Name *"
                   placeholderTextColor={COLORS.primary}
-                  value={event.address}
+                  value={event.name}
                   onChangeText={(text) => {
-                    handleInputChange("address", text);
-                    setErrors({ ...errors, ["address"]: "" });
-                    // setErrors({ ...errors, ["spotName"]: "" });
-                    console.log(errors);
+                    handleInputChange("name", text);
+                    setErrors({ ...errors, ["name"]: "" });
                   }}
                 />
-              ) : (
+                {errors.name ? (
+                  <Text style={styles.errorMessage}>{errors.name}</Text>
+                ) : null}
                 <Dropdown
                   style={styles.input}
                   placeholderStyle={styles.placeholderStyle}
                   selectedTextStyle={styles.placeholderStyle}
                   itemTextStyle={styles.itemTextStyle}
                   iconStyle={styles.iconStyle}
-                  data={filteredSpots}
+                  data={colonies}
                   search={false}
                   maxHeight={300}
                   labelField="name"
-                  valueField="coordinate"
+                  valueField="value"
                   placeholder={
-                    // event.spotName === "" ? "Spot *" : event.spotName
-                    "Spot *"
+                    event.colonyName === "" ? "Colony Name *" : event.colonyName
                   }
-                  value={event.spotName}
-                  disable={filteredSpots.length < 1}
-                  onChange={(item) => {
-                    // setErrors({ ...errors, ["spotName"]: "" });
-                    console.log("Selected spot:", item.name);
-                    handleInputChange("spotName", item.name);
-                    handleInputChange("coordinate", item.coordinate);
-                    setErrors({ ...errors, ["spotName"]: "" });
+                  value={event.colonyName}
+                  onChange={onChangeColony}
+                />
+                {errors.colonyName ? (
+                  <Text style={styles.errorMessage}>{errors.colonyName}</Text>
+                ) : null}
+                <View style={styles.checkboxContainer}>
+                  <CheckBox
+                    value={isCustomAddress}
+                    onValueChange={setIsCustomAddress}
+                    style={styles.checkbox}
+                    color={COLORS.primary}
+                  />
+                  <Text style={styles.checkboxLabel}>Use custom address?</Text>
+                </View>
+                {isCustomAddress ? (
+                  <View style={styles.findLocationContainer}>
+                    <GooglePlacesInput
+                      placeholderText="Custom Address *"
+                      placeholderTextColor={COLORS.primary}
+                      changeMapRegion={true}
+                      textInputStyle={[
+                        styles.input,
+                        {
+                          backgroundColor: "transparent",
+                          paddingHorizontal: 10,
+                          borderRadius: 10,
+                        },
+                      ]}
+                      handleInputChange={handleInputChange}
+                    />
+                  </View>
+                ) : (
+                  <Dropdown
+                    style={styles.input}
+                    placeholderStyle={styles.placeholderStyle}
+                    selectedTextStyle={styles.placeholderStyle}
+                    itemTextStyle={styles.itemTextStyle}
+                    iconStyle={styles.iconStyle}
+                    data={filteredSpots}
+                    search={false}
+                    maxHeight={300}
+                    labelField="name"
+                    valueField="coordinate"
+                    placeholder={
+                      // event.spotName === "" ? "Spot *" : event.spotName
+                      "Spot *"
+                    }
+                    value={event.spotName}
+                    disable={filteredSpots.length < 1}
+                    onChange={(item) => {
+                      // setErrors({ ...errors, ["spotName"]: "" });
+                      console.log("Selected spot:", item.name);
+                      handleInputChange("spotName", item.name);
+                      handleInputChange("coordinate", item.coordinate);
+                      setErrors({ ...errors, ["spotName"]: "" });
+                    }}
+                  />
+                )}
+                {!isCustomAddress &&
+                  filteredSpots.length < 1 &&
+                  event.colonyName !== "" && (
+                    <Text style={styles.errorMessage}>
+                      <Text>No spots found in colony </Text>
+                      <Text style={{ textDecorationLine: "underline" }}>
+                        {event.colonyName}
+                      </Text>
+                      <Text>
+                        . Please create a spot or use a custom address.
+                      </Text>
+                    </Text>
+                  )}
+                {!isCustomAddress && errors.spotName ? (
+                  <Text style={styles.errorMessage}>{errors.spotName}</Text>
+                ) : null}
+                {isCustomAddress && errors.address ? (
+                  <Text style={styles.errorMessage}>{errors.address}</Text>
+                ) : null}
+
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity
+                    style={styles.buttonDateTime}
+                    onPress={() => {
+                      showMode("date");
+                      console.log("Pressed Date");
+                    }}
+                  >
+                    <Text style={styles.buttonDateTimeText}>{dateText}</Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    style={styles.buttonDateTime}
+                    onPress={() => {
+                      showMode("time");
+                      console.log("Pressed Time");
+                    }}
+                  >
+                    <Text style={styles.buttonDateTimeText}>{timeText}</Text>
+                  </TouchableOpacity>
+                  {show && (
+                    <View>
+                      <DateTimePicker
+                        testId="dateTimePicker"
+                        value={event.date}
+                        mode={mode}
+                        is24Hour={false}
+                        display="spinner"
+                        textColor={COLORS.primary}
+                        onChange={onChange}
+                      />
+                      {Platform.OS === "ios" && (
+                        <TouchableOpacity
+                          style={styles.confirmButton}
+                          onPress={() => {
+                            setShow(false);
+                            setErrors({ ...errors, ["dateTime"]: "" });
+                          }}
+                        >
+                          <Text style={styles.confirmButtonText}>Confirm</Text>
+                        </TouchableOpacity>
+                      )}
+                    </View>
+                  )}
+                </View>
+                {errors.dateTime ? (
+                  <Text style={styles.errorMessage}>{errors.dateTime}</Text>
+                ) : null}
+
+                <TextInput
+                  style={[
+                    styles.input,
+                    { height: 150, textAlignVertical: "top" },
+                  ]}
+                  placeholder="Description"
+                  placeholderTextColor={COLORS.primary}
+                  multiline
+                  numberOfLines={4}
+                  value={event.description}
+                  onChangeText={(text) => {
+                    handleInputChange("description", text);
+                    setErrors({ ...errors, ["description"]: "" });
                   }}
                 />
-              )}
-              {!isCustomAddress &&
-                filteredSpots.length < 1 &&
-                event.colonyName !== "" && (
-                  <Text style={styles.errorMessage}>
-                    <Text>No spots found in colony </Text>
-                    <Text style={{ textDecorationLine: "underline" }}>
-                      {event.colonyName}
-                    </Text>
-                    <Text>. Please create a spot or use a custom address.</Text>
-                  </Text>
-                )}
-              {!isCustomAddress && errors.spotName ? (
-                <Text style={styles.errorMessage}>{errors.spotName}</Text>
-              ) : null}
-              {isCustomAddress && errors.address ? (
-                <Text style={styles.errorMessage}>{errors.address}</Text>
-              ) : null}
+                {errors.description ? (
+                  <Text style={styles.errorMessage}>{errors.description}</Text>
+                ) : null}
+              </View>
 
-              <TextInput
-                style={[
-                  styles.input,
-                  { height: 200, textAlignVertical: "top" },
-                ]}
-                placeholder="Description"
-                placeholderTextColor={COLORS.primary}
-                multiline
-                numberOfLines={4}
-                value={event.description}
-                onChangeText={(text) => {
-                  handleInputChange("description", text);
-                  setErrors({ ...errors, ["description"]: "" });
-                }}
-              />
-              {errors.description ? (
-                <Text style={styles.errorMessage}>{errors.description}</Text>
-              ) : null}
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                  style={styles.buttonNormal}
+                  onPress={() => {
+                    hideModal();
+                    resetEventState();
+                    setTimeout(() => {
+                      showModal("social");
+                    }, 500);
+                    // showModal("social");
+                    console.log("Event Canceled");
+                  }}
+                >
+                  <Text style={styles.buttonText}>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.buttonNormal}
+                  onPress={handleCreateEvent}
+                >
+                  <Text style={styles.buttonText}>Create</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                style={styles.buttonNormal}
-                onPress={() => {
-                  hideModal();
-                  resetEventState();
-                  setTimeout(() => {
-                    showModal("social");
-                  }, 500);
-                  // showModal("social");
-                  console.log("Event Canceled");
-                }}
-              >
-                <Text style={styles.buttonText}>Cancel</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.buttonNormal}
-                onPress={handleCreateEvent}
-              >
-                <Text style={styles.buttonText}>Create</Text>
-              </TouchableOpacity>
-            </View>
-          </ScrollView>
+          </TouchableWithoutFeedback>
         </View>
       </KeyboardAvoidingView>
     </Modal>
@@ -472,8 +508,9 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
     padding: 20,
-    alignItems: "center",
-    height: "80%",
+    // alignItems: "center",
+    height: "100%",
+    width: "100%",
   },
   modalTitle: {
     fontSize: 40,
@@ -489,14 +526,30 @@ const styles = StyleSheet.create({
   },
   buttonNormal: {
     borderRadius: 30,
-    width: 160,
-    borderWidth: 2,
-    borderColor: COLORS.darkersecondary,
+    width: "45%",
     marginVertical: 10,
+    alignItems: "center",
+    backgroundColor: COLORS.primary,
+  },
+  buttonDateTime: {
+    borderRadius: 10,
+    width: "45%",
+    borderWidth: 2,
+    marginVertical: 10,
+    borderColor: COLORS.darkersecondary,
     alignItems: "center",
   },
   buttonText: {
     fontSize: 20,
+    color: COLORS.secondary,
+    textAlign: "center",
+    fontWeight: "bold",
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    alignSelf: "center",
+  },
+  buttonDateTimeText: {
+    fontSize: 16,
     color: COLORS.primary,
     textAlign: "center",
     fontWeight: "bold",
@@ -506,14 +559,16 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: "row",
-    display: "flex",
-    alignContent: "space-around",
+    alignContent: "center",
+    marginTop: 5,
   },
   backButton: {
     height: 50,
     width: 50,
-    position: "absolute",
-    left: -60,
+    // position: "absolute",
+    // left: -60,
+    marginRight: 15,
+    marginTop: 2,
     tintColor: COLORS.primary,
   },
   inputContainer: {
@@ -585,6 +640,17 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.5,
     shadowRadius: 10,
+  },
+  bar: {
+    justifyContent: "center",
+    alignSelf: "center",
+    marginTop: 10,
+    width: "80%",
+    marginBottom: 10,
+  },
+  findLocationContainer: {
+    flexDirection: "row",
+    alignContent: "center",
   },
 });
 

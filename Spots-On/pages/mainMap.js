@@ -28,6 +28,7 @@ import { isPointWithinRadius } from "geolib";
 import StatusModal from "../components/statusModal";
 import users from "../components/users";
 import EditSpot from "../components/editSpot";
+import EventInfo from "../components/eventInfo";
 
 export default function MainMap({ navigation }) {
   // Manage the location of the map
@@ -74,6 +75,17 @@ export default function MainMap({ navigation }) {
     safe: "",
     colonyName: "",
     radius: 250,
+  });
+
+  const [currentEvent, setCurrentEvent] = useState({
+    name: "",
+    colonyName: "",
+    date: new Date(),
+    time: "",
+    address: "",
+    coordinate: {},
+    description: "",
+    spotName: "",
   });
 
   const logUser = () => {
@@ -342,6 +354,7 @@ export default function MainMap({ navigation }) {
     chat: false,
     status: false,
     editSpot: false,
+    eventInfo: false,
   });
 
   // Function to show a specific modal
@@ -644,8 +657,15 @@ export default function MainMap({ navigation }) {
               showModal={showModal}
               eventsToday={eventsToday}
               eventsUpcoming={eventsUpcoming}
+              currentEvent={currentEvent}
+              setCurrentEvent={setCurrentEvent}
             />
-
+            <EventInfo
+              isModalVisible={modals.eventInfo}
+              hideModal={() => hideModal("eventInfo")}
+              showModal={showModal}
+              event={currentEvent}
+            />
             <CreateEventModal
               isModalVisible={modals.createEvent}
               hideModal={() => hideModal("createEvent")}

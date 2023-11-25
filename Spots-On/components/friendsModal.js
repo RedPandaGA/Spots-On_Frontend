@@ -6,16 +6,16 @@ import {
   TouchableOpacity,
   FlatList,
   Image,
-  TextInput
+  TextInput,
 } from "react-native";
 import Modal from "react-native-modal";
-import { LayoutAnimation, UIManager } from 'react-native';
+import { LayoutAnimation, UIManager } from "react-native";
 import ColonySliderModal from "../components/colonySliderModal";
 import SearchBarModal from "../components/searchBarModal";
 import COLORS from "./colors";
 import { AntDesign } from "@expo/vector-icons";
 
-if (Platform.OS === 'android') {
+if (Platform.OS === "android") {
   if (UIManager.setLayoutAnimationEnabledExperimental) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
   }
@@ -169,7 +169,7 @@ const FriendsModal = ({ isModalVisible, hideModal, navigation }) => {
                   size={40}
                   color={COLORS.secondary}
                 />
-                </View>
+              </View>
             ) : (
               <TouchableOpacity
                 style={styles.addFriendButton}
@@ -272,7 +272,7 @@ const styles = StyleSheet.create({
   addFriendImageInput: {
     marginLeft: 30,
     marginTop: 12.25,
-    position: 'absolute'
+    position: "absolute",
   },
   addFriendText: {
     color: COLORS.secondary,
@@ -291,7 +291,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     fontSize: 18,
     color: COLORS.secondary,
-    fontWeight: 'bold'
+    fontWeight: "bold",
   },
 });
 

@@ -33,7 +33,7 @@ const Spot = ({
         onDrag={onDrag}
         onDragEnd={onDragEnd}
         onPress={() => {
-          if (!isEditSpotVisible) setCurrentSpot(chosenSpot);
+          if (setCurrentSpot) setCurrentSpot(chosenSpot);
         }}
       >
         <Image
@@ -43,7 +43,7 @@ const Spot = ({
         <Callout
           style={styles.callout}
           onPress={() => {
-            if (!isEditSpotVisible) showModal("editSpot");
+            if (showModal) showModal("editSpot");
             console.log("Clicked description/spot info");
             console.log("Chosen spot:", chosenSpot);
           }}
