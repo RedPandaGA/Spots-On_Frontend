@@ -17,22 +17,27 @@ const ChatModal = ({ isModalVisible, hideModal, navigation }) => {
     {
       name: "Bestiesss",
       memberCount: 3,
+      code: 'B3STIES'
     },
     {
       name: "Volleyball squad",
       memberCount: 4,
+      code: 'VB4LL'
     },
     {
       name: "OOD group",
       memberCount: 5,
+      code: '00DGR0UP'
     },
     {
       name: "CSC 3102",
       memberCount: 20,
+      code: 'ABC123'
     },
     {
       name: "SASE people",
       memberCount: 28,
+      code: 'S4SEPPL'
     },
   ];
 
@@ -46,7 +51,7 @@ const ChatModal = ({ isModalVisible, hideModal, navigation }) => {
       onPress={() => {
         setIsClickingChat(true);
         hideModal();
-        navigation.navigate("ColonyChat");
+        navigation.navigate("ColonyChat", {item});
       }}
     >
       <View style={styles.chatItem}>

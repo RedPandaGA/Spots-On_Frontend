@@ -11,6 +11,7 @@ import { GiftedChat, Bubble, Day, Time } from "react-native-gifted-chat";
 import COLORS from "../components/colors";
 import ThreeDotsModal from "../components/threeDotsModal.js";
 import ColonyChatList from "../components/colonyChatList.js";
+import { useRoute } from '@react-navigation/native';
 
 const renderBubble = (props) => (
   <Bubble
@@ -57,6 +58,9 @@ export default function ColonyChat({ navigation }) {
   const [isThreeDotsVisible, setIsThreeDotsVisible] = useState(false);
   const [isChatListVisible, setIsChatListVisible] = useState(false);
 
+  const route = useRoute();
+  const { item } = route.params;
+
   const onSend = () => {
     if (inputText.trim() === "") {
       return;
@@ -95,7 +99,7 @@ export default function ColonyChat({ navigation }) {
     <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={toggleChatList}>
-          <Text style={styles.title}>ColonyName</Text>
+          <Text style={styles.title}>{item.name}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
