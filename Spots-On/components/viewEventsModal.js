@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
-  Modal,
+  // Modal,
   Dimensions,
   StyleSheet,
   View,
@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import Bar from "./bar";
 import COLORS from "./colors";
+import Modal from "react-native-modal";
 
 const ViewEventsModal = ({
   isModalVisible,
@@ -20,127 +21,121 @@ const ViewEventsModal = ({
   showModal,
   eventsToday,
   eventsUpcoming,
+  currentEvent,
+  setCurrentEvent,
 }) => {
   const [isTodayPressed, setIsTodayPressed] = useState(true);
   const [isUpcomingPressed, setIsUpcomingPressed] = useState(false);
 
-  const screenHeight = Dimensions.get("window").height;
-  const percentageThreshold = 0.6; // Adjust the percentage as needed
+  // useEffect with currentEvent as a dependency
+  useEffect(() => {
+    // This code block will run whenever currentEvent changes
+    console.log("Current event has been updated:", currentEvent);
 
-  const panResponder = PanResponder.create({
-    onStartShouldSetPanResponder: (e, gestureState) => {
-      // Calculate the threshold based on a percentage of the screen height
-      const threshold = screenHeight * percentageThreshold;
-      return e.nativeEvent.pageY < threshold;
-    },
-    onPanResponderMove: (event, gestureState) => {
-      if (gestureState.dy > 0) {
-        if (gestureState.dy < screenHeight * percentageThreshold) {
-          modalPosition.setValue(gestureState.dy);
-        }
-      }
-    },
-    onPanResponderRelease: (event, gestureState) => {
-      if (gestureState.dy > 200) {
-        hideModal();
-      } else {
-        modalPosition.setValue(0);
-      }
-    },
-  });
-
-  const modalPosition = new Animated.Value(0);
+    // Add any other logic or actions you want to perform after state update
+  }, [currentEvent]); // Specify currentEvent as a dependency
 
   const renderItem = ({ item }) => (
     <View style={styles.eventItem}>
-      <View styles={styles.infoContainer}>
-        <Image
-          style={styles.eventImage}
-          source={require("../assets/marker.png")}
-        />
-        <Text style={styles.eventTitle}>{item.name}</Text>
-      </View>
-      <Text style={styles.eventLocation}>
-        {item.address} @ {item.time}
-      </Text>
+      <TouchableOpacity
+        onPress={() => {
+          setCurrentEvent(item);
+          hideModal();
+          setTimeout(() => {
+            showModal("eventInfo");
+          }, 500);
+          // showModal("eventInfo");
+          console.log("Current event:", currentEvent);
+        }}
+      >
+        <View styles={styles.infoContainer}>
+          <Image
+            style={styles.eventImage}
+            source={require("../assets/marker.png")}
+          />
+          <Text style={styles.eventTitle}>{item.name}</Text>
+        </View>
+        <Text style={styles.eventLocation}>
+          {item.address} @ {item.time}
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 
   return (
     <Modal
-      animationType="slide"
-      transparent
-      visible={isModalVisible}
-      onRequestClose={hideModal}
+      animationIn="slideInUp"
+      animationOut="slideOutDown"
+      isVisible={isModalVisible}
+      onBackdropPress={hideModal}
+      onSwipeComplete={hideModal}
+      swipeDirection="down"
+      propagateSwipe
+      style={styles.modalContainer}
+      backdropOpacity={0}
     >
-      <View style={styles.modalContainer} {...panResponder.panHandlers}>
-        <Animated.View
-          style={[
-            styles.modalContent,
-            { transform: [{ translateY: modalPosition }] },
-          ]}
-        >
-          <Bar color={COLORS.primary} />
-          <View style={styles.header}>
-            <TouchableOpacity
-              onPress={() => {
-                hideModal();
+      <View style={[styles.modalContent, styles.shadow]}>
+        <Bar color={COLORS.primary} />
+        <View style={styles.header}>
+          <TouchableOpacity
+            onPress={() => {
+              hideModal();
+              setTimeout(() => {
                 showModal("social");
-                console.log("Pressed back button to social");
-              }}
-            >
-              <Image
-                source={require("../assets/backButton.png")}
-                style={styles.backButton}
-              />
-            </TouchableOpacity>
-            <Text style={styles.modalTitle}>Events</Text>
-          </View>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={
-                isTodayPressed ? styles.buttonPressed : styles.buttonNormal
-              }
-              onPress={() => {
-                setIsTodayPressed(true);
-                setIsUpcomingPressed(false);
-                console.log("Pressed Today");
-              }}
-            >
-              <Text style={styles.buttonText}>Today</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={
-                isUpcomingPressed ? styles.buttonPressed : styles.buttonNormal
-              }
-              onPress={() => {
-                setIsTodayPressed(false);
-                setIsUpcomingPressed(true);
-                console.log("Pressed Upcoming");
-              }}
-            >
-              <Text style={styles.buttonText}>Upcoming</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={{ flex: 1, width: "100%" }}>
-            {isTodayPressed && (
-              <FlatList
-                data={eventsToday}
-                renderItem={renderItem}
-                keyExtractor={(item, index) => index.toString()}
-                // showsVerticalScrollIndicator={false}
-              />
-            )}
-            {isUpcomingPressed && (
-              <FlatList
-                data={eventsUpcoming}
-                renderItem={renderItem}
-                keyExtractor={(item, index) => index.toString()}
-                // showsVerticalScrollIndicator={false}
-              />
-            )}
-          </View>
-        </Animated.View>
+              }, 500);
+              // showModal("social");
+              console.log("Pressed back button to social");
+            }}
+          >
+            <Image
+              source={require("../assets/backButton.png")}
+              style={styles.backButton}
+            />
+          </TouchableOpacity>
+          <Text style={styles.modalTitle}>Events</Text>
+        </View>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={isTodayPressed ? styles.buttonPressed : styles.buttonNormal}
+            onPress={() => {
+              setIsTodayPressed(true);
+              setIsUpcomingPressed(false);
+              console.log("Pressed Today");
+            }}
+          >
+            <Text style={styles.buttonText}>Today</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={
+              isUpcomingPressed ? styles.buttonPressed : styles.buttonNormal
+            }
+            onPress={() => {
+              setIsTodayPressed(false);
+              setIsUpcomingPressed(true);
+              console.log("Pressed Upcoming");
+            }}
+          >
+            <Text style={styles.buttonText}>Upcoming</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={{ flex: 1, width: "100%" }}>
+          {isTodayPressed && (
+            <FlatList
+              data={eventsToday}
+              renderItem={renderItem}
+              keyExtractor={(item, index) => index.toString()}
+              // showsVerticalScrollIndicator={false}
+            />
+          )}
+          {isUpcomingPressed && (
+            <FlatList
+              data={eventsUpcoming}
+              renderItem={renderItem}
+              keyExtractor={(item, index) => index.toString()}
+              // showsVerticalScrollIndicator={false}
+            />
+          )}
+        </View>
       </View>
     </Modal>
   );
@@ -148,16 +143,15 @@ const ViewEventsModal = ({
 
 const styles = StyleSheet.create({
   modalContainer: {
-    flex: 1,
     justifyContent: "flex-end",
-    backgroundColor: "transparent",
+    margin: 0,
   },
   modalContent: {
     backgroundColor: COLORS.secondary,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
     padding: 20,
-    height: "60%",
+    height: "90%",
     alignItems: "center",
   },
   modalTitle: {
@@ -235,6 +229,14 @@ const styles = StyleSheet.create({
     width: 40,
     position: "absolute",
     left: -50,
+    tintColor: COLORS.red,
+  },
+  shadow: {
+    elevation: 20,
+    shadowColor: COLORS.black,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.5,
+    shadowRadius: 10,
   },
 });
 

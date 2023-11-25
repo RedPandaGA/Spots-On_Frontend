@@ -1,20 +1,16 @@
 import React, { useState } from "react";
 import {
-  Modal,
-  Dimensions,
   StyleSheet,
   View,
   Text,
   Image,
-  Animated,
-  PanResponder,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   TextInput,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  TouchableWithoutFeedback,
 } from "react-native";
 import Bar from "./bar";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -22,6 +18,8 @@ import COLORS from "./colors";
 import * as Location from "expo-location";
 import { Dropdown } from "react-native-element-dropdown";
 import CheckBox from "expo-checkbox";
+import Modal from "react-native-modal";
+import GooglePlacesInput from "./googlePlacesInput";
 
 const CreateEventModal = ({
   isModalVisible,
@@ -51,6 +49,17 @@ const CreateEventModal = ({
     spotName: "",
     description: "",
   });
+
+  const resetErrors = () => {
+    setErrors({
+      name: "",
+      colonyName: "",
+      dateTime: "",
+      address: "",
+      spotName: "",
+      description: "",
+    });
+  };
 
   const validateForm = () => {
     const newErrors = {
@@ -102,6 +111,23 @@ const CreateEventModal = ({
     spotName: "",
   });
 
+  const resetEventState = () => {
+    const reset = {
+      name: "",
+      colonyName: "",
+      date: new Date(),
+      time: "",
+      address: "",
+      coordinate: {},
+      description: "",
+      spotName: "",
+    };
+    setEvent(reset);
+    setDateText("Date");
+    setTimeText("Time");
+    resetErrors();
+  };
+
   const handleCreateEvent = () => {
     const isValid = validateForm();
     // console.log(errors);
@@ -138,7 +164,11 @@ const CreateEventModal = ({
       // console.log(event);
       // console.log(newEvents);
 
+      resetEventState();
       hideModal();
+      setTimeout(() => {
+        showModal("viewEvents");
+      }, 500);
       console.log("Event Created", event);
     }
   };
@@ -205,129 +235,63 @@ const CreateEventModal = ({
     setErrors({ ...errors, ["colonyName"]: "" });
   };
 
-  const screenHeight = Dimensions.get("window").height;
-  const percentageThreshold = 0.3; // Adjust the percentage as needed
-
-  const panResponder = PanResponder.create({
-    onStartShouldSetPanResponder: (e, gestureState) => {
-      // Calculate the threshold based on a percentage of the screen height
-      // const threshold = screenHeight * percentageThreshold;
-      // return e.nativeEvent.pageY > threshold && e.nativeEvent.pageY < screenHeight * (percentageThreshold + .1);
-      return true;
-    },
-    onPanResponderMove: (event, gestureState) => {
-      if (gestureState.dy > 0) {
-        if (gestureState.dy < screenHeight * percentageThreshold) {
-          modalPosition.setValue(gestureState.dy);
-        }
-      }
-    },
-    onPanResponderRelease: (event, gestureState) => {
-      if (gestureState.dy > 200) {
-        hideModal();
-      } else {
-        modalPosition.setValue(0);
-      }
-    },
-  });
-
-  const modalPosition = new Animated.Value(0);
-
   const handleInputChange = (key, value) => {
     setEvent((prevEvent) => {
       const updatedEvent = { ...prevEvent, [key]: value };
       console.log("Updated Event:", updatedEvent);
       return updatedEvent;
     });
+    if (key === "address") {
+      setErrors({ ...errors, ["address"]: "" });
+    }
   };
 
   return (
     <Modal
-      animationType="slide"
-      transparent
+      animationIn="slideInUp"
+      animationOut="slideOutDown"
       visible={isModalVisible}
-      onRequestClose={hideModal}
+      onBackdropPress={hideModal}
+      onSwipeComplete={hideModal}
+      swipeDirection="down"
+      backdropOpacity={0}
+      propagateSwipe
+      style={styles.modalContainer}
     >
       <KeyboardAvoidingView
-        style={{ flex: 1 }}
+        style={styles.modalContainer}
         behavior={Platform.OS === "ios" ? "padding" : "height"} // Adjust this as needed
       >
-        <View style={styles.modalContainer} {...panResponder.panHandlers}>
-          <Animated.View
-            style={[
-              styles.modalContent,
-              { transform: [{ translateY: modalPosition }] },
-            ]}
+        <View style={[styles.modalContent, styles.shadow]}>
+          <Bar style={styles.bar} color={COLORS.primary} />
+          <TouchableWithoutFeedback
+            touchSoundDisabled
+            onPress={() => Keyboard.dismiss()}
           >
-            <Bar color={COLORS.primary} />
-            <View style={styles.header}>
-              <TouchableOpacity
-                onPress={() => {
-                  hideModal();
-                  showModal("social");
-                  console.log("Pressed back button to social");
-
-                  // CREATE EVENT AND UDPDATE DATABASE WITH ALL THE INFO RECEIVED FROM THIS MODAL
-                  // DATE, TIME, ASSOCIATED COLONY NAME, LOCATION, DESCRIPTION, ETC.
-                }}
-              >
-                <Image
-                  source={require("../assets/backButton.png")}
-                  style={styles.backButton}
-                />
-              </TouchableOpacity>
-              <Text style={styles.modalTitle}>Create Event</Text>
-            </View>
-            <ScrollView style={{ width: "100%" }}>
-              <View style={styles.buttonContainer}>
+            <View style={{ flex: 1 }}>
+              <View style={styles.header}>
                 <TouchableOpacity
-                  style={styles.buttonNormal}
                   onPress={() => {
-                    showMode("date");
-                    console.log("Pressed Date");
+                    hideModal();
+                    resetEventState();
+                    setTimeout(() => {
+                      showModal("social");
+                    }, 500);
+                    // showModal("social");
+                    console.log("Pressed back button to social");
+
+                    // CREATE EVENT AND UDPDATE DATABASE WITH ALL THE INFO RECEIVED FROM THIS MODAL
+                    // DATE, TIME, ASSOCIATED COLONY NAME, LOCATION, DESCRIPTION, ETC.
                   }}
                 >
-                  <Text style={styles.buttonText}>{dateText}</Text>
+                  <Image
+                    source={require("../assets/backButton.png")}
+                    style={styles.backButton}
+                  />
                 </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={styles.buttonNormal}
-                  onPress={() => {
-                    showMode("time");
-                    console.log("Pressed Time");
-                  }}
-                >
-                  <Text style={styles.buttonText}>{timeText}</Text>
-                </TouchableOpacity>
+                <Text style={styles.modalTitle}>Create Event</Text>
               </View>
 
-              {show && (
-                <View>
-                  <DateTimePicker
-                    testId="dateTimePicker"
-                    value={event.date}
-                    mode={mode}
-                    is24Hour={false}
-                    display="spinner"
-                    textColor={COLORS.primary}
-                    onChange={onChange}
-                  />
-                  {Platform.OS === "ios" && (
-                    <TouchableOpacity
-                      style={styles.confirmButton}
-                      onPress={() => {
-                        setShow(false);
-                        setErrors({ ...errors, ["dateTime"]: "" });
-                      }}
-                    >
-                      <Text style={styles.confirmButtonText}>Confirm</Text>
-                    </TouchableOpacity>
-                  )}
-                </View>
-              )}
-              {errors.dateTime ? (
-                <Text style={styles.errorMessage}>{errors.dateTime}</Text>
-              ) : null}
               <View style={styles.inputContainer}>
                 <TextInput
                   style={styles.input}
@@ -372,18 +336,22 @@ const CreateEventModal = ({
                   <Text style={styles.checkboxLabel}>Use custom address?</Text>
                 </View>
                 {isCustomAddress ? (
-                  <TextInput
-                    style={styles.input}
-                    placeholder="Custom Address * "
-                    placeholderTextColor={COLORS.primary}
-                    value={event.address}
-                    onChangeText={(text) => {
-                      handleInputChange("address", text);
-                      setErrors({ ...errors, ["address"]: "" });
-                      // setErrors({ ...errors, ["spotName"]: "" });
-                      console.log(errors);
-                    }}
-                  />
+                  <View style={styles.findLocationContainer}>
+                    <GooglePlacesInput
+                      placeholderText="Custom Address *"
+                      placeholderTextColor={COLORS.primary}
+                      changeMapRegion={true}
+                      textInputStyle={[
+                        styles.input,
+                        {
+                          backgroundColor: "transparent",
+                          paddingHorizontal: 10,
+                          borderRadius: 10,
+                        },
+                      ]}
+                      handleInputChange={handleInputChange}
+                    />
+                  </View>
                 ) : (
                   <Dropdown
                     style={styles.input}
@@ -431,6 +399,55 @@ const CreateEventModal = ({
                   <Text style={styles.errorMessage}>{errors.address}</Text>
                 ) : null}
 
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity
+                    style={styles.buttonDateTime}
+                    onPress={() => {
+                      showMode("date");
+                      console.log("Pressed Date");
+                    }}
+                  >
+                    <Text style={styles.buttonDateTimeText}>{dateText}</Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    style={styles.buttonDateTime}
+                    onPress={() => {
+                      showMode("time");
+                      console.log("Pressed Time");
+                    }}
+                  >
+                    <Text style={styles.buttonDateTimeText}>{timeText}</Text>
+                  </TouchableOpacity>
+                  {show && (
+                    <View>
+                      <DateTimePicker
+                        testId="dateTimePicker"
+                        value={event.date}
+                        mode={mode}
+                        is24Hour={false}
+                        display="spinner"
+                        textColor={COLORS.primary}
+                        onChange={onChange}
+                      />
+                      {Platform.OS === "ios" && (
+                        <TouchableOpacity
+                          style={styles.confirmButton}
+                          onPress={() => {
+                            setShow(false);
+                            setErrors({ ...errors, ["dateTime"]: "" });
+                          }}
+                        >
+                          <Text style={styles.confirmButtonText}>Confirm</Text>
+                        </TouchableOpacity>
+                      )}
+                    </View>
+                  )}
+                </View>
+                {errors.dateTime ? (
+                  <Text style={styles.errorMessage}>{errors.dateTime}</Text>
+                ) : null}
+
                 <TextInput
                   style={[
                     styles.input,
@@ -450,12 +467,17 @@ const CreateEventModal = ({
                   <Text style={styles.errorMessage}>{errors.description}</Text>
                 ) : null}
               </View>
+
               <View style={styles.buttonContainer}>
                 <TouchableOpacity
                   style={styles.buttonNormal}
                   onPress={() => {
                     hideModal();
-                    setSocialModal(true);
+                    resetEventState();
+                    setTimeout(() => {
+                      showModal("social");
+                    }, 500);
+                    // showModal("social");
                     console.log("Event Canceled");
                   }}
                 >
@@ -468,8 +490,8 @@ const CreateEventModal = ({
                   <Text style={styles.buttonText}>Create</Text>
                 </TouchableOpacity>
               </View>
-            </ScrollView>
-          </Animated.View>
+            </View>
+          </TouchableWithoutFeedback>
         </View>
       </KeyboardAvoidingView>
     </Modal>
@@ -478,17 +500,17 @@ const CreateEventModal = ({
 
 const styles = StyleSheet.create({
   modalContainer: {
-    flex: 1,
     justifyContent: "flex-end",
-    backgroundColor: "transparent",
+    margin: 0,
   },
   modalContent: {
     backgroundColor: COLORS.secondary,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
     padding: 20,
-    height: 500,
-    alignItems: "center",
+    // alignItems: "center",
+    height: "100%",
+    width: "100%",
   },
   modalTitle: {
     fontSize: 40,
@@ -504,14 +526,30 @@ const styles = StyleSheet.create({
   },
   buttonNormal: {
     borderRadius: 30,
-    width: 160,
-    borderWidth: 2,
-    borderColor: COLORS.darkersecondary,
+    width: "45%",
     marginVertical: 10,
+    alignItems: "center",
+    backgroundColor: COLORS.primary,
+  },
+  buttonDateTime: {
+    borderRadius: 10,
+    width: "45%",
+    borderWidth: 2,
+    marginVertical: 10,
+    borderColor: COLORS.darkersecondary,
     alignItems: "center",
   },
   buttonText: {
     fontSize: 20,
+    color: COLORS.secondary,
+    textAlign: "center",
+    fontWeight: "bold",
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    alignSelf: "center",
+  },
+  buttonDateTimeText: {
+    fontSize: 16,
     color: COLORS.primary,
     textAlign: "center",
     fontWeight: "bold",
@@ -521,14 +559,16 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: "row",
-    display: "flex",
-    alignContent: "space-around",
+    alignContent: "center",
+    marginTop: 5,
   },
   backButton: {
     height: 50,
     width: 50,
-    position: "absolute",
-    left: -60,
+    // position: "absolute",
+    // left: -60,
+    marginRight: 15,
+    marginTop: 2,
     tintColor: COLORS.primary,
   },
   inputContainer: {
@@ -593,6 +633,24 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     marginLeft: 10,
     fontWeight: "bold",
+  },
+  shadow: {
+    elevation: 20,
+    shadowColor: COLORS.black,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.5,
+    shadowRadius: 10,
+  },
+  bar: {
+    justifyContent: "center",
+    alignSelf: "center",
+    marginTop: 10,
+    width: "80%",
+    marginBottom: 10,
+  },
+  findLocationContainer: {
+    flexDirection: "row",
+    alignContent: "center",
   },
 });
 

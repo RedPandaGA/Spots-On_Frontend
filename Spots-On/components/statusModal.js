@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     width: "45%",
     borderWidth: 1.5,
-    borderColor: "#ccc",
+    borderColor: COLORS.secondary,
     marginVertical: 10,
     alignItems: "center",
     backgroundColor: COLORS.secondary,

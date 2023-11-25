@@ -12,6 +12,7 @@ import {
 import Bar from "./bar";
 import COLORS from "./colors";
 import Modal from "react-native-modal";
+import { useRoute } from '@react-navigation/native';
 
 const ThreeDotsModal = ({ isModalVisible, hideModal }) => {
   const [isMute, setIsMute] = useState(false);
@@ -37,6 +38,9 @@ const ThreeDotsModal = ({ isModalVisible, hideModal }) => {
   //     keyboardDidHideListener.remove();
   //   };
   // }, []);
+
+  const route = useRoute();
+  const { item } = route.params;
 
   const toggleMute = () => {
     setIsMute((prevState) => !prevState);
@@ -84,7 +88,7 @@ const ThreeDotsModal = ({ isModalVisible, hideModal }) => {
             <Text style={styles.buttonText}>Leave</Text>
           </TouchableOpacity>
         </View>
-        <Text style={styles.code}>M1L4N1SC00L</Text>
+        <Text style={styles.code}>{item.code}</Text>
         <View style={{ width: "100%" }}>
           <TextInput
             style={styles.input}

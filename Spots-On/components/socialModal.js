@@ -1,16 +1,13 @@
 import React, { useState, useRef } from "react";
 import {
   KeyboardAvoidingView,
-  Modal,
   Image,
   TextInput,
-  Dimensions,
   StyleSheet,
   View,
   Text,
   TouchableOpacity,
-  Animated,
-  PanResponder,
+  Keyboard,
 } from "react-native";
 import Bar from "./bar";
 import COLORS from "./colors";
@@ -18,6 +15,7 @@ import Config from '../.config.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const papiUrl = Config.PAPI_URL;
+import Modal from "react-native-modal";
 
 const SocialModal = ({ isModalVisible, hideModal, showModal }) => {
   const [joinColonyCode, setJoinColonyCode] = useState("");
@@ -68,46 +66,13 @@ const SocialModal = ({ isModalVisible, hideModal, showModal }) => {
     setIsJoinColonyInputFocused(false);
   };
 
-  const screenHeight = Dimensions.get("window").height;
-  const percentageThreshold = 0.5; // Adjust the percentage as needed
-
-  const panResponder = PanResponder.create({
-    onStartShouldSetPanResponder: (e, gestureState) => {
-      // Calculate the threshold based on a percentage of the screen height
-      // const threshold = screenHeight * percentageThreshold;
-      // return e.nativeEvent.pageY > threshold && e.nativeEvent.pageY < screenHeight * (percentageThreshold + .1);
-      return true;
-    },
-    onPanResponderMove: (event, gestureState) => {
-      if (gestureState.dy > 0) {
-        if (gestureState.dy < screenHeight * percentageThreshold) {
-          modalPosition.setValue(gestureState.dy);
-        }
-      }
-    },
-    onPanResponderRelease: (event, gestureState) => {
-      if (gestureState.dy > 200) {
-        hideModal();
-      } else {
-        modalPosition.setValue(0);
-      }
-    },
-  });
-
-  const statusInputRef = useRef(null);
-
   const joinColonyInputRef = useRef(null);
 
   const handleUnfocus = () => {
-    if (statusInputRef.current) {
-      statusInputRef.current.blur();
-    }
     if (joinColonyInputRef.current) {
       joinColonyInputRef.current.blur();
     }
   };
-
-  const modalPosition = new Animated.Value(0);
 
   const buttonList = [
     // "Create a Spot",
@@ -127,21 +92,33 @@ const SocialModal = ({ isModalVisible, hideModal, showModal }) => {
       // Handle specific action for Button 4
     },
     () => {
+      handleUnfocus();
+      Keyboard.dismiss();
       hideModal();
-      showModal("createColony");
+      setTimeout(() => {
+        showModal("createColony");
+      }, 500);
       console.log("Create Colony clicked");
       // Handle specific action for Button 5
     },
     () => {
+      handleUnfocus();
+      Keyboard.dismiss();
       hideModal();
-      showModal("viewEvents");
+      setTimeout(() => {
+        showModal("viewEvents");
+      }, 500);
       console.log("View Events clicked");
       // Handle specific action for Button 2
       // You can customize this function for each button
     },
     () => {
+      handleUnfocus();
+      Keyboard.dismiss();
       hideModal();
-      showModal("createEvent");
+      setTimeout(() => {
+        showModal("createEvent");
+      }, 500);
       console.log("Create Event clicked");
       // Handle specific action for Button 3
     },
@@ -199,27 +176,28 @@ const SocialModal = ({ isModalVisible, hideModal, showModal }) => {
 
   return (
     <Modal
-      animationType="slide"
-      transparent
-      visible={isModalVisible}
-      onRequestClose={hideModal}
+      animationIn="slideInUp"
+      animationOut="slideOutDown"
+      isVisible={isModalVisible}
+      onBackdropPress={() => {
+        Keyboard.dismiss();
+        hideModal();
+      }}
+      onModalHide={handleUnfocus}
+      onSwipeComplete={hideModal}
+      swipeDirection="down"
+      style={styles.modalContainer}
+      backdropOpacity={0}
     >
       <KeyboardAvoidingView
-        style={{ flex: 1 }}
+        style={styles.modalContainer}
         behavior={Platform.OS === "ios" ? "padding" : "height"} // Adjust this as needed
       >
-        <View style={styles.modalContainer} {...panResponder.panHandlers}>
-          <Animated.View
-            style={[
-              styles.modalContent,
-              { transform: [{ translateY: modalPosition }] },
-            ]}
-          >
-            <Bar color={COLORS.primary} />
-            {buttonList.map((buttonText, index) =>
-              renderButton(buttonText, index)
-            )}
-          </Animated.View>
+        <View style={[styles.modalContent, styles.shadow]}>
+          <Bar color={COLORS.primary} />
+          {buttonList.map((buttonText, index) =>
+            renderButton(buttonText, index)
+          )}
         </View>
       </KeyboardAvoidingView>
     </Modal>
@@ -228,19 +206,16 @@ const SocialModal = ({ isModalVisible, hideModal, showModal }) => {
 
 const styles = StyleSheet.create({
   modalContainer: {
-    flex: 1,
     justifyContent: "flex-end",
-    backgroundColor: "transparent",
-    height: 400,
+    margin: 0,
   },
   modalContent: {
     backgroundColor: COLORS.secondary,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
     padding: 20,
-
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-end",
   },
   modalTitle: {
     fontSize: 18,
@@ -287,6 +262,13 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     tintColor: COLORS.primary,
+  },
+  shadow: {
+    elevation: 20,
+    shadowColor: COLORS.black,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.5,
+    shadowRadius: 10,
   },
 });
 

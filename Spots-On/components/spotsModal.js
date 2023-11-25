@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
-  // Modal,
   Switch,
   StyleSheet,
   View,
@@ -10,7 +9,6 @@ import {
   KeyboardAvoidingView,
   Image,
   FlatList,
-  Animated,
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
@@ -19,7 +17,7 @@ import Modal from "react-native-modal";
 import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import Bar from "./bar";
-import MapView, { Marker, Circle } from "react-native-maps";
+import MapView from "react-native-maps";
 import Slider from "@react-native-community/slider";
 import Spot from "./spot";
 import * as Location from "expo-location";
@@ -28,20 +26,19 @@ import Config from '../.config.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const apiUrl = Config.PAPI_URL;
+import GooglePlacesInput from "./googlePlacesInput";
 
 const CreateSpotModal = ({
   isModalVisible,
   hideModal,
-  // cancelCreateSpot,
-  // newSpot,
-  // setNewSpot,
-  // resetNewSpot,
   allSpots,
   setAllSpots,
   mapRegion,
   colonies,
+  showModal,
+  currentSpot,
+  setCurrentSpot,
 }) => {
-  // const [showAddSpot, setShowAddSpot] = useState(false);
   const [showSpotList, setShowSpotList] = useState(true);
   const [circleRadius, setCircleRadius] = useState(50);
   const [circleCenter, setCircleCenter] = useState({
@@ -114,25 +111,11 @@ const CreateSpotModal = ({
     });
   };
 
-  // const colonyList = colonies.map((colony, index) => [
-  //   {
-  //     label: colony.name,
-  //     value: index + 1,
-  //   },
-  // ]);
-  // console.log(colonyList);
-
   const [spotNameError, setSpotNameError] = useState(null);
   const [colonyNameError, setColonyNameError] = useState(null);
 
-  // // Animated values
-  // const spotListOpacity = new Animated.Value(1);
-  // const addSpotOpacity = new Animated.Value(0);
-  // const addSpotTranslateX = new Animated.Value(300);
-  // const spotListTranslateX = new Animated.Value(-300);
-
   const handleInputChange = (key, value) => {
-    setNewSpot({ ...newSpot, [key]: value });
+    setNewSpot((newSpot) => ({ ...newSpot, [key]: value }));
     // Clear the error when the user starts typing
     key === "name" && setSpotNameError(null);
     key === "colonyName" && setColonyNameError(null);
@@ -144,7 +127,6 @@ const CreateSpotModal = ({
       longitude: mapRegion.longitude,
     });
     setCircleRadius(50);
-    // setShowAddSpot(false);
     setShowSpotList(true);
     setSpotNameError(false);
     setColonyNameError(false);
@@ -174,62 +156,25 @@ const CreateSpotModal = ({
     }));
   };
 
-  // useEffect(() => {
-  //   // Animate the content switch
-  //   if (showAddSpot) {
-  //     // Spot list slides out to the left
-  //     Animated.timing(spotListTranslateX, {
-  //       toValue: -300,
-  //       duration: 500,
-  //       useNativeDriver: false,
-  //     }).start();
+  // Use a ref to store the previous currentSpot value
+  const prevCurrentSpotRef = useRef();
 
-  //     // Add spot form fades in and slides in from the right
-  //     Animated.parallel([
-  //       Animated.timing(addSpotOpacity, {
-  //         toValue: 1,
-  //         duration: 500,
-  //         useNativeDriver: false,
-  //       }),
-  //       Animated.spring(addSpotTranslateX, {
-  //         toValue: 0,
-  //         useNativeDriver: false,
-  //       }),
-  //     ]).start();
-  //   } else {
-  //     // Spot list slides in from the left
-  //     Animated.timing(spotListTranslateX, {
-  //       toValue: 0,
-  //       duration: 200,
-  //       useNativeDriver: false,
-  //     }).start();
+  useEffect(() => {
+    // Update the local state when currentSpot prop changes
+    if (currentSpot && currentSpot !== prevCurrentSpotRef.current) {
+      setNewSpot({
+        name: currentSpot.name,
+        colonyName: currentSpot.colonyName,
+        radius: currentSpot.radius,
+        coordinate: currentSpot.coordinate,
+        address: currentSpot.address,
+        safe: currentSpot.safe,
+      });
 
-  //     // Add spot form fades out and slides out to the right
-  //     Animated.parallel([
-  //       Animated.timing(addSpotOpacity, {
-  //         toValue: 0,
-  //         duration: 500,
-  //         useNativeDriver: false,
-  //       }),
-  //       Animated.spring(addSpotTranslateX, {
-  //         toValue: 300,
-  //         useNativeDriver: false,
-  //       }),
-  //     ]).start();
-  //   }
-  // }, [showAddSpot]);
-
-  // const renderSpotItem = ({ item }) => {
-  //   return (
-  //     <TouchableOpacity style={styles.addSpotButton}>
-  //       <Image
-  //         style={styles.spotListImage}
-  //         source={require("../assets/marker.png")}
-  //       />
-  //       <Text style={styles.addSpotText}>{item.name}</Text>
-  //     </TouchableOpacity>
-  //   );
-  // };
+      // Save the currentSpot to the ref for the next comparison
+      prevCurrentSpotRef.current = currentSpot;
+    }
+  }, [currentSpot]);
 
   const renderSpotItem = ({ item }) => {
     // Find the associated colony
@@ -241,7 +186,18 @@ const CreateSpotModal = ({
     if (associatedColony && associatedColony.selected) {
       return (
         <TouchableOpacity
-          onPress={() => console.log(item.coordinate)}
+          onPress={() => {
+            hideModal();
+            setCurrentSpot(item);
+
+            console.log("Current Spot:", currentSpot);
+            console.log("Item:", item);
+            setTimeout(() => {
+              showModal("editSpot");
+            }, 1000);
+            // showModal("editSpot");
+            // console.log(item.coordinate);
+          }}
           style={styles.addSpotButton}
         >
           <Image
@@ -269,6 +225,18 @@ const CreateSpotModal = ({
     Keyboard.dismiss();
   };
 
+  // useEffect(() => {
+  //   // geocode();
+  //   console.log(newSpot.coordinate);
+  //   setRegion({
+  //     latitude: newSpot.coordinate.latitude,
+  //     longitude: newSpot.coordinate.longitude,
+  //     latitudeDelta: 0.005,
+  //     longitudeDelta: 0.005,
+  //   });
+  //   Keyboard.dismiss();
+  // }, [newSpot.address]);
+
   const metersToFeet = (meters) => {
     // 1 meter is approximately 3.28084 feet
     const feetConversionFactor = 3.28084;
@@ -287,18 +255,12 @@ const CreateSpotModal = ({
       animationOut="slideOutDown"
       isVisible={isModalVisible}
       onBackdropPress={() => {
-        // setShowAddSpot(false);
         setShowSpotList(true);
         hideModal();
-        // cancelCreateSpot();
-        // resetNewSpot();
       }}
       onSwipeComplete={() => {
-        // setShowAddSpot(false);
         setShowSpotList(true);
         hideModal();
-        // cancelCreateSpot();
-        // resetNewSpot();
       }}
       swipeThreshold={200}
       swipeDirection={showSpotList ? "down" : null}
@@ -356,7 +318,7 @@ const CreateSpotModal = ({
                     }}
                   >
                     <Image
-                      source={require("../assets/back-button-secondary-color.png")}
+                      source={require("../assets/backButton.png")}
                       style={styles.backButton}
                     />
                   </TouchableOpacity>
@@ -374,18 +336,6 @@ const CreateSpotModal = ({
                     {spotNameError && (
                       <Text style={styles.errorMessage}>{spotNameError}</Text>
                     )}
-                    {/* <TextInput
-                      style={[
-                        styles.input,
-                        colonyNameError && styles.inputError,
-                      ]}
-                      placeholder="Colony Name *"
-                      placeholderTextColor={COLORS.secondary}
-                      value={newSpot.colonyName}
-                      onChangeText={(text) =>
-                        handleInputChange("colonyName", text)
-                      }
-                    /> */}
                     <Dropdown
                       style={styles.input}
                       placeholderStyle={styles.placeholderStyle}
@@ -410,13 +360,14 @@ const CreateSpotModal = ({
                         newSpot.colonyName = item.name;
                         setColonyNameError(null);
                         newSpot.colonyId = item.cid;
+                        handleInputChange("colonyName", item.name);
                       }}
                     />
                     {colonyNameError && (
                       <Text style={styles.errorMessage}>{colonyNameError}</Text>
                     )}
                     <View style={styles.findLocationContainer}>
-                      <TextInput
+                      {/* <TextInput
                         style={[styles.input, { width: "80%" }]}
                         placeholder="Find Address"
                         placeholderTextColor={COLORS.secondary}
@@ -430,7 +381,21 @@ const CreateSpotModal = ({
                         style={styles.findLocationButton}
                       >
                         <Text style={styles.findLocationText}>Find</Text>
-                      </TouchableOpacity>
+                      </TouchableOpacity> */}
+                      <GooglePlacesInput
+                        placeholderText="Find address on map"
+                        placeholderTextColor={COLORS.secondary}
+                        changeMapRegion={true}
+                        textInputStyle={[
+                          styles.input,
+                          {
+                            backgroundColor: "transparent",
+                            paddingHorizontal: 0,
+                            borderRadius: 0,
+                          },
+                        ]}
+                        handleInputChange={handleInputChange}
+                      />
                     </View>
                   </View>
                   <View style={styles.switchContainer}>
@@ -445,9 +410,17 @@ const CreateSpotModal = ({
                   </View>
                   <MapView
                     style={styles.map}
-                    region={region}
+                    region={
+                      newSpot.coordinate
+                        ? {
+                            latitude: newSpot.coordinate.latitude,
+                            longitude: newSpot.coordinate.longitude,
+                            latitudeDelta: 0.005,
+                            longitudeDelta: 0.005,
+                          }
+                        : mapRegion
+                    }
                     userInterfaceStyle="light"
-                    // onPress={handleMapPress}
                     onRegionChange={(newRegion) => {
                       setCircleCenter(newRegion);
                     }}
@@ -455,31 +428,6 @@ const CreateSpotModal = ({
                       setCircleCenter(newRegion);
                     }}
                   >
-                    {/* <View
-                      style={{
-                        position: "absolute",
-                        top: "50%",
-                        left: "50%",
-                      }}
-                    >
-                      <Marker coordinate={circleCenter}>
-                        <Image
-                          source={require("../assets/marker.png")}
-                          style={{ width: 30, height: 30 }}
-                        />
-                      </Marker>
-                      <Circle
-                        center={circleCenter}
-                        radius={circleRadius}
-                        strokeWidth={1}
-                        strokeColor={newSpot.safe ? "#2C6765" : "#FF5555"}
-                        fillColor={
-                          newSpot.safe
-                            ? "rgba(44, 103, 101, .3)"
-                            : "rgba(255, 85, 85, .3)"
-                        } // transparent versions of COLORS.primary/COLORS.active
-                      />
-                    </View> */}
                     <Spot
                       coordinate={circleCenter}
                       spotName={newSpot.name}
@@ -553,21 +501,15 @@ const CreateSpotModal = ({
 
 const styles = StyleSheet.create({
   modalContainer: {
-    // flex: 1,
     justifyContent: "flex-end",
-    // // alignItems: "center",
     margin: 0,
-    // backgroundColor: COLORS.primary,
-    // height: "50%",
   },
   modalContent: {
     backgroundColor: COLORS.primary,
     borderTopRightRadius: 50,
     borderTopLeftRadius: 50,
-    // padding: 20,
     height: "95%",
     width: "100%",
-    // alignItems: "center",
   },
   modalTitle: {
     fontSize: 40,
@@ -610,12 +552,11 @@ const styles = StyleSheet.create({
   buttonNormal: {
     borderRadius: 30,
     width: "45%",
-    borderWidth: 1.5,
-    borderColor: "#ccc",
     marginVertical: 10,
     alignItems: "center",
     backgroundColor: COLORS.secondary,
   },
+
   buttonText: {
     fontSize: 20,
     color: COLORS.primary,
@@ -634,6 +575,7 @@ const styles = StyleSheet.create({
     height: 50,
     marginHorizontal: 20,
     marginTop: 5,
+    tintColor: COLORS.secondary,
   },
   inputContainer: {
     width: "100%",
@@ -645,7 +587,6 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     marginBottom: 10,
     paddingBottom: 0,
-    // borderRadius: 10,
     color: COLORS.secondary,
     fontWeight: "bold",
     fontSize: 20,
@@ -682,6 +623,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     marginRight: 15,
+    tintColor: COLORS.red,
   },
   bar: {
     justifyContent: "center",
@@ -726,13 +668,9 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 18,
   },
-  // inputError: {
-  //   borderColor: "red",
-  // },
   errorMessage: {
     color: COLORS.active,
     fontSize: 14,
-    // marginTop: 5,
     marginLeft: 10,
     fontWeight: "bold",
   },

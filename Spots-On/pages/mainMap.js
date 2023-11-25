@@ -30,6 +30,7 @@ import Config from '../.config.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 // import users from "../components/users";
 import EditSpot from "../components/editSpot";
+import EventInfo from "../components/eventInfo";
 
 const papiUrl = Config.PAPI_URL;
 
@@ -69,6 +70,17 @@ export default function MainMap({ navigation }) {
     safe: "",
     colonyName: "",
     radius: 250,
+  });
+
+  const [currentEvent, setCurrentEvent] = useState({
+    name: "",
+    colonyName: "",
+    date: new Date(),
+    time: "",
+    address: "",
+    coordinate: {},
+    description: "",
+    spotName: "",
   });
 
   const logUser = () => {
@@ -534,6 +546,7 @@ export default function MainMap({ navigation }) {
     chat: false,
     status: false,
     editSpot: false,
+    eventInfo: false,
   });
 
   // Function to show a specific modal
@@ -842,43 +855,44 @@ export default function MainMap({ navigation }) {
                 />
               </View>
             </TouchableOpacity>
-            {modals.social && (
-              <SocialModal
-                isModalVisible={modals.social}
-                hideModal={() => hideModal("social")}
-                showModal={showModal}
-              />
-            )}
-            {modals.viewEvents && (
-              <ViewEventsModal
-                isModalVisible={modals.viewEvents}
-                hideModal={() => hideModal("viewEvents")}
-                showModal={showModal}
-                eventsToday={eventsToday}
-                eventsUpcoming={eventsUpcoming}
-              />
-            )}
-            {modals.createEvent && (
-              <CreateEventModal
-                isModalVisible={modals.createEvent}
-                hideModal={() => hideModal("createEvent")}
-                showModal={showModal}
-                colonies={colonies}
-                allSpots={spots}
-                eventsToday={eventsToday}
-                eventsUpcoming={eventsUpcoming}
-                setEventsToday={setEventsToday}
-                setEventsUpcoming={setEventsUpcoming}
-              />
-            )}
-            {modals.createColony && (
-              <CreateColonyModal
-                isModalVisible={modals.createColony}
-                hideModal={() => hideModal("createColony")}
-                showModal={showModal}
-                user={user}
-              />
-            )}
+            <SocialModal
+              isModalVisible={modals.social}
+              hideModal={() => hideModal("social")}
+              showModal={showModal}
+            />
+            <ViewEventsModal
+              isModalVisible={modals.viewEvents}
+              hideModal={() => hideModal("viewEvents")}
+              showModal={showModal}
+              eventsToday={eventsToday}
+              eventsUpcoming={eventsUpcoming}
+              currentEvent={currentEvent}
+              setCurrentEvent={setCurrentEvent}
+            />
+            <EventInfo
+              isModalVisible={modals.eventInfo}
+              hideModal={() => hideModal("eventInfo")}
+              showModal={showModal}
+              event={currentEvent}
+            />
+            <CreateEventModal
+              isModalVisible={modals.createEvent}
+              hideModal={() => hideModal("createEvent")}
+              showModal={showModal}
+              colonies={colonies}
+              allSpots={spots}
+              eventsToday={eventsToday}
+              eventsUpcoming={eventsUpcoming}
+              setEventsToday={setEventsToday}
+              setEventsUpcoming={setEventsUpcoming}
+            />
+
+            <CreateColonyModal
+              isModalVisible={modals.createColony}
+              hideModal={() => hideModal("createColony")}
+              showModal={showModal}
+              user={user}
+            />
             {/* Chats Button */}
             <MapButton
               imageSource={require("../assets/speech-bubble.png")}
@@ -991,21 +1005,22 @@ export default function MainMap({ navigation }) {
               width={45}
               height={45}
             />
-            {modals.spots && (
-              <CreateSpotModal
-                isModalVisible={modals.spots}
-                hideModal={() => hideModal("spots")}
-                allSpots={spots}
-                setAllSpots={setSpots}
-                mapRegion={{
-                  latitude: user.currentLocation.latitude,
-                  longitude: user.currentLocation.longitude,
-                  latitudeDelta: 0.005,
-                  longitudeDelta: 0.005,
-                }}
-                colonies={colonies}
-              />
-            )}
+            <CreateSpotModal
+              isModalVisible={modals.spots}
+              hideModal={() => hideModal("spots")}
+              allSpots={spots}
+              setAllSpots={setSpots}
+              mapRegion={{
+                latitude: user.currentLocation.latitude,
+                longitude: user.currentLocation.longitude,
+                latitudeDelta: 0.005,
+                longitudeDelta: 0.005,
+              }}
+              colonies={colonies}
+              showModal={showModal}
+              currentSpot={currentSpot}
+              setCurrentSpot={setCurrentSpot}
+            />
             {/* Settings Button */}
             <MapButton
               imageSource={require("../assets/setting.png")}

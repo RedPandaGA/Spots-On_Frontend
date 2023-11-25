@@ -1,16 +1,15 @@
 import React, { useState } from "react";
 import {
-  Modal,
-  Dimensions,
   StyleSheet,
   View,
   Text,
   Image,
   Animated,
-  PanResponder,
   TouchableOpacity,
   TextInput,
   KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import Bar from "./bar";
 import COLORS from "./colors";
@@ -18,6 +17,7 @@ import Config from '../.config.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const papiUrl = Config.PAPI_URL;
+import Modal from "react-native-modal";
 
 const CreateColonyModal = ({ isModalVisible, hideModal, showModal, user }) => {
   const [isPrivateColony, setIsPrivateColony] = useState(true);
@@ -25,8 +25,8 @@ const CreateColonyModal = ({ isModalVisible, hideModal, showModal, user }) => {
 
   const [colonyName, setColonyName] = useState("");
 
-  const screenHeight = Dimensions.get("window").height;
-  const percentageThreshold = 0.6; // Adjust the percentage as needed
+  // const screenHeight = Dimensions.get("window").height;
+  // const percentageThreshold = 0.6; // Adjust the percentage as needed
 
   const createColony = async () => {
     try {
@@ -63,54 +63,77 @@ const CreateColonyModal = ({ isModalVisible, hideModal, showModal, user }) => {
       }
   }
 
-  const panResponder = PanResponder.create({
-    onStartShouldSetPanResponder: (e, gestureState) => {
-      // Calculate the threshold based on a percentage of the screen height
-      const threshold = screenHeight * percentageThreshold;
-      return e.nativeEvent.pageY < threshold;
-    },
-    onPanResponderMove: (event, gestureState) => {
-      if (gestureState.dy > 0) {
-        if (gestureState.dy < screenHeight * percentageThreshold) {
-          modalPosition.setValue(gestureState.dy);
-        }
-      }
-    },
-    onPanResponderRelease: (event, gestureState) => {
-      if (gestureState.dy > 200) {
-        hideModal();
-      } else {
-        modalPosition.setValue(0);
-      }
-    },
-  });
+//   const panResponder = PanResponder.create({
+//     onStartShouldSetPanResponder: (e, gestureState) => {
+//       // Calculate the threshold based on a percentage of the screen height
+//       const threshold = screenHeight * percentageThreshold;
+//       return e.nativeEvent.pageY < threshold;
+//     },
+//     onPanResponderMove: (event, gestureState) => {
+//       if (gestureState.dy > 0) {
+//         if (gestureState.dy < screenHeight * percentageThreshold) {
+//           modalPosition.setValue(gestureState.dy);
+//         }
+//       }
+//     },
+//     onPanResponderRelease: (event, gestureState) => {
+//       if (gestureState.dy > 200) {
+//         hideModal();
+//       } else {
+//         modalPosition.setValue(0);
+//       }
+//     },
+//   });
+  // const panResponder = PanResponder.create({
+  //   onStartShouldSetPanResponder: (e, gestureState) => {
+  //     // Calculate the threshold based on a percentage of the screen height
+  //     const threshold = screenHeight * percentageThreshold;
+  //     return e.nativeEvent.pageY < threshold;
+  //   },
+  //   onPanResponderMove: (event, gestureState) => {
+  //     if (gestureState.dy > 0) {
+  //       if (gestureState.dy < screenHeight * percentageThreshold) {
+  //         modalPosition.setValue(gestureState.dy);
+  //       }
+  //     }
+  //   },
+  //   onPanResponderRelease: (event, gestureState) => {
+  //     if (gestureState.dy > 200) {
+  //       hideModal();
+  //     } else {
+  //       modalPosition.setValue(0);
+  //     }
+  //   },
+  // });
 
-  const modalPosition = new Animated.Value(0);
+  // const modalPosition = new Animated.Value(0);
 
   return (
     <Modal
-      animationType="slide"
-      transparent
-      visible={isModalVisible}
-      onRequestClose={hideModal}
+      animationIn="slideInUp"
+      animationOut="slideOutDown"
+      isVisible={isModalVisible}
+      onBackdropPress={hideModal}
+      onSwipeComplete={hideModal}
+      swipeDirection="down"
+      style={styles.modalContainer}
+      backdropOpacity={0}
     >
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === "ios" ? "padding" : "height"} // Adjust this as needed
-      >
-        <View style={styles.modalContainer} {...panResponder.panHandlers}>
-          <Animated.View
-            style={[
-              styles.modalContent,
-              { transform: [{ translateY: modalPosition }] },
-            ]}
-          >
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <KeyboardAvoidingView
+          style={styles.modalContainer}
+          behavior={Platform.OS === "ios" ? "padding" : "height"} // Adjust this as needed
+        >
+          <View style={[styles.modalContent, styles.shadow]}>
             <Bar color={COLORS.primary} />
             <View style={styles.header}>
               <TouchableOpacity
                 onPress={() => {
                   hideModal();
-                  showModal("social");
+                  setTimeout(() => {
+                    showModal("social");
+                  }, 500);
+                  // showModal("social");
                   console.log("Pressed back button to social");
 
                   // CREATE COLONY AND UPLOAD COLONY INFORMATION TO DATABASE
@@ -180,26 +203,27 @@ const CreateColonyModal = ({ isModalVisible, hideModal, showModal, user }) => {
             >
               <Text style={styles.buttonText}>Create Colony</Text>
             </TouchableOpacity>
-          </Animated.View>
-        </View>
-      </KeyboardAvoidingView>
+          </View>
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
     </Modal>
   );
 };
 
 const styles = StyleSheet.create({
   modalContainer: {
-    flex: 1,
     justifyContent: "flex-end",
-    backgroundColor: "transparent",
+    margin: 0,
   },
   modalContent: {
     backgroundColor: COLORS.secondary,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
-    padding: 20,
-    height: 400,
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 40,
     alignItems: "center",
+    justifyContent: "center",
   },
   modalTitle: {
     fontSize: 36,
@@ -266,6 +290,13 @@ const styles = StyleSheet.create({
   },
   disabledButton: {
     opacity: 0.5,
+  },
+  shadow: {
+    elevation: 20,
+    shadowColor: COLORS.black,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.5,
+    shadowRadius: 10,
   },
 });
 

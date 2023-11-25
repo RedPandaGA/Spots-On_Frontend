@@ -9,8 +9,8 @@ import {
   ScrollView,
 } from "react-native";
 import COLORS from "../components/colors";
-import ColonySliderModal from "../components/colonySliderModal";
-import Carousel from "react-native-snap-carousel";
+import Swiper from "react-native-swiper";
+import { Dropdown } from "react-native-element-dropdown";
 
 export default function Notifications({ navigation }) {
 
@@ -32,11 +32,11 @@ export default function Notifications({ navigation }) {
     },
   ];
 
-  const carouselRef = useRef(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-  const renderItem = ({ item }) => {
-    return (
-      <View style={styles.carouselItem}>
+  const renderCarouselItems = () => {
+    return carouselData.map((item, index) => (
+      <View style={styles.carouselItem} key={`carousel_item_${index}`}>
         <View style={styles.cardContainer}>
           <Image source={item.imagePath} style={styles.cardImage} />
           <View style={styles.textContent}>
@@ -45,8 +45,17 @@ export default function Notifications({ navigation }) {
           </View>
         </View>
       </View>
-    );
+    ));
   };
+
+  const [selectedColony, setSelectedColony] = useState(null);
+
+  const colonies = [
+    { name: "Colony A", value: "colonyA" },
+    { name: "Colony B", value: "colonyB" },
+    { name: "Colony C", value: "colonyC" },
+    // Add more colonies as needed
+  ];
 
   const statusList = ["friend1", "friend2", "friend3"];
 
@@ -134,8 +143,8 @@ export default function Notifications({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      <ScrollView>
+    <ScrollView>
+      <View style={styles.container}>
         <View style={styles.header}>
           <TouchableOpacity
             onPress={() => {
@@ -145,48 +154,64 @@ export default function Notifications({ navigation }) {
           >
             <View style={styles.backButton}>
               <Image
-                source={require("../assets/back-button-secondary-color.png")}
+                source={require("../assets/backButton.png")}
                 style={styles.image}
               />
             </View>
           </TouchableOpacity>
           <Text style={styles.title}>Notifications</Text>
         </View>
-        <View style={styles.carouselContainer}>
-          <Carousel
-            ref={carouselRef}
-            data={carouselData}
-            renderItem={renderItem}
-            sliderWidth={400}
-            itemWidth={370}
-            layout="default"
-            snapToAlignment="start"
-            snapToInterval={400}
+        <View style={[styles.carouselContainer, { height: 170 }]}>
+          <Swiper
+            loop={false}
+            index={currentIndex}
+            onIndexChanged={(index) => setCurrentIndex(index)}
+            dot={<View style={styles.dot} />}
+            activeDot={<View style={styles.activeDot} />}
+          >
+            {renderCarouselItems()}
+          </Swiper>
+        </View>
+        <View style={styles.inputContainer}>
+          <Dropdown
+            style={styles.dropdown}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.placeholderStyle}
+            itemTextStyle={styles.itemTextStyle}
+            iconStyle={styles.iconStyle}
+            data={colonies}
+            search={false}
+            maxHeight={300}
+            labelField="name"
+            valueField="value"
+            placeholder={selectedColony ? selectedColony.name : "Select Colony Name"}
+            onChange={(item) => {
+              setSelectedColony(item);
+            }}
           />
         </View>
-        <View style={styles.sliderContainer}>
-          <ColonySliderModal />
+        <View>
+          <Text style={styles.subtitle}>Status notifications</Text>
+          <View style={styles.settingsItems}>
+            {statusList.map((buttonText, index) =>
+              renderStatusToggleBox(buttonText, index)
+            )}
+          </View>
+          <Text style={styles.subtitle}>Location notifications</Text>
+          <View style={styles.settingsItems}>
+            {locationList.map((buttonText, index) =>
+              renderLocationToggleBox(buttonText, index)
+            )}
+          </View>
+          <Text style={styles.subtitle}>Spots notifications</Text>
+          <View style={[styles.settingsItems, { marginBottom: 20 }]}>
+            {spotsList.map((buttonText, index) =>
+              renderSpotsToggleBox(buttonText, index)
+            )}
+          </View>
         </View>
-        <Text style={styles.subtitle}>Status notifications</Text>
-        <View style={styles.settingsItems}>
-          {statusList.map((buttonText, index) =>
-            renderStatusToggleBox(buttonText, index)
-          )}
-        </View>
-        <Text style={styles.subtitle}>Location notifications</Text>
-        <View style={styles.settingsItems}>
-          {locationList.map((buttonText, index) =>
-            renderLocationToggleBox(buttonText, index)
-          )}
-        </View>
-        <Text style={styles.subtitle}>Spots notifications</Text>
-        <View style={[styles.settingsItems, { marginBottom: 20 }]}>
-          {spotsList.map((buttonText, index) =>
-            renderSpotsToggleBox(buttonText, index)
-          )}
-        </View>
-      </ScrollView>
-    </View>
+      </View>
+    </ScrollView>
   );
 }
 
@@ -229,7 +254,8 @@ const styles = StyleSheet.create({
     width: 50,
     position: "absolute",
     left: 20,
-    top: 3
+    top: 3,
+    tintColor: COLORS.secondary
   },
   settingsItems: {
     marginTop: 20,
@@ -262,9 +288,6 @@ const styles = StyleSheet.create({
   spotsNotifButton: {
     marginVertical: 10,
     padding: 10,
-  },
-  sliderContainer: {
-    width: "107%",
   },
   carouselContainer: {
     marginVertical: 25,
@@ -302,5 +325,45 @@ const styles = StyleSheet.create({
   textContent: {
     flex: 1, // Take the remaining space
     justifyContent: 'center',
+  },
+  inputContainer: {
+    width: "98%",
+    flex: 1,
+    marginTop: -40,
+    marginBottom: -10,
+    alignSelf: 'center',
+  },
+  dropdown: {
+    margin: 16,
+    height: 50,
+    borderColor: COLORS.secondary,
+    borderBottomWidth: 1,
+    padding: 10,
+  },
+  placeholderStyle: {
+    fontSize: 20,
+    marginLeft: -10,
+    color: COLORS.secondary,
+    fontWeight: "bold",
+  },
+  itemTextStyle: {
+    fontSize: 20,
+  },
+  iconStyle: {
+    tintColor: COLORS.secondary,
+  },
+  dot: {
+    backgroundColor: COLORS.lighterprimary,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginHorizontal: 4,
+  },
+  activeDot: {
+    backgroundColor: COLORS.secondary,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginHorizontal: 4,
   },
 });

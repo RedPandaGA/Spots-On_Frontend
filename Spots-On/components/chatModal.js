@@ -58,7 +58,7 @@ const ChatModal = ({ isModalVisible, hideModal, navigation, colonies}) => {
         <View styles={styles.infoContainer}>
           <Image
             style={styles.chatImage}
-            source={require("../assets/profile-user.png")}
+            source={require("../assets/groupprofile.png")}
           />
           <Text style={styles.chatName}>{item.name}</Text>
         </View>
