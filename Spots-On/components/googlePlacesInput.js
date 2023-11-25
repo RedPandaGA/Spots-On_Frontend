@@ -1,6 +1,6 @@
 import React from "react";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import { PLACES_API_KEY } from "@env";
+// import { PLACES_API_KEY } from "@env";
 import COLORS from "./colors";
 import { SafeAreaView } from "react-native";
 

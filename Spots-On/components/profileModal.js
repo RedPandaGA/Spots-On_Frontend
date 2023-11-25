@@ -10,9 +10,13 @@ import {
 import Bar from "./bar";
 import COLORS from "./colors";
 import Modal from "react-native-modal";
+import { useRoute } from '@react-navigation/native';
 
 const ProfileModal = ({ isModalVisible, hideModal }) => {
   // const modalPosition = -425;
+
+  const route = useRoute();
+  const { item } = route.params;
 
   return (
     <Modal
@@ -30,8 +34,8 @@ const ProfileModal = ({ isModalVisible, hideModal }) => {
           source={require("../assets/profilePicture.png")}
           style={styles.profilePicture}
         />
-        <Text style={styles.nameText}>Faris Khattak</Text>
-        <Text style={styles.statusText}>dont talk to me. studying</Text>
+        <Text style={styles.nameText}>{item.name}</Text>
+        <Text style={styles.statusText}>{item.status}</Text>
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={styles.button}
@@ -104,7 +108,7 @@ const styles = StyleSheet.create({
   },
   nameText: {
     color: COLORS.primary,
-    fontSize: 40,
+    fontSize: 35,
     textAlign: "center",
     fontWeight: "bold",
   },

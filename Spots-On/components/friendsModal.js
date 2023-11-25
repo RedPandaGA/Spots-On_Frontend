@@ -62,39 +62,39 @@ const FriendsModal = ({ isModalVisible, hideModal, navigation }) => {
     },
     {
       name: "Sacaen winds",
-      status: "working on OOD 2",
+      status: "playing Roblox",
     },
     {
       name: "bawmba",
-      status: "watching utube",
+      status: "at the gym",
     },
     {
       name: "anviii",
-      status: "chilling in PFT commons",
+      status: "hiii",
     },
     {
       name: "sycosyclopse",
-      status: "studyingggg",
+      status: "driving to laffy",
     },
     {
       name: "austin",
-      status: "volunteering at the hospital",
+      status: "go to the EDA meeting 2nite!",
     },
     {
       name: "kelli dinh",
-      status: "working on OOD 2",
+      status: "studying for physics",
     },
     {
       name: "Fred juley",
-      status: "watching utube",
+      status: "playing vball",
     },
     {
       name: "betsi cao",
-      status: "chilling in PFT commons",
+      status: "studying",
     },
     {
       name: "Rot Nguyen",
-      status: "studyingggg",
+      status: "studying",
     },
   ];
 
@@ -102,7 +102,7 @@ const FriendsModal = ({ isModalVisible, hideModal, navigation }) => {
     <TouchableOpacity
       onPress={() => {
         hideModal();
-        navigation.navigate("FriendChat");
+        navigation.navigate("FriendChat", { item });
       }}
     >
       <View style={styles.friendItem}>

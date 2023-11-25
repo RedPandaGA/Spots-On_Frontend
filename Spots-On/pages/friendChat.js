@@ -10,6 +10,7 @@ import {
 import { GiftedChat, Bubble, Day, Time } from "react-native-gifted-chat";
 import COLORS from "../components/colors.js";
 import ProfileModal from "../components/profileModal.js";
+import { useRoute } from '@react-navigation/native';
 
 const renderBubble = (props) => (
   <Bubble
@@ -57,6 +58,9 @@ export default function FriendChat({ navigation }) {
 
   const [isProfileVisible, setIsProfileVisible] = useState(false);
 
+  const route = useRoute();
+  const { item } = route.params;
+
   const onSend = () => {
     if (inputText.trim() === "") {
       return;
@@ -99,7 +103,7 @@ export default function FriendChat({ navigation }) {
           />
         </TouchableOpacity>
         <TouchableOpacity onPress={toggleProfile}>
-          <Text style={styles.title}>Faris Khattak</Text>
+          <Text style={styles.title}>{item.name}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
