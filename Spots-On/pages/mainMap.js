@@ -111,7 +111,7 @@ export default function MainMap({ navigation }) {
         }
     
         // Successfully updated user location
-        console.log('User location updated successfully ' + JSON.stringify(response));
+        //console.log('User location updated successfully ' + JSON.stringify(response));
       } catch (error) {
         console.error('Error:', error);
         // Handle other errors as needed
@@ -136,12 +136,41 @@ export default function MainMap({ navigation }) {
         }
     
         const data = await response.json();
-        console.log("DATAHERE: " + JSON.stringify(data));
-        // Assuming the API returns an array of JSONs
         data.forEach((colony) => {
             colony.selected = false;
+        })
+        console.log("DATAARG: " + JSON.stringify(data))
+        return data;
+    } catch (error) {
+        console.error('Error:', error);
+        // Handle other errors as needed
+        return [];
+    }
+  }
+
+  const getUsersSpotsInColony = async () => {
+    console.log("colonies: " + JSON.stringify(colonies));
+    selectedColony = findSelectedColony(colonies);
+    console.log("selectedColony: " + JSON.stringify(selectedColony));
+    try {
+        const authToken = await AsyncStorage.getItem('token');
+        const response = await fetch(`${papiUrl}/allSpotsByColony/${selectedColony.cid}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authToken}`
+          },
         });
-        console.log("DATAHERE2: " + JSON.stringify(data));
+    
+        if (!response.ok) {
+          // Handle error, e.g., display an error message
+          console.error('Error fetching user colonies:', response.status);
+          return [];
+        }
+    
+        const data = await response.json();
+        //console.log("SPOTDATAHERE: " + JSON.stringify(data));
+
         return data;
     } catch (error) {
         console.error('Error:', error);
@@ -181,6 +210,7 @@ export default function MainMap({ navigation }) {
       setCurrentRegion(initialRegion);
       updateUserLocation();
       setColonies(await getUserColonies());
+      displayAllSpots()
     };
 
     getLocation();
@@ -194,6 +224,7 @@ export default function MainMap({ navigation }) {
       console.log("Updated user's location!");
       updateUserLocation();
       setColonies(await getUserColonies());
+      displayAllSpots()
     }, 30000); // 30 seconds
 
     // Clean up the interval when the component is unmounted
@@ -272,9 +303,14 @@ export default function MainMap({ navigation }) {
   const findSelectedColony = (colonies) => {
     if(colonies.length > 0){
         console.log("inhere: "+ JSON.stringify(colonies));
-        return colonies.find((colony) => colony.selected);
+        selectedColony = colonies.find((colony) => colony.selected=true);
+        if(selectedColony != undefined){
+            return selectedColony
+        } else {
+            return {};
+        }    
     } else {
-        return [];
+        return {};
     }
   };
 
@@ -486,18 +522,17 @@ export default function MainMap({ navigation }) {
   //     />
   //   ));
   // };
+//   .filter((spot) => {
+    //     // Find the associated colony
+    //     // const associatedColony = colonies.find(
+    //     //   (colony) => colony.name === spot.colonyName
+    //     // );
 
+    //     // Display the spot only if the associated colony is selected
+    //     return associatedColony && associatedColony.selected;
+    //   })
   const displayAllSpots = () => {
     return spots
-      .filter((spot) => {
-        // Find the associated colony
-        // const associatedColony = colonies.find(
-        //   (colony) => colony.name === spot.colonyName
-        // );
-
-        // Display the spot only if the associated colony is selected
-        return associatedColony && associatedColony.selected;
-      })
       .map((spot) => (
         <Spot
           key={spot.id}
@@ -799,6 +834,7 @@ export default function MainMap({ navigation }) {
               style={styles.colonySlider}
               colonies={colonies}
               setColonies={setColonies}
+              getSpots={getUsersSpotsInColony}
               spots={spots}
               setSpots={setSpots}
             />

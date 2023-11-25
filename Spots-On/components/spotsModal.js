@@ -27,7 +27,7 @@ import { Dropdown } from "react-native-element-dropdown";
 import Config from '../.config.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const apiUrl = Config.API_URL;
+const apiUrl = Config.PAPI_URL;
 
 const CreateSpotModal = ({
   isModalVisible,
@@ -72,12 +72,12 @@ const CreateSpotModal = ({
     
         const spotData = {
           sname: newSpot.name,
-          location: newSpot.location,
+          location: newSpot.coordinate,
           danger: newSpot.safe,
           cid: newSpot.colonyId,
           radius: newSpot.radius,
         };
-    
+        console.log(spotData);
         const response = await fetch(`${apiUrl}/createSpot`, {
           method: 'POST',
           headers: {
@@ -100,6 +100,7 @@ const CreateSpotModal = ({
         // Handle other errors as needed
       }
   }
+
 
   const resetNewSpot = () => {
     setNewSpot({
@@ -406,10 +407,9 @@ const CreateSpotModal = ({
                         // const statusValue = item.value - 1;
                         // setUser({ ...user, statusCode: statusValue });
                         // console.log(statusIdentifiers[statusValue].label);
-                        console.log(item);
-                        handleInputChange("colonyName", item.name);
-                        handleInputChange("colonyId", item.cid);
-                        console.log(item);
+                        newSpot.colonyName = item.name;
+                        setColonyNameError(null);
+                        newSpot.colonyId = item.cid;
                       }}
                     />
                     {colonyNameError && (
@@ -526,10 +526,13 @@ const CreateSpotModal = ({
                                 radius: circleRadius,
                                 coordinate: circleCenter,
                             };
-                            setAllSpots([...allSpots, updatedSpot]);
+                            newSpot.coordinate = circleCenter;
+                            newSpot.radius = circleRadius;
+                            //setAllSpots([...allSpots, updatedSpot]);
                             // setShowAddSpot(false);
                             setShowSpotList(true);
                             // hideModal();
+                            createSpot();
                             console.log("Spot Created:\n", newSpot);
                             resetValues();
                         }
