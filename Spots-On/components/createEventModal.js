@@ -560,6 +560,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
     alignContent: "center",
+    marginTop: 5,
   },
   backButton: {
     height: 50,

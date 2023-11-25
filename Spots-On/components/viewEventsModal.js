@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   // Modal,
   Dimensions,
@@ -21,13 +21,33 @@ const ViewEventsModal = ({
   showModal,
   eventsToday,
   eventsUpcoming,
+  currentEvent,
+  setCurrentEvent,
 }) => {
   const [isTodayPressed, setIsTodayPressed] = useState(true);
   const [isUpcomingPressed, setIsUpcomingPressed] = useState(false);
 
+  // useEffect with currentEvent as a dependency
+  useEffect(() => {
+    // This code block will run whenever currentEvent changes
+    console.log("Current event has been updated:", currentEvent);
+
+    // Add any other logic or actions you want to perform after state update
+  }, [currentEvent]); // Specify currentEvent as a dependency
+
   const renderItem = ({ item }) => (
     <View style={styles.eventItem}>
-      <TouchableOpacity onPress={() => console.log(item)}>
+      <TouchableOpacity
+        onPress={() => {
+          setCurrentEvent(item);
+          hideModal();
+          setTimeout(() => {
+            showModal("eventInfo");
+          }, 500);
+          // showModal("eventInfo");
+          console.log("Current event:", currentEvent);
+        }}
+      >
         <View styles={styles.infoContainer}>
           <Image
             style={styles.eventImage}

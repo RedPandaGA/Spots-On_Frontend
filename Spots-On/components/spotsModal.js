@@ -45,7 +45,7 @@ const CreateSpotModal = ({
   const [newSpot, setNewSpot] = useState({
     name: "",
     colonyName: "",
-    radius: 250,
+    radius: 150,
     coordinate: {
       latitude: mapRegion.latitude,
       longitude: mapRegion.longitude,
@@ -60,7 +60,7 @@ const CreateSpotModal = ({
     setNewSpot({
       name: "",
       colonyName: "",
-      radius: 250,
+      radius: 150,
       coordinate: {
         latitude: mapRegion.latitude,
         longitude: mapRegion.longitude,
