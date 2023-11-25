@@ -39,6 +39,10 @@ const ThreeDotsModal = ({ isModalVisible, hideModal }) => {
   //   };
   // }, []);
 
+  useEffect(() =>{
+    console.log("item: " + JSON.stringify(item));
+  },[]);
+
   const route = useRoute();
   const { item } = route.params;
 
@@ -88,7 +92,7 @@ const ThreeDotsModal = ({ isModalVisible, hideModal }) => {
             <Text style={styles.buttonText}>Leave</Text>
           </TouchableOpacity>
         </View>
-        <Text style={styles.code}>{item.code}</Text>
+        <Text style={styles.code}>{item.invite}</Text>
         <View style={{ width: "100%" }}>
           <TextInput
             style={styles.input}
