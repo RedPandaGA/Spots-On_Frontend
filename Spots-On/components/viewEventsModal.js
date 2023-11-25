@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   // Modal,
   Dimensions,
@@ -21,13 +21,33 @@ const ViewEventsModal = ({
   showModal,
   eventsToday,
   eventsUpcoming,
+  currentEvent,
+  setCurrentEvent,
 }) => {
   const [isTodayPressed, setIsTodayPressed] = useState(true);
   const [isUpcomingPressed, setIsUpcomingPressed] = useState(false);
 
+  // useEffect with currentEvent as a dependency
+  useEffect(() => {
+    // This code block will run whenever currentEvent changes
+    console.log("Current event has been updated:", currentEvent);
+
+    // Add any other logic or actions you want to perform after state update
+  }, [currentEvent]); // Specify currentEvent as a dependency
+
   const renderItem = ({ item }) => (
     <View style={styles.eventItem}>
-      <TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          setCurrentEvent(item);
+          hideModal();
+          setTimeout(() => {
+            showModal("eventInfo");
+          }, 500);
+          // showModal("eventInfo");
+          console.log("Current event:", currentEvent);
+        }}
+      >
         <View styles={styles.infoContainer}>
           <Image
             style={styles.eventImage}
@@ -60,7 +80,6 @@ const ViewEventsModal = ({
           <TouchableOpacity
             onPress={() => {
               hideModal();
-              resetEventState();
               setTimeout(() => {
                 showModal("social");
               }, 500);
@@ -132,7 +151,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
     padding: 20,
-    height: "60%",
+    height: "90%",
     alignItems: "center",
   },
   modalTitle: {
@@ -218,7 +237,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.5,
     shadowRadius: 10,
-    // borderRadius: 50,
   },
 });
 

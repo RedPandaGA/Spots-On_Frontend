@@ -22,6 +22,7 @@ import Slider from "@react-native-community/slider";
 import Spot from "./spot";
 import * as Location from "expo-location";
 import { Dropdown } from "react-native-element-dropdown";
+import GooglePlacesInput from "./googlePlacesInput";
 
 const CreateSpotModal = ({
   isModalVisible,
@@ -44,8 +45,13 @@ const CreateSpotModal = ({
   const [newSpot, setNewSpot] = useState({
     name: "",
     colonyName: "",
-    radius: 250,
-    coordinate: {},
+    radius: 150,
+    coordinate: {
+      latitude: mapRegion.latitude,
+      longitude: mapRegion.longitude,
+      longitudeDelta: 0.005,
+      latitudeDelta: 0.005,
+    },
     address: "",
     safe: true,
   });
@@ -54,8 +60,11 @@ const CreateSpotModal = ({
     setNewSpot({
       name: "",
       colonyName: "",
-      radius: 250,
-      coordinate: {},
+      radius: 150,
+      coordinate: {
+        latitude: mapRegion.latitude,
+        longitude: mapRegion.longitude,
+      },
       address: "",
       safe: true,
     });
@@ -175,6 +184,18 @@ const CreateSpotModal = ({
     Keyboard.dismiss();
   };
 
+  // useEffect(() => {
+  //   // geocode();
+  //   console.log(newSpot.coordinate);
+  //   setRegion({
+  //     latitude: newSpot.coordinate.latitude,
+  //     longitude: newSpot.coordinate.longitude,
+  //     latitudeDelta: 0.005,
+  //     longitudeDelta: 0.005,
+  //   });
+  //   Keyboard.dismiss();
+  // }, [newSpot.address]);
+
   const metersToFeet = (meters) => {
     // 1 meter is approximately 3.28084 feet
     const feetConversionFactor = 3.28084;
@@ -192,7 +213,6 @@ const CreateSpotModal = ({
       animationIn="slideInUp"
       animationOut="slideOutDown"
       isVisible={isModalVisible}
-      // onModalHide={() => showModal("editSpot")}
       onBackdropPress={() => {
         setShowSpotList(true);
         hideModal();
@@ -300,7 +320,7 @@ const CreateSpotModal = ({
                       <Text style={styles.errorMessage}>{colonyNameError}</Text>
                     )}
                     <View style={styles.findLocationContainer}>
-                      <TextInput
+                      {/* <TextInput
                         style={[styles.input, { width: "80%" }]}
                         placeholder="Find Address"
                         placeholderTextColor={COLORS.secondary}
@@ -314,7 +334,21 @@ const CreateSpotModal = ({
                         style={styles.findLocationButton}
                       >
                         <Text style={styles.findLocationText}>Find</Text>
-                      </TouchableOpacity>
+                      </TouchableOpacity> */}
+                      <GooglePlacesInput
+                        placeholderText="Find address on map"
+                        placeholderTextColor={COLORS.secondary}
+                        changeMapRegion={true}
+                        textInputStyle={[
+                          styles.input,
+                          {
+                            backgroundColor: "transparent",
+                            paddingHorizontal: 0,
+                            borderRadius: 0,
+                          },
+                        ]}
+                        handleInputChange={handleInputChange}
+                      />
                     </View>
                   </View>
                   <View style={styles.switchContainer}>
@@ -329,7 +363,16 @@ const CreateSpotModal = ({
                   </View>
                   <MapView
                     style={styles.map}
-                    region={region}
+                    region={
+                      newSpot.coordinate
+                        ? {
+                            latitude: newSpot.coordinate.latitude,
+                            longitude: newSpot.coordinate.longitude,
+                            latitudeDelta: 0.005,
+                            longitudeDelta: 0.005,
+                          }
+                        : mapRegion
+                    }
                     userInterfaceStyle="light"
                     onRegionChange={(newRegion) => {
                       setCircleCenter(newRegion);
