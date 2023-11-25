@@ -39,10 +39,6 @@ const ThreeDotsModal = ({ isModalVisible, hideModal }) => {
   //   };
   // }, []);
 
-  useEffect(() =>{
-    console.log("item: " + JSON.stringify(item));
-  },[]);
-
   const route = useRoute();
   const { item } = route.params;
 
