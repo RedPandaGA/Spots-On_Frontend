@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -15,19 +15,28 @@ export default function ColonySlider({
   getSpots,
   spots,
   setSpots,
+  setUsers,
+  getUsersInColony,
+  findSelectedColony
 }) {
+useEffect(() => {
+    async function grabColonyInfo() {
+        if (Object.keys(findSelectedColony(colonies)).length > 0) {
+            setSpots(await getSpots());
+            setUsers(await getUsersInColony());
+        }
+    }
+    grabColonyInfo();
+    }, [colonies])
+
   const onPress = async (name) => {
-    //console.log("beforeUpdated: " + JSON.stringify(colonies));
     // Update the selected state for each colony
     const updatedColony = colonies.map((item) => ({
       ...item,
       selected: item.name === name,
     }));
-    //console.log("updated: " + JSON.stringify(updatedColony));
     setColonies(updatedColony);
-    //console.log("afterUpdated: " + JSON.stringify(colonies));
-    setSpots(await getSpots());
-    //console.log("wot: " + JSON.stringify(spots));
+    //console.log("colonies: " + JSON.stringify(colonies));
   };
 
   return (

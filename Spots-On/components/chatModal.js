@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   View,
@@ -10,31 +10,36 @@ import {
 import SearchBarModal from "./searchBarModal";
 import Modal from "react-native-modal";
 import COLORS from "./colors";
+import Config from '../.config.js';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const ChatModal = ({ isModalVisible, hideModal, navigation }) => {
+const papiUrl = Config.PAPI_URL;
+
+const ChatModal = ({ isModalVisible, hideModal, navigation, colonies}) => {
+
   // Define an array of friends and their statuses
-  const chatList = [
-    {
-      name: "Bestiesss",
-      memberCount: 3,
-    },
-    {
-      name: "Volleyball squad",
-      memberCount: 4,
-    },
-    {
-      name: "OOD group",
-      memberCount: 5,
-    },
-    {
-      name: "CSC 3102",
-      memberCount: 20,
-    },
-    {
-      name: "SASE people",
-      memberCount: 28,
-    },
-  ];
+//   const chatList = [
+//     {
+//       name: "Bestiesss",
+//       memberCount: 3,
+//     },
+//     {
+//       name: "Volleyball squad",
+//       memberCount: 4,
+//     },
+//     {
+//       name: "OOD group",
+//       memberCount: 5,
+//     },
+//     {
+//       name: "CSC 3102",
+//       memberCount: 20,
+//     },
+//     {
+//       name: "SASE people",
+//       memberCount: 28,
+//     },
+//   ];
 
   const [isColoniesPressed, setIsColoniesPressed] = useState(true);
   const [isFriendsPressed, setIsFriendsPressed] = useState(false);
@@ -46,7 +51,7 @@ const ChatModal = ({ isModalVisible, hideModal, navigation }) => {
       onPress={() => {
         setIsClickingChat(true);
         hideModal();
-        navigation.navigate("ColonyChat");
+        navigation.navigate("ColonyChat", {item});
       }}
     >
       <View style={styles.chatItem}>
@@ -119,7 +124,7 @@ const ChatModal = ({ isModalVisible, hideModal, navigation }) => {
           {/* Display the list of friends and statuses using FlatList */}
           <View style={{ marginTop: "3%", flex: 1, width: "100%" }}>
             <FlatList
-              data={chatList}
+              data={colonies}
               renderItem={renderItem}
               keyExtractor={(item, index) => index.toString()}
               showsVerticalScrollIndicator={false}

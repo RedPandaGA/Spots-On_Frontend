@@ -28,7 +28,7 @@ import { isPointWithinRadius } from "geolib";
 import StatusModal from "../components/statusModal";
 import Config from '../.config.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import users from "../components/users";
+// import users from "../components/users";
 import EditSpot from "../components/editSpot";
 
 const papiUrl = Config.PAPI_URL;
@@ -46,6 +46,7 @@ export default function MainMap({ navigation }) {
   const [initialRegion, setInitialRegion] = useState(null);
   const [currentRegion, setCurrentRegion] = useState(initialRegion);
   const [showResetButton, setShowResetButton] = useState(false);
+  const [users, setUsers] = useState([]);
 
   // CREATE FUNCTION TO GRAB USER INFORMATION AND STORE INTO USESTATE VARIABLES?
   const [user, setUser] = useState({
@@ -60,16 +61,6 @@ export default function MainMap({ navigation }) {
     picture: "../assets/profilePicture.png", // not sure how to store yet
     emergency: false,
     premium: false,
-    associatedColonies: [
-      "SASE",
-      "lsu engineering",
-      "swim friends",
-      "ood group",
-      "best friends",
-      "volleyball",
-      "oopah",
-      "vsa",
-    ],
   });
 
   const [currentSpot, setCurrentSpot] = useState({
@@ -118,6 +109,85 @@ export default function MainMap({ navigation }) {
       }
   };
 
+  const getUsersInColony = async () => {
+    try {
+        // Get the authorization token from AsyncStorage
+        const authToken = await AsyncStorage.getItem('token');
+        //console.log(JSON.stringify({ location: user.currentLocation }))
+        if (!authToken) {
+          // Handle the case where the token is not available
+          console.error('Authorization token not found.');
+          return [];
+        }
+
+        const apiUrl = `${papiUrl}/usersInColony/${findSelectedColony(colonies).cid}`;
+
+        // Send the GET request
+        const response = await fetch(apiUrl, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken}`, // Include the authorization token
+        },
+        });
+
+        if (!response.ok) {
+            // Handle error, e.g., display an error message
+            console.error('Error getting users in colony:', response.status);
+            return [];
+        }
+
+        // Parse the response JSON and return the array of users
+        const responseData = await response.json();
+        console.log("ReturnedUsers: " + responseData);
+        return responseData; // Adjust based on the actual response structure
+    } catch (error) {
+        console.error('Error:', error);
+        // Handle other errors as needed
+        return [];
+    }
+};
+
+  const getNumOfMembers = async (colonyId) => {
+    try {
+        // Get the authorization token from AsyncStorage
+        const authToken = await AsyncStorage.getItem('token');
+        if (!authToken) {
+          // Handle the case where the token is not available
+          console.error('Authorization token not found.');
+          return null;
+        }
+
+         // Construct the URL with the colony ID as a parameter
+        const apiUrl = `${papiUrl}/getNumMems/${colonyId}`;
+
+        // Send the GET request
+        const response = await fetch(apiUrl, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken}`, // Include the authorization token
+        },
+        });
+
+        if (!response.ok) {
+        // Handle error, e.g., display an error message
+            console.error('Error getting number of members:', response.status);
+            return null;
+        }
+
+        // Parse the response JSON and return the number
+        const responseData = await response.json();
+        const numberOfMembers = responseData.number; // Adjust based on the actual response structure
+
+        return numberOfMembers;
+    } catch (error) {
+        console.error('Error:', error);
+        // Handle other errors as needed
+        return null;
+    }
+  }
+
   const getUserColonies = async () => {
     try {
         const authToken = await AsyncStorage.getItem('token');
@@ -139,6 +209,9 @@ export default function MainMap({ navigation }) {
         data.forEach((colony) => {
             colony.selected = false;
         })
+        for (const colony of data){
+            colony.memberCount = await getNumOfMembers(colony.cid);
+        }
         console.log("DATAARG: " + JSON.stringify(data))
         return data;
     } catch (error) {
@@ -164,7 +237,7 @@ export default function MainMap({ navigation }) {
     
         if (!response.ok) {
           // Handle error, e.g., display an error message
-          console.error('Error fetching user colonies:', response.status);
+          console.error('Error fetching colonies\' spots:', response.status);
           return [];
         }
     
@@ -178,6 +251,7 @@ export default function MainMap({ navigation }) {
         return [];
     }
   }
+
 
   // GRAB LOCATION FROM USER AND STORE IN DATABASE
   useEffect(() => {
@@ -224,7 +298,8 @@ export default function MainMap({ navigation }) {
       console.log("Updated user's location!");
       updateUserLocation();
       setColonies(await getUserColonies());
-      displayAllSpots()
+      setUsers([]);
+      displayAllSpots();
     }, 30000); // 30 seconds
 
     // Clean up the interval when the component is unmounted
@@ -303,7 +378,7 @@ export default function MainMap({ navigation }) {
   const findSelectedColony = (colonies) => {
     if(colonies.length > 0){
         console.log("inhere: "+ JSON.stringify(colonies));
-        selectedColony = colonies.find((colony) => colony.selected=true);
+        selectedColony = colonies.find((colony) => colony.selected == true);
         if(selectedColony != undefined){
             return selectedColony
         } else {
@@ -316,25 +391,24 @@ export default function MainMap({ navigation }) {
 
   const renderUsersOnMap = (users, colonies) => {
     // Find the selected colony
-    const selectedColony = findSelectedColony(colonies);
+    // const selectedColony = findSelectedColony(colonies);
 
     // If no colony is selected, return an empty array
-    if (!selectedColony) {
-      return [];
-    }
+    // if (!selectedColony) {
+    //   return [];
+    // }
 
     // Filter users based on the selected colony
     //Update to get a list of users from db
-    const filteredUsers = users.filter((user) =>
-      user.associatedColonies.includes(selectedColony.name)
-    );
-
-    return filteredUsers.map((user) => (
+    // const filteredUsers = users.filter((user) =>
+    //   user.associatedColonies.includes(selectedColony.name)
+    // );
+    return users.map((user) => (
       <Marker
         key={user.uid}
         coordinate={{
-          latitude: user.currentLocation.latitude,
-          longitude: user.currentLocation.longitude,
+          latitude: user.loc_history[0].latitude,
+          longitude: user.loc_history[0].longitude,
         }}
       >
         <Image
@@ -363,7 +437,7 @@ export default function MainMap({ navigation }) {
               <Text
                 style={[styles.statusLabel, { color: getStatusColor(user) }]}
               >
-                {statusIdentifiers[user.statusCode].label}
+                {statusIdentifiers[user.status_code].label}
               </Text>
             )}
             {user.status !== "" && (
@@ -750,6 +824,7 @@ export default function MainMap({ navigation }) {
               isModalVisible={modals.friends}
               hideModal={() => hideModal("friends")}
               navigation={navigation}
+              users={users}
             />
 
             {/* Social Button */}
@@ -819,6 +894,7 @@ export default function MainMap({ navigation }) {
               isModalVisible={modals.chat}
               hideModal={() => hideModal("chat")}
               navigation={navigation}
+              colonies={colonies}
             />
 
             {/* ------ SEARCH BAR ------ */}
@@ -837,6 +913,9 @@ export default function MainMap({ navigation }) {
               getSpots={getUsersSpotsInColony}
               spots={spots}
               setSpots={setSpots}
+              setUsers={setUsers}
+              getUsersInColony={getUsersInColony}
+              findSelectedColony={findSelectedColony}
             />
 
             {/* ------ SIDE BUTTONS ------ */}

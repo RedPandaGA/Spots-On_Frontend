@@ -13,70 +13,70 @@ import SearchBarModal from "../components/searchBarModal";
 import COLORS from "./colors";
 import { AntDesign } from "@expo/vector-icons";
 
-const FriendsModal = ({ isModalVisible, hideModal, navigation }) => {
+const FriendsModal = ({ isModalVisible, hideModal, navigation, users}) => {
   // Define an array of friends and their statuses
-  const friendsList = [
-    {
-      name: "Michelle Vo",
-      status: "volunteering at the hospital",
-    },
-    {
-      name: "Faris Khattak",
-      status: "working on OOD 2",
-    },
-    {
-      name: "Gavin Avery",
-      status: "watching utube",
-    },
-    {
-      name: "Richard Jiang",
-      status: "chilling in PFT commons",
-    },
-    {
-      name: "Milan Nguyen",
-      status: "studyingggg",
-    },
-    {
-      name: "Aeryn Shadingdong",
-      status: "volunteering at the hospital",
-    },
-    {
-      name: "Sacaen winds",
-      status: "working on OOD 2",
-    },
-    {
-      name: "bawmba",
-      status: "watching utube",
-    },
-    {
-      name: "anviii",
-      status: "chilling in PFT commons",
-    },
-    {
-      name: "sycosyclopse",
-      status: "studyingggg",
-    },
-    {
-      name: "austin",
-      status: "volunteering at the hospital",
-    },
-    {
-      name: "kelli dinh",
-      status: "working on OOD 2",
-    },
-    {
-      name: "Fred juley",
-      status: "watching utube",
-    },
-    {
-      name: "betsi cao",
-      status: "chilling in PFT commons",
-    },
-    {
-      name: "Rot Nguyen",
-      status: "studyingggg",
-    },
-  ];
+//   const friendsList = [
+//     {
+//       name: "Michelle Vo",
+//       status: "volunteering at the hospital",
+//     },
+//     {
+//       name: "Faris Khattak",
+//       status: "working on OOD 2",
+//     },
+//     {
+//       name: "Gavin Avery",
+//       status: "watching utube",
+//     },
+//     {
+//       name: "Richard Jiang",
+//       status: "chilling in PFT commons",
+//     },
+//     {
+//       name: "Milan Nguyen",
+//       status: "studyingggg",
+//     },
+//     {
+//       name: "Aeryn Shadingdong",
+//       status: "volunteering at the hospital",
+//     },
+//     {
+//       name: "Sacaen winds",
+//       status: "working on OOD 2",
+//     },
+//     {
+//       name: "bawmba",
+//       status: "watching utube",
+//     },
+//     {
+//       name: "anviii",
+//       status: "chilling in PFT commons",
+//     },
+//     {
+//       name: "sycosyclopse",
+//       status: "studyingggg",
+//     },
+//     {
+//       name: "austin",
+//       status: "volunteering at the hospital",
+//     },
+//     {
+//       name: "kelli dinh",
+//       status: "working on OOD 2",
+//     },
+//     {
+//       name: "Fred juley",
+//       status: "watching utube",
+//     },
+//     {
+//       name: "betsi cao",
+//       status: "chilling in PFT commons",
+//     },
+//     {
+//       name: "Rot Nguyen",
+//       status: "studyingggg",
+//     },
+//   ];
 
   const renderItem = ({ item }) => (
     <TouchableOpacity
@@ -91,9 +91,9 @@ const FriendsModal = ({ isModalVisible, hideModal, navigation }) => {
             style={styles.friendImage}
             source={require("../assets/profile-user.png")}
           />
-          <Text style={styles.friendName}>{item.name}</Text>
+          <Text style={styles.friendName}>{item.nickname}</Text>
         </View>
-        <Text style={styles.friendStatus}>{item.status}</Text>
+        <Text style={styles.friendStatus}>{item.status}Online</Text>
       </View>
     </TouchableOpacity>
   );
@@ -147,7 +147,7 @@ const FriendsModal = ({ isModalVisible, hideModal, navigation }) => {
               <Text style={styles.addFriendText}>Add a new friend</Text>
             </TouchableOpacity>
             <FlatList
-              data={friendsList}
+              data={users}
               renderItem={renderItem}
               keyExtractor={(item, index) => index.toString()}
               showsVerticalScrollIndicator={false}
