@@ -27,10 +27,10 @@ const ProfileModal = ({ isModalVisible, hideModal }) => {
     >
       <View style={styles.modalContent}>
         <Image
-          source={require("../assets/profilePicture.png")}
+          source={require("../assets/michelle.png")}
           style={styles.profilePicture}
         />
-        <Text style={styles.nameText}>Faris Khattak</Text>
+        <Text style={styles.nameText}>Michelle Vo</Text>
         <Text style={styles.statusText}>dont talk to me. studying</Text>
         <View style={styles.buttonContainer}>
           <TouchableOpacity

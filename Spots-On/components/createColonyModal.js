@@ -19,7 +19,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const papiUrl = Config.PAPI_URL;
 import Modal from "react-native-modal";
 
-const CreateColonyModal = ({ isModalVisible, hideModal, showModal, user, getUserColonies, setColonies}) => {
+const CreateColonyModal = ({
+  isModalVisible,
+  hideModal,
+  showModal,
+  user,
+  getUserColonies,
+  setColonies,
+}) => {
   const [isPrivateColony, setIsPrivateColony] = useState(true);
   const [isPublicColony, setIsPublicColony] = useState(false);
 
@@ -30,62 +37,62 @@ const CreateColonyModal = ({ isModalVisible, hideModal, showModal, user, getUser
 
   const createColony = async () => {
     try {
-        // Get the authorization token from AsyncStorage
-        const authToken = await AsyncStorage.getItem('token');
-        if (!authToken) {
-          // Handle the case where the token is not available
-          console.error('Authorization token not found.');
-          return;
-        }
-    
-        const response = await fetch(`${papiUrl}/createColony`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${authToken}`, // Attach the token to the Authorization header
-          },
-          body: JSON.stringify({
-            cname: colonyName,
-          }),
-        });
-    
-        if (!response.ok) {
-          // Handle error, e.g., display an error message
-          console.error('Error creating colony:', response.status);
-          return;
-        }
-
-        // Successfully created colony
-        console.log('Colony created successfully:', response);
-
-        setColonies(await getUserColonies());
-      } catch (error) {
-        console.error('Error:', error);
-        // Handle other errors as needed
+      // Get the authorization token from AsyncStorage
+      const authToken = await AsyncStorage.getItem("token");
+      if (!authToken) {
+        // Handle the case where the token is not available
+        console.error("Authorization token not found.");
+        return;
       }
-  }
 
-//   const panResponder = PanResponder.create({
-//     onStartShouldSetPanResponder: (e, gestureState) => {
-//       // Calculate the threshold based on a percentage of the screen height
-//       const threshold = screenHeight * percentageThreshold;
-//       return e.nativeEvent.pageY < threshold;
-//     },
-//     onPanResponderMove: (event, gestureState) => {
-//       if (gestureState.dy > 0) {
-//         if (gestureState.dy < screenHeight * percentageThreshold) {
-//           modalPosition.setValue(gestureState.dy);
-//         }
-//       }
-//     },
-//     onPanResponderRelease: (event, gestureState) => {
-//       if (gestureState.dy > 200) {
-//         hideModal();
-//       } else {
-//         modalPosition.setValue(0);
-//       }
-//     },
-//   });
+      const response = await fetch(`${papiUrl}/createColony`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`, // Attach the token to the Authorization header
+        },
+        body: JSON.stringify({
+          cname: colonyName,
+        }),
+      });
+
+      if (!response.ok) {
+        // Handle error, e.g., display an error message
+        console.error("Error creating colony:", response.status);
+        return;
+      }
+
+      // Successfully created colony
+      console.log("Colony created successfully:", response);
+
+      setColonies(await getUserColonies());
+    } catch (error) {
+      console.error("Error:", error);
+      // Handle other errors as needed
+    }
+  };
+
+  //   const panResponder = PanResponder.create({
+  //     onStartShouldSetPanResponder: (e, gestureState) => {
+  //       // Calculate the threshold based on a percentage of the screen height
+  //       const threshold = screenHeight * percentageThreshold;
+  //       return e.nativeEvent.pageY < threshold;
+  //     },
+  //     onPanResponderMove: (event, gestureState) => {
+  //       if (gestureState.dy > 0) {
+  //         if (gestureState.dy < screenHeight * percentageThreshold) {
+  //           modalPosition.setValue(gestureState.dy);
+  //         }
+  //       }
+  //     },
+  //     onPanResponderRelease: (event, gestureState) => {
+  //       if (gestureState.dy > 200) {
+  //         hideModal();
+  //       } else {
+  //         modalPosition.setValue(0);
+  //       }
+  //     },
+  //   });
   // const panResponder = PanResponder.create({
   //   onStartShouldSetPanResponder: (e, gestureState) => {
   //     // Calculate the threshold based on a percentage of the screen height
@@ -201,6 +208,7 @@ const CreateColonyModal = ({ isModalVisible, hideModal, showModal, user, getUser
                 console.log("Created Colony: " + colonyName);
                 createColony();
                 hideModal();
+                setColonyName("");
               }}
             >
               <Text style={styles.buttonText}>Create Colony</Text>

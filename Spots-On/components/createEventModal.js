@@ -19,7 +19,7 @@ import { Dropdown } from "react-native-element-dropdown";
 import CheckBox from "expo-checkbox";
 import Modal from "react-native-modal";
 import GooglePlacesInput from "./googlePlacesInput";
-import { ScrollView } from "react-native-gesture-handler";
+import { ScrollView } from "react-native-virtualized-view";
 
 const CreateEventModal = ({
   isModalVisible,
@@ -32,6 +32,7 @@ const CreateEventModal = ({
   eventsUpcoming,
   setEventsToday,
   setEventsUpcoming,
+  getSpots,
 }) => {
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
@@ -230,8 +231,9 @@ const CreateEventModal = ({
     const spotsInColony = allSpots.filter(
       (spot) => spot.colonyName === selectedColonyName
     );
-    setFilteredSpots(spotsInColony);
-    console.log("These are the arrays of spots in the colony\n", spotsInColony);
+    const spots = getSpots(item.id);
+    // setFilteredSpots(spots);
+    console.log("These are the arrays of spots in the colony\n", spots);
     setErrors({ ...errors, ["colonyName"]: "" });
   };
 
@@ -292,7 +294,10 @@ const CreateEventModal = ({
                 <Text style={styles.modalTitle}>Create Event</Text>
               </View>
 
-              <ScrollView>
+              <ScrollView
+                nestedScrollEnabled={true}
+                keyboardShouldPersistTaps="handled"
+              >
                 <View style={styles.inputContainer}>
                   <TextInput
                     style={styles.input}
