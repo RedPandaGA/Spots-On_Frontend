@@ -259,11 +259,10 @@ export default function MainMap({ navigation }) {
         }
     
         const data = await response.json();
-        data.forEach((colony) => {
-            colony.selected = false;
-        })
+
         for (const colony of data){
             colony.memberCount = await getNumOfMembers(colony.cid);
+            colony.selected = false;
         }
         console.log("DATAARG: " + JSON.stringify(data))
         return data;
@@ -351,7 +350,7 @@ export default function MainMap({ navigation }) {
       user.currentLocation = location.coords;
       console.log("Updated user's location!");
       updateUserLocation();
-      setColonies(await getUserColonies());
+      //setColonies(await getUserColonies());
       setUsers([]);
       displayAllSpots();
     }, 30000); // 30 seconds
@@ -942,6 +941,8 @@ export default function MainMap({ navigation }) {
               hideModal={() => hideModal("createColony")}
               showModal={showModal}
               user={user}
+              getUserColonies={getUserColonies}
+              setColonies={setColonies}
             />
             {/* Chats Button */}
             <MapButton
@@ -1077,7 +1078,7 @@ export default function MainMap({ navigation }) {
               style={styles.settingsButton}
               onPress={() => {
                 console.log("Pressed settings button");
-                navigation.navigate("Settings");
+                navigation.navigate("Settings", {colonies: colonies});
               }}
               width={45}
               height={45}

@@ -11,7 +11,8 @@ import COLORS from "../components/colors";
 import { Dropdown } from "react-native-element-dropdown";
 import Swiper from "react-native-swiper";
 
-export default function ColonyManagement({ navigation }) {
+export default function ColonyManagement({ navigation, route}) {
+    const {colonies} = route.params;
 
   const carouselData = [
     {
@@ -44,12 +45,12 @@ export default function ColonyManagement({ navigation }) {
 
   const [selectedColony, setSelectedColony] = useState(null);
 
-  const colonies = [
-    { name: "Colony A", value: "colonyA" },
-    { name: "Colony B", value: "colonyB" },
-    { name: "Colony C", value: "colonyC" },
-    // Add more colonies as needed
-  ];
+//   const colonies = [
+//     { name: "Colony A", value: "colonyA" },
+//     { name: "Colony B", value: "colonyB" },
+//     { name: "Colony C", value: "colonyC" },
+//     // Add more colonies as needed
+//   ];
 
   const detailList = ["Edit Colony Name"];
 
@@ -123,7 +124,7 @@ export default function ColonyManagement({ navigation }) {
         <View style={styles.header}>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("Settings");
+              navigation.navigate("Settings", {colonies: colonies});
               console.log("Pressed back button");
             }}
           >

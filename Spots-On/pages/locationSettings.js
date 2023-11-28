@@ -12,7 +12,8 @@ import COLORS from "../components/colors";
 import { Dropdown } from "react-native-element-dropdown";
 import Swiper from "react-native-swiper";
 
-export default function LocationSharing({ navigation }) {
+export default function LocationSharing({ navigation, route}) {
+    const {colonies} = route.params;
 
   const carouselData = [
     {
@@ -50,12 +51,12 @@ export default function LocationSharing({ navigation }) {
 
   const [selectedColony, setSelectedColony] = useState(null);
 
-  const colonies = [
-    { name: "Colony A", value: "colonyA" },
-    { name: "Colony B", value: "colonyB" },
-    { name: "Colony C", value: "colonyC" },
-    // Add more colonies as needed
-  ];
+//   const colonies = [
+//     { name: "Colony A", value: "colonyA" },
+//     { name: "Colony B", value: "colonyB" },
+//     { name: "Colony C", value: "colonyC" },
+//     // Add more colonies as needed
+//   ];
 
   const hibernationList = ["Location sharing", "Status sharing"];
 
@@ -165,7 +166,7 @@ export default function LocationSharing({ navigation }) {
           <TouchableOpacity
             onPress={() => {
               console.log("Pressed back button");
-              navigation.navigate("Settings");
+              navigation.navigate("Settings", {colonies: colonies});
             }}
           >
             <View style={styles.backButton}>

@@ -6,10 +6,13 @@
   <component name="ChangeListManager">
     <list default="true" id="bb950c41-3fac-4440-952a-f7c0da027e3a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/colonySliderModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/colonySliderModal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/friendsModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/friendsModal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/statusModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/statusModal.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/createColonyModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/createColonyModal.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/accSettings.js" beforeDir="false" afterPath="$PROJECT_DIR$/pages/accSettings.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/colonymngmntSettings.js" beforeDir="false" afterPath="$PROJECT_DIR$/pages/colonymngmntSettings.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/locationSettings.js" beforeDir="false" afterPath="$PROJECT_DIR$/pages/locationSettings.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/mainMap.js" beforeDir="false" afterPath="$PROJECT_DIR$/pages/mainMap.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/notifSettings.js" beforeDir="false" afterPath="$PROJECT_DIR$/pages/notifSettings.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/settings.js" beforeDir="false" afterPath="$PROJECT_DIR$/pages/settings.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

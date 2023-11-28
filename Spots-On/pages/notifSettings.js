@@ -12,7 +12,8 @@ import COLORS from "../components/colors";
 import Swiper from "react-native-swiper";
 import { Dropdown } from "react-native-element-dropdown";
 
-export default function Notifications({ navigation }) {
+export default function Notifications({ navigation, route}) {
+    const {colonies} = route.params;
 
   const carouselData = [
     {
@@ -50,12 +51,12 @@ export default function Notifications({ navigation }) {
 
   const [selectedColony, setSelectedColony] = useState(null);
 
-  const colonies = [
-    { name: "Colony A", value: "colonyA" },
-    { name: "Colony B", value: "colonyB" },
-    { name: "Colony C", value: "colonyC" },
-    // Add more colonies as needed
-  ];
+//   const colonies = [
+//     { name: "Colony A", value: "colonyA" },
+//     { name: "Colony B", value: "colonyB" },
+//     { name: "Colony C", value: "colonyC" },
+//     // Add more colonies as needed
+//   ];
 
   const statusList = ["friend1", "friend2", "friend3"];
 
@@ -149,7 +150,7 @@ export default function Notifications({ navigation }) {
           <TouchableOpacity
             onPress={() => {
               console.log("Pressed back button");
-              navigation.navigate("Settings");
+              navigation.navigate("Settings", {colonies: colonies});
             }}
           >
             <View style={styles.backButton}>

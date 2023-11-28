@@ -19,7 +19,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const papiUrl = Config.PAPI_URL;
 import Modal from "react-native-modal";
 
-const CreateColonyModal = ({ isModalVisible, hideModal, showModal, user }) => {
+const CreateColonyModal = ({ isModalVisible, hideModal, showModal, user, getUserColonies, setColonies}) => {
   const [isPrivateColony, setIsPrivateColony] = useState(true);
   const [isPublicColony, setIsPublicColony] = useState(false);
 
@@ -54,9 +54,11 @@ const CreateColonyModal = ({ isModalVisible, hideModal, showModal, user }) => {
           console.error('Error creating colony:', response.status);
           return;
         }
-    
+
         // Successfully created colony
         console.log('Colony created successfully:', response);
+
+        setColonies(await getUserColonies());
       } catch (error) {
         console.error('Error:', error);
         // Handle other errors as needed

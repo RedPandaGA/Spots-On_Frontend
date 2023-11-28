@@ -2,8 +2,8 @@ import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView } from "react-native";
 import COLORS from "../components/colors";
 
-export default function Account({ navigation }) {
-
+export default function Account({ navigation, route }) {
+    const {colonies} = route.params;
   const detailList = ["Edit Phone Number", "Edit Email Address", "Change Password"];
 
   const detailButtonActions = [
@@ -50,7 +50,7 @@ export default function Account({ navigation }) {
       <View>
         <View style={styles.header}>
           <TouchableOpacity onPress={() => {
-            navigation.navigate("Settings");
+            navigation.navigate("Settings", {colonies: colonies});
             console.log("Pressed back button");
           }}>
             <View style={styles.backButton}>
