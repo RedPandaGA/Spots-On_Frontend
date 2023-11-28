@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   View,
@@ -6,77 +6,97 @@ import {
   TouchableOpacity,
   FlatList,
   Image,
+  TextInput,
 } from "react-native";
 import Modal from "react-native-modal";
+import { LayoutAnimation, UIManager } from "react-native";
 import ColonySliderModal from "../components/colonySliderModal";
 import SearchBarModal from "../components/searchBarModal";
 import COLORS from "./colors";
 import { AntDesign } from "@expo/vector-icons";
 
-const FriendsModal = ({ isModalVisible, hideModal, navigation }) => {
+const FriendsModal = ({ isModalVisible, hideModal, navigation, users }) => {
+  if (Platform.OS === "android") {
+    if (UIManager.setLayoutAnimationEnabledExperimental) {
+      UIManager.setLayoutAnimationEnabledExperimental(true);
+    }
+  }
+
+  const [addingFriend, setAddingFriend] = useState(false);
+
+  const expandButton = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setAddingFriend(true);
+  };
+
+  const collapseButton = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setAddingFriend(false);
+  };
+
   // Define an array of friends and their statuses
-  const friendsList = [
-    {
-      name: "Michelle Vo",
-      status: "volunteering at the hospital",
-    },
-    {
-      name: "Faris Khattak",
-      status: "working on OOD 2",
-    },
-    {
-      name: "Gavin Avery",
-      status: "watching utube",
-    },
-    {
-      name: "Richard Jiang",
-      status: "chilling in PFT commons",
-    },
-    {
-      name: "Milan Nguyen",
-      status: "studyingggg",
-    },
-    {
-      name: "Aeryn Shadingdong",
-      status: "volunteering at the hospital",
-    },
-    {
-      name: "Sacaen winds",
-      status: "working on OOD 2",
-    },
-    {
-      name: "bawmba",
-      status: "watching utube",
-    },
-    {
-      name: "anviii",
-      status: "chilling in PFT commons",
-    },
-    {
-      name: "sycosyclopse",
-      status: "studyingggg",
-    },
-    {
-      name: "austin",
-      status: "volunteering at the hospital",
-    },
-    {
-      name: "kelli dinh",
-      status: "working on OOD 2",
-    },
-    {
-      name: "Fred juley",
-      status: "watching utube",
-    },
-    {
-      name: "betsi cao",
-      status: "chilling in PFT commons",
-    },
-    {
-      name: "Rot Nguyen",
-      status: "studyingggg",
-    },
-  ];
+  //   const friendsList = [
+  //     {
+  //       name: "Michelle Vo",
+  //       status: "volunteering at the hospital",
+  //     },
+  //     {
+  //       name: "Faris Khattak",
+  //       status: "working on OOD 2",
+  //     },
+  //     {
+  //       name: "Gavin Avery",
+  //       status: "watching utube",
+  //     },
+  //     {
+  //       name: "Richard Jiang",
+  //       status: "chilling in PFT commons",
+  //     },
+  //     {
+  //       name: "Milan Nguyen",
+  //       status: "studyingggg",
+  //     },
+  //     {
+  //       name: "Aeryn Shadingdong",
+  //       status: "volunteering at the hospital",
+  //     },
+  //     {
+  //       name: "Sacaen winds",
+  //       status: "working on OOD 2",
+  //     },
+  //     {
+  //       name: "bawmba",
+  //       status: "watching utube",
+  //     },
+  //     {
+  //       name: "anviii",
+  //       status: "chilling in PFT commons",
+  //     },
+  //     {
+  //       name: "sycosyclopse",
+  //       status: "studyingggg",
+  //     },
+  //     {
+  //       name: "austin",
+  //       status: "volunteering at the hospital",
+  //     },
+  //     {
+  //       name: "kelli dinh",
+  //       status: "working on OOD 2",
+  //     },
+  //     {
+  //       name: "Fred juley",
+  //       status: "watching utube",
+  //     },
+  //     {
+  //       name: "betsi cao",
+  //       status: "chilling in PFT commons",
+  //     },
+  //     {
+  //       name: "Rot Nguyen",
+  //       status: "studyingggg",
+  //     },
+  //   ];
 
   const renderItem = ({ item }) => (
     <TouchableOpacity
@@ -89,11 +109,11 @@ const FriendsModal = ({ isModalVisible, hideModal, navigation }) => {
         <View styles={styles.infoContainer}>
           <Image
             style={styles.friendImage}
-            source={require("../assets/profile-user.png")}
+            source={require("../assets/profile.png")}
           />
-          <Text style={styles.friendName}>{item.name}</Text>
+          <Text style={styles.friendName}>{item.nickname}</Text>
         </View>
-        <Text style={styles.friendStatus}>{item.status}</Text>
+        <Text style={styles.friendStatus}>{item.status}Online</Text>
       </View>
     </TouchableOpacity>
   );
@@ -108,6 +128,7 @@ const FriendsModal = ({ isModalVisible, hideModal, navigation }) => {
       swipeDirection="left"
       propagateSwipe
       style={{ margin: 0 }}
+      backdropOpacity={0.4}
     >
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
@@ -130,24 +151,42 @@ const FriendsModal = ({ isModalVisible, hideModal, navigation }) => {
 
           {/* Display the list of friends and statuses using FlatList */}
           <View style={{ flex: 1, marginTop: 20, marginRight: 20 }}>
-            <TouchableOpacity
-              style={styles.addFriendButton}
-              onPress={() => {
-                // setShowAddSpot(true);
-                // setShowSpotList(false);
-                // console.log(mapRegion);
-              }}
-            >
-              <AntDesign
-                style={styles.addFriendImage}
-                name="pluscircle"
-                size={40}
-                color={COLORS.secondary}
-              />
-              <Text style={styles.addFriendText}>Add a new friend</Text>
-            </TouchableOpacity>
+            {addingFriend ? (
+              <View>
+                <TextInput
+                  placeholder="Enter friend's phone #"
+                  placeholderTextColor={COLORS.secondary}
+                  onSubmitEditing={(event) => {
+                    const friendName = event.nativeEvent.text;
+                    console.log("New friend added:", friendName);
+                    collapseButton();
+                  }}
+                  style={styles.expandedInput}
+                  keyboardType="numeric"
+                />
+                <AntDesign
+                  style={styles.addFriendImageInput}
+                  name="pluscircle"
+                  size={40}
+                  color={COLORS.secondary}
+                />
+              </View>
+            ) : (
+              <TouchableOpacity
+                style={styles.addFriendButton}
+                onPress={expandButton}
+              >
+                <AntDesign
+                  style={styles.addFriendImage}
+                  name="pluscircle"
+                  size={40}
+                  color={COLORS.secondary}
+                />
+                <Text style={styles.addFriendText}>Add a new friend</Text>
+              </TouchableOpacity>
+            )}
             <FlatList
-              data={friendsList}
+              data={users}
               renderItem={renderItem}
               keyExtractor={(item, index) => index.toString()}
               showsVerticalScrollIndicator={false}
@@ -231,11 +270,29 @@ const styles = StyleSheet.create({
   addFriendImage: {
     marginRight: 20,
   },
+  addFriendImageInput: {
+    marginLeft: 30,
+    marginTop: 12.25,
+    position: "absolute",
+  },
   addFriendText: {
     color: COLORS.secondary,
     fontSize: 18,
     fontWeight: "bold",
     paddingVertical: 10,
+  },
+  expandedInput: {
+    marginLeft: 30,
+    marginRight: -10,
+    marginTop: 12.25,
+    backgroundColor: COLORS.darkerprimary,
+    paddingVertical: 6.25,
+    paddingLeft: 60,
+    marginBottom: 12,
+    borderRadius: 30,
+    fontSize: 18,
+    color: COLORS.secondary,
+    fontWeight: "bold",
   },
 });
 

@@ -13,7 +13,6 @@ const Spot = ({
   onDragEnd,
   showModal,
   setCurrentSpot,
-  isEditSpotVisible,
 }) => {
   const chosenSpot = {
     spotName: spotName,
@@ -33,17 +32,18 @@ const Spot = ({
         onDrag={onDrag}
         onDragEnd={onDragEnd}
         onPress={() => {
-          if (!isEditSpotVisible) setCurrentSpot(chosenSpot);
+          if (setCurrentSpot) setCurrentSpot(chosenSpot);
+          console.log("Spot clicked:", chosenSpot);
         }}
       >
         <Image
           source={require("../assets/marker.png")}
-          style={{ width: 30, height: 30 }}
+          style={{ width: 30, height: 30, tintColor: COLORS.red }}
         />
         <Callout
           style={styles.callout}
           onPress={() => {
-            if (!isEditSpotVisible) showModal("editSpot");
+            if (showModal) showModal("editSpot");
             console.log("Clicked description/spot info");
             console.log("Chosen spot:", chosenSpot);
           }}

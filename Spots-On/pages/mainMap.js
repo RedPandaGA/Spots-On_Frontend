@@ -26,10 +26,11 @@ import Spot from "../components/spot";
 import Splash from "./splash";
 import { isPointWithinRadius } from "geolib";
 import StatusModal from "../components/statusModal";
-import Config from '../.config.js';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import users from "../components/users";
+import Config from "../.config.js";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+// import users from "../components/users";
 import EditSpot from "../components/editSpot";
+import EventInfo from "../components/eventInfo";
 
 const papiUrl = Config.PAPI_URL;
 
@@ -46,6 +47,7 @@ export default function MainMap({ navigation }) {
   const [initialRegion, setInitialRegion] = useState(null);
   const [currentRegion, setCurrentRegion] = useState(initialRegion);
   const [showResetButton, setShowResetButton] = useState(false);
+  const [users, setUsers] = useState([]);
 
   // CREATE FUNCTION TO GRAB USER INFORMATION AND STORE INTO USESTATE VARIABLES?
   const [user, setUser] = useState({
@@ -60,16 +62,6 @@ export default function MainMap({ navigation }) {
     picture: "../assets/profilePicture.png", // not sure how to store yet
     emergency: false,
     premium: false,
-    associatedColonies: [
-      "SASE",
-      "lsu engineering",
-      "swim friends",
-      "ood group",
-      "best friends",
-      "volleyball",
-      "oopah",
-      "vsa",
-    ],
   });
 
   const [currentSpot, setCurrentSpot] = useState({
@@ -80,104 +72,205 @@ export default function MainMap({ navigation }) {
     radius: 250,
   });
 
+  const [currentEvent, setCurrentEvent] = useState({
+    name: "",
+    colonyName: "",
+    date: new Date(),
+    time: "",
+    address: "",
+    coordinate: {},
+    description: "",
+    spotName: "",
+  });
+
   const logUser = () => {
     console.log(user);
   };
 
   const updateUserLocation = async () => {
     try {
-        // Get the authorization token from AsyncStorage
-        const authToken = await AsyncStorage.getItem('token');
-        //console.log(JSON.stringify({ location: user.currentLocation }))
-        if (!authToken) {
-          // Handle the case where the token is not available
-          console.error('Authorization token not found.');
-          return;
-        }
-    
-        const response = await fetch(`${papiUrl}/updateUserLocation`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${authToken}`, // Attach the token to the Authorization header
-          },
-          body: JSON.stringify({ location: user.currentLocation }),
-        });
-    
-        if (!response.ok) {
-          // Handle error, e.g., display an error message
-          console.error('Error updating user location:', response.status);
-          return;
-        }
-    
-        // Successfully updated user location
-        //console.log('User location updated successfully ' + JSON.stringify(response));
-      } catch (error) {
-        console.error('Error:', error);
-        // Handle other errors as needed
+      // Get the authorization token from AsyncStorage
+      const authToken = await AsyncStorage.getItem("token");
+      //console.log(JSON.stringify({ location: user.currentLocation }))
+      if (!authToken) {
+        // Handle the case where the token is not available
+        console.error("Authorization token not found.");
+        return;
       }
+
+      const response = await fetch(`${papiUrl}/updateUserLocation`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`, // Attach the token to the Authorization header
+        },
+        body: JSON.stringify({ location: user.currentLocation }),
+      });
+
+      if (!response.ok) {
+        // Handle error, e.g., display an error message
+        console.error("Error updating user location:", response.status);
+        return;
+      }
+
+      // Successfully updated user location
+      //console.log('User location updated successfully ' + JSON.stringify(response));
+    } catch (error) {
+      console.error("Error:", error);
+      // Handle other errors as needed
+    }
+  };
+
+  const getUsersInColony = async () => {
+    try {
+      // Get the authorization token from AsyncStorage
+      const authToken = await AsyncStorage.getItem("token");
+      //console.log(JSON.stringify({ location: user.currentLocation }))
+      if (!authToken) {
+        // Handle the case where the token is not available
+        console.error("Authorization token not found.");
+        return [];
+      }
+
+      const apiUrl = `${papiUrl}/usersInColony/${
+        findSelectedColony(colonies).cid
+      }`;
+
+      // Send the GET request
+      const response = await fetch(apiUrl, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`, // Include the authorization token
+        },
+      });
+
+      if (!response.ok) {
+        // Handle error, e.g., display an error message
+        console.error("Error getting users in colony:", response.status);
+        return [];
+      }
+
+      // Parse the response JSON and return the array of users
+      const responseData = await response.json();
+      console.log("ReturnedUsers: " + responseData);
+      return responseData; // Adjust based on the actual response structure
+    } catch (error) {
+      console.error("Error:", error);
+      // Handle other errors as needed
+      return [];
+    }
+  };
+
+  const getNumOfMembers = async (colonyId) => {
+    try {
+      // Get the authorization token from AsyncStorage
+      const authToken = await AsyncStorage.getItem("token");
+      if (!authToken) {
+        // Handle the case where the token is not available
+        console.error("Authorization token not found.");
+        return null;
+      }
+
+      // Construct the URL with the colony ID as a parameter
+      const apiUrl = `${papiUrl}/getNumMems/${colonyId}`;
+
+      // Send the GET request
+      const response = await fetch(apiUrl, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`, // Include the authorization token
+        },
+      });
+
+      if (!response.ok) {
+        // Handle error, e.g., display an error message
+        console.error("Error getting number of members:", response.status);
+        return null;
+      }
+
+      // Parse the response JSON and return the number
+      const responseData = await response.json();
+      const numberOfMembers = responseData.number; // Adjust based on the actual response structure
+
+      return numberOfMembers;
+    } catch (error) {
+      console.error("Error:", error);
+      // Handle other errors as needed
+      return null;
+    }
   };
 
   const getUserColonies = async () => {
     try {
-        const authToken = await AsyncStorage.getItem('token');
-        const response = await fetch(`${papiUrl}/usersColonies/${await AsyncStorage.getItem('uid')}`, {
-          method: 'GET',
+      const authToken = await AsyncStorage.getItem("token");
+      const response = await fetch(
+        `${papiUrl}/usersColonies/${await AsyncStorage.getItem("uid")}`,
+        {
+          method: "GET",
           headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${authToken}`
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
           },
-        });
-    
-        if (!response.ok) {
-          // Handle error, e.g., display an error message
-          console.error('Error fetching user colonies:', response.status);
-          return [];
         }
-    
-        const data = await response.json();
-        data.forEach((colony) => {
-            colony.selected = false;
-        })
-        console.log("DATAARG: " + JSON.stringify(data))
-        return data;
-    } catch (error) {
-        console.error('Error:', error);
-        // Handle other errors as needed
+      );
+
+      if (!response.ok) {
+        // Handle error, e.g., display an error message
+        console.error("Error fetching user colonies:", response.status);
         return [];
+      }
+
+      const data = await response.json();
+      data.forEach((colony) => {
+        colony.selected = false;
+      });
+      for (const colony of data) {
+        colony.memberCount = await getNumOfMembers(colony.cid);
+      }
+      console.log("DATAARG: " + JSON.stringify(data));
+      return data;
+    } catch (error) {
+      console.error("Error:", error);
+      // Handle other errors as needed
+      return [];
     }
-  }
+  };
 
   const getUsersSpotsInColony = async () => {
     console.log("colonies: " + JSON.stringify(colonies));
     selectedColony = findSelectedColony(colonies);
     console.log("selectedColony: " + JSON.stringify(selectedColony));
     try {
-        const authToken = await AsyncStorage.getItem('token');
-        const response = await fetch(`${papiUrl}/allSpotsByColony/${selectedColony.cid}`, {
-          method: 'GET',
+      const authToken = await AsyncStorage.getItem("token");
+      const response = await fetch(
+        `${papiUrl}/allSpotsByColony/${selectedColony.cid}`,
+        {
+          method: "GET",
           headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${authToken}`
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
           },
-        });
-    
-        if (!response.ok) {
-          // Handle error, e.g., display an error message
-          console.error('Error fetching user colonies:', response.status);
-          return [];
         }
-    
-        const data = await response.json();
-        //console.log("SPOTDATAHERE: " + JSON.stringify(data));
+      );
 
-        return data;
-    } catch (error) {
-        console.error('Error:', error);
-        // Handle other errors as needed
+      if (!response.ok) {
+        // Handle error, e.g., display an error message
+        console.error("Error fetching colonies' spots:", response.status);
         return [];
+      }
+
+      const data = await response.json();
+      //console.log("SPOTDATAHERE: " + JSON.stringify(data));
+
+      return data;
+    } catch (error) {
+      console.error("Error:", error);
+      // Handle other errors as needed
+      return [];
     }
-  }
+  };
 
   // GRAB LOCATION FROM USER AND STORE IN DATABASE
   useEffect(() => {
@@ -198,7 +291,6 @@ export default function MainMap({ navigation }) {
       console.log("Received current position!");
       user.currentLocation = location.coords;
 
-
       const initialRegion = {
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
@@ -210,7 +302,7 @@ export default function MainMap({ navigation }) {
       setCurrentRegion(initialRegion);
       updateUserLocation();
       setColonies(await getUserColonies());
-      displayAllSpots()
+      displayAllSpots();
     };
 
     getLocation();
@@ -224,7 +316,8 @@ export default function MainMap({ navigation }) {
       console.log("Updated user's location!");
       updateUserLocation();
       setColonies(await getUserColonies());
-      displayAllSpots()
+      setUsers([]);
+      displayAllSpots();
     }, 30000); // 30 seconds
 
     // Clean up the interval when the component is unmounted
@@ -301,40 +394,39 @@ export default function MainMap({ navigation }) {
   };
 
   const findSelectedColony = (colonies) => {
-    if(colonies.length > 0){
-        console.log("inhere: "+ JSON.stringify(colonies));
-        selectedColony = colonies.find((colony) => colony.selected=true);
-        if(selectedColony != undefined){
-            return selectedColony
-        } else {
-            return {};
-        }    
-    } else {
+    if (colonies.length > 0) {
+      console.log("inhere: " + JSON.stringify(colonies));
+      selectedColony = colonies.find((colony) => colony.selected == true);
+      if (selectedColony != undefined) {
+        return selectedColony;
+      } else {
         return {};
+      }
+    } else {
+      return {};
     }
   };
 
   const renderUsersOnMap = (users, colonies) => {
     // Find the selected colony
-    const selectedColony = findSelectedColony(colonies);
+    // const selectedColony = findSelectedColony(colonies);
 
     // If no colony is selected, return an empty array
-    if (!selectedColony) {
-      return [];
-    }
+    // if (!selectedColony) {
+    //   return [];
+    // }
 
     // Filter users based on the selected colony
     //Update to get a list of users from db
-    const filteredUsers = users.filter((user) =>
-      user.associatedColonies.includes(selectedColony.name)
-    );
-
-    return filteredUsers.map((user) => (
+    // const filteredUsers = users.filter((user) =>
+    //   user.associatedColonies.includes(selectedColony.name)
+    // );
+    return users.map((user) => (
       <Marker
         key={user.uid}
         coordinate={{
-          latitude: user.currentLocation.latitude,
-          longitude: user.currentLocation.longitude,
+          latitude: user.loc_history[0].latitude,
+          longitude: user.loc_history[0].longitude,
         }}
       >
         <Image
@@ -363,7 +455,7 @@ export default function MainMap({ navigation }) {
               <Text
                 style={[styles.statusLabel, { color: getStatusColor(user) }]}
               >
-                {statusIdentifiers[user.statusCode].label}
+                {statusIdentifiers[user.status_code].label}
               </Text>
             )}
             {user.status !== "" && (
@@ -506,6 +598,7 @@ const fetchIncognitoStatus = async () => {
     chat: false,
     status: false,
     editSpot: false,
+    eventInfo: false,
   });
 
   // Function to show a specific modal
@@ -554,46 +647,21 @@ const fetchIncognitoStatus = async () => {
     setSpots(updatedSpots);
   };
 
-  // const displayAllSpots = () => {
-  //   return spots.map((spot) => (
-  //     <Spot
-  //       key={spot.id}
-  //       coordinate={spot.coordinate}
-  //       spotName={spot.name}
-  //       colonyName={spot.colonyName}
-  //       spotRadius={spot.radius}
-  //       isSafe={spot.safe}
-  //       onDrag={(e) => handleSpotDrag(e, spot.id)}
-  //       onDragEnd={(e) => handleSpotDragEnd(e, spot.id)}
-  //     />
-  //   ));
-  // };
-//   .filter((spot) => {
-    //     // Find the associated colony
-    //     // const associatedColony = colonies.find(
-    //     //   (colony) => colony.name === spot.colonyName
-    //     // );
-
-    //     // Display the spot only if the associated colony is selected
-    //     return associatedColony && associatedColony.selected;
-    //   })
   const displayAllSpots = () => {
-    return spots
-      .map((spot) => (
-        <Spot
-          key={spot.id}
-          coordinate={spot.coordinate}
-          spotName={spot.name}
-          colonyName={spot.colonyName}
-          spotRadius={spot.radius}
-          isSafe={spot.safe}
-          onDrag={(e) => handleSpotDrag(e, spot.id)}
-          onDragEnd={(e) => handleSpotDragEnd(e, spot.id)}
-          showModal={showModal}
-          setCurrentSpot={setCurrentSpot}
-          isEditSpotVisible={modals.editSpot}
-        />
-      ));
+    return spots.map((spot) => (
+      <Spot
+        key={spot.id}
+        coordinate={spot.coordinate}
+        spotName={spot.name}
+        colonyName={spot.colonyName}
+        spotRadius={spot.radius}
+        isSafe={spot.safe}
+        onDrag={(e) => handleSpotDrag(e, spot.id)}
+        onDragEnd={(e) => handleSpotDragEnd(e, spot.id)}
+        showModal={showModal}
+        setCurrentSpot={setCurrentSpot}
+      />
+    ));
   };
 
   // GET ALL COLONIES FROM DATABASE AND STORE INTO VARIABLES TO USE AND DISPLAY
@@ -748,7 +816,7 @@ const fetchIncognitoStatus = async () => {
               {displayAllSpots()}
               {renderUsersOnMap(users, colonies)}
               {user.currentLocation && showCurrentLocation()}
-              <Circle
+              {/* <Circle
                 center={{
                   latitude: 30.41699914895536,
                   longitude: -91.17555990815163,
@@ -777,7 +845,7 @@ const fetchIncognitoStatus = async () => {
                 strokeWidth={1}
                 strokeColor="#rgba(255, 85, 85, 1)"
                 fillColor="rgba(255, 85, 85, .3)"
-              />
+              /> */}
             </MapView>
 
             {/* ------ MAIN NAV BUTTONS ------ */}
@@ -796,6 +864,7 @@ const fetchIncognitoStatus = async () => {
               isModalVisible={modals.friends}
               hideModal={() => hideModal("friends")}
               navigation={navigation}
+              users={users}
             />
 
             {/* Social Button */}
@@ -813,43 +882,44 @@ const fetchIncognitoStatus = async () => {
                 />
               </View>
             </TouchableOpacity>
-            {modals.social && (
-              <SocialModal
-                isModalVisible={modals.social}
-                hideModal={() => hideModal("social")}
-                showModal={showModal}
-              />
-            )}
-            {modals.viewEvents && (
-              <ViewEventsModal
-                isModalVisible={modals.viewEvents}
-                hideModal={() => hideModal("viewEvents")}
-                showModal={showModal}
-                eventsToday={eventsToday}
-                eventsUpcoming={eventsUpcoming}
-              />
-            )}
-            {modals.createEvent && (
-              <CreateEventModal
-                isModalVisible={modals.createEvent}
-                hideModal={() => hideModal("createEvent")}
-                showModal={showModal}
-                colonies={colonies}
-                allSpots={spots}
-                eventsToday={eventsToday}
-                eventsUpcoming={eventsUpcoming}
-                setEventsToday={setEventsToday}
-                setEventsUpcoming={setEventsUpcoming}
-              />
-            )}
-            {modals.createColony && (
-              <CreateColonyModal
-                isModalVisible={modals.createColony}
-                hideModal={() => hideModal("createColony")}
-                showModal={showModal}
-                user={user}
-              />
-            )}
+            <SocialModal
+              isModalVisible={modals.social}
+              hideModal={() => hideModal("social")}
+              showModal={showModal}
+            />
+            <ViewEventsModal
+              isModalVisible={modals.viewEvents}
+              hideModal={() => hideModal("viewEvents")}
+              showModal={showModal}
+              eventsToday={eventsToday}
+              eventsUpcoming={eventsUpcoming}
+              currentEvent={currentEvent}
+              setCurrentEvent={setCurrentEvent}
+            />
+            <EventInfo
+              isModalVisible={modals.eventInfo}
+              hideModal={() => hideModal("eventInfo")}
+              showModal={showModal}
+              event={currentEvent}
+            />
+            <CreateEventModal
+              isModalVisible={modals.createEvent}
+              hideModal={() => hideModal("createEvent")}
+              showModal={showModal}
+              colonies={colonies}
+              allSpots={spots}
+              eventsToday={eventsToday}
+              eventsUpcoming={eventsUpcoming}
+              setEventsToday={setEventsToday}
+              setEventsUpcoming={setEventsUpcoming}
+            />
+
+            <CreateColonyModal
+              isModalVisible={modals.createColony}
+              hideModal={() => hideModal("createColony")}
+              showModal={showModal}
+              user={user}
+            />
             {/* Chats Button */}
             <MapButton
               imageSource={require("../assets/speech-bubble.png")}
@@ -865,6 +935,7 @@ const fetchIncognitoStatus = async () => {
               isModalVisible={modals.chat}
               hideModal={() => hideModal("chat")}
               navigation={navigation}
+              colonies={colonies}
             />
 
             {/* ------ SEARCH BAR ------ */}
@@ -883,6 +954,9 @@ const fetchIncognitoStatus = async () => {
               getSpots={getUsersSpotsInColony}
               spots={spots}
               setSpots={setSpots}
+              setUsers={setUsers}
+              getUsersInColony={getUsersInColony}
+              findSelectedColony={findSelectedColony}
             />
 
             {/* ------ SIDE BUTTONS ------ */}
@@ -931,22 +1005,20 @@ const fetchIncognitoStatus = async () => {
               width={45}
               height={45}
             />
-            {modals.editSpot && (
-              <EditSpot
-                isModalVisible={modals.editSpot}
-                hideModal={() => hideModal("editSpot")}
-                allSpots={spots}
-                setAllSpots={setSpots}
-                mapRegion={{
-                  latitude: user.currentLocation.latitude,
-                  longitude: user.currentLocation.longitude,
-                  latitudeDelta: 0.005,
-                  longitudeDelta: 0.005,
-                }}
-                colonies={colonies}
-                currentSpot={currentSpot}
-              />
-            )}
+            <EditSpot
+              isModalVisible={modals.editSpot}
+              hideModal={() => hideModal("editSpot")}
+              allSpots={spots}
+              setAllSpots={setSpots}
+              mapRegion={{
+                latitude: user.currentLocation.latitude,
+                longitude: user.currentLocation.longitude,
+                latitudeDelta: 0.005,
+                longitudeDelta: 0.005,
+              }}
+              colonies={colonies}
+              currentSpot={currentSpot}
+            />
 
             {/* Spots Modal Button */}
             <MapButton
@@ -958,21 +1030,22 @@ const fetchIncognitoStatus = async () => {
               width={45}
               height={45}
             />
-            {modals.spots && (
-              <CreateSpotModal
-                isModalVisible={modals.spots}
-                hideModal={() => hideModal("spots")}
-                allSpots={spots}
-                setAllSpots={setSpots}
-                mapRegion={{
-                  latitude: user.currentLocation.latitude,
-                  longitude: user.currentLocation.longitude,
-                  latitudeDelta: 0.005,
-                  longitudeDelta: 0.005,
-                }}
-                colonies={colonies}
-              />
-            )}
+            <CreateSpotModal
+              isModalVisible={modals.spots}
+              hideModal={() => hideModal("spots")}
+              allSpots={spots}
+              setAllSpots={setSpots}
+              mapRegion={{
+                latitude: user.currentLocation.latitude,
+                longitude: user.currentLocation.longitude,
+                latitudeDelta: 0.005,
+                longitudeDelta: 0.005,
+              }}
+              colonies={colonies}
+              showModal={showModal}
+              currentSpot={currentSpot}
+              setCurrentSpot={setCurrentSpot}
+            />
             {/* Settings Button */}
             <MapButton
               imageSource={require("../assets/setting.png")}

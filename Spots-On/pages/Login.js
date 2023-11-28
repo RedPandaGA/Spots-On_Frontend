@@ -7,11 +7,13 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import COLORS from "../components/colors";
-import CustomAlert from '../components/alert';
-import Config from '../.config.js';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import CustomAlert from "../components/alert";
+import Config from "../.config.js";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const apiUrl = Config.API_URL;
 
@@ -20,8 +22,8 @@ const Login = ({ navigation }) => {
   const [password, setPassword] = useState("");
 
   const [showAlert, setShowAlert] = useState(false);
-  const [alertTitle, setAlertTitle] = useState('');
-  const [alertMessage, setAlertMessage] = useState('');
+  const [alertTitle, setAlertTitle] = useState("");
+  const [alertMessage, setAlertMessage] = useState("");
 
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
@@ -36,44 +38,44 @@ const Login = ({ navigation }) => {
     // THROW ERROR AND DISPLAY THAT USER IS NOT IN DATABSE OTHERWISE
 
     if (!phoneNumber || !password) {
-      setAlertTitle('Incomplete Fields');
-      setAlertMessage('Please fill in all the fields.');
+      setAlertTitle("Incomplete Fields");
+      setAlertMessage("Please fill in all the fields.");
       setShowAlert(true);
       return;
     }
 
     const userData = {
-        pnum: phoneNumber,
-        pass: password,
+      pnum: phoneNumber,
+      pass: password,
     };
 
     try {
-        const response = await fetch(`${apiUrl}/login`, {
-            method: 'POST',
-            headers: {
-            'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(userData),
-        });
+      const response = await fetch(`${apiUrl}/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
 
-        if (!response.ok) {
-            console.error('Error logging in: ', response.status);
-            return;
-        }
+      if (!response.ok) {
+        console.error("Error logging in: ", response.status);
+        return;
+      }
 
-        const data = await response.json();
-        const receivedToken = data.token;
-        const newuid = data.uid;
+      const data = await response.json();
+      const receivedToken = data.token;
+      const newuid = data.uid;
 
-        // Store the token in AsyncStorage
-        await AsyncStorage.setItem('token', receivedToken);
-        await AsyncStorage.setItem('uid', newuid);
+      // Store the token in AsyncStorage
+      await AsyncStorage.setItem("token", receivedToken);
+      // await AsyncStorage.setItem('uid', newuid);
 
-        console.log('Logged Into Account: ' + await AsyncStorage.getItem('token') + " uid: " + await AsyncStorage.getItem('uid'));
-        navigation.navigate('Home');
+      // console.log('Logged Into Account: ' + await AsyncStorage.getItem('token') + " uid: " + await AsyncStorage.getItem('uid'));
+      navigation.navigate("Home");
     } catch (error) {
-        console.error('Error:', error);
-        // Handle other errors as needed
+      console.error("Error:", error);
+      // Handle other errors as needed
     }
   };
 
@@ -84,59 +86,68 @@ const Login = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.shadow}>
-        <Image
-          source={require("../assets/ladybugfixed.png")}
-          style={styles.icon}
-        />
-      </View>
-      {/* <Button title="Login" onPress={handleLogin} /> */}
-      <TextInput
-        style={[styles.input, { marginTop: 50 }]}
-        keyboardType="numeric"
-        placeholder="Phone #"
-        placeholderTextColor={COLORS.secondary}
-        value={phoneNumber}
-        onChangeText={(text) => setPhoneNumber(text)}
-      />
-      <View style={styles.passwordContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          placeholderTextColor={COLORS.secondary}
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-          secureTextEntry={!isPasswordVisible}
-        />
-        <TouchableOpacity onPress={togglePasswordVisibility} style={styles.eyeIcon}>
-          <Image
-            source={isPasswordVisible ? require("../assets/noeye.png") : require("../assets/eye.png")}
-            style={styles.eyecon}
-          />
-        </TouchableOpacity>
-      </View>
-      <TouchableOpacity
-        style={[styles.button, { alignSelf: "center", marginTop: 30 }]}
-        onPress={handleLogin}
-      >
-        <Text style={styles.buttonText}>Login</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={[styles.button, { alignSelf: "center", marginTop: 20 }]}
-        onPress={handleSignup}
-      >
-        <Text style={styles.buttonText}>Create Account</Text>
-      </TouchableOpacity>
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
-        <CustomAlert
-          visible={showAlert}
-          title={alertTitle}
-          message={alertMessage}
-          onClose={() => setShowAlert(false)}
+        <View style={styles.shadow}>
+          <Image
+            source={require("../assets/ladybugfixed.png")}
+            style={styles.icon}
+          />
+        </View>
+        {/* <Button title="Login" onPress={handleLogin} /> */}
+        <TextInput
+          style={[styles.input, { marginTop: 50 }]}
+          keyboardType="numeric"
+          placeholder="Phone #"
+          placeholderTextColor={COLORS.secondary}
+          value={phoneNumber}
+          onChangeText={(text) => setPhoneNumber(text)}
         />
+        <View style={styles.passwordContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            placeholderTextColor={COLORS.secondary}
+            value={password}
+            onChangeText={(text) => setPassword(text)}
+            secureTextEntry={!isPasswordVisible}
+          />
+          <TouchableOpacity
+            onPress={togglePasswordVisibility}
+            style={styles.eyeIcon}
+          >
+            <Image
+              source={
+                isPasswordVisible
+                  ? require("../assets/noeye.png")
+                  : require("../assets/eye.png")
+              }
+              style={styles.eyecon}
+            />
+          </TouchableOpacity>
+        </View>
+        <TouchableOpacity
+          style={[styles.button, { alignSelf: "center", marginTop: 30 }]}
+          onPress={handleLogin}
+        >
+          <Text style={styles.buttonText}>Login</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.button, { alignSelf: "center", marginTop: 20 }]}
+          onPress={handleSignup}
+        >
+          <Text style={styles.buttonText}>Create Account</Text>
+        </TouchableOpacity>
+        <View style={styles.container}>
+          <CustomAlert
+            visible={showAlert}
+            title={alertTitle}
+            message={alertMessage}
+            onClose={() => setShowAlert(false)}
+          />
+        </View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -188,8 +199,8 @@ const styles = StyleSheet.create({
     borderRadius: 100,
   },
   passwordContainer: {
-    width: '100%',
-    alignItems: 'center'
+    width: "100%",
+    alignItems: "center",
   },
   eyecon: {
     height: 30,
@@ -197,9 +208,9 @@ const styles = StyleSheet.create({
     tintColor: COLORS.darkerprimary,
   },
   eyeIcon: {
-    position: 'absolute',
+    position: "absolute",
     right: 30,
-    top: 20
+    top: 20,
   },
 });
 

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  // Modal,
   Switch,
   StyleSheet,
   View,
@@ -24,67 +23,30 @@ import Slider from "@react-native-community/slider";
 import Spot from "./spot";
 import * as Location from "expo-location";
 import { Dropdown } from "react-native-element-dropdown";
+import GooglePlacesInput from "./googlePlacesInput";
+import { useHandler } from "react-native-reanimated";
 
 const EditSpot = ({
   isModalVisible,
   hideModal,
-  // cancelCreateSpot,
-  // newSpot,
-  // setNewSpot,
-  // resetNewSpot,
   allSpots,
   setAllSpots,
   mapRegion,
   colonies,
   currentSpot,
 }) => {
-  // const [showAddSpot, setShowAddSpot] = useState(false);
   const [showSpotList, setShowSpotList] = useState(true);
-  const [circleRadius, setCircleRadius] = useState(50);
+  const [circleRadius, setCircleRadius] = useState(currentSpot.radius);
   const [circleCenter, setCircleCenter] = useState(currentSpot.coordinate);
-  const [region, setRegion] = useState(mapRegion);
-  const [newSpot, setNewSpot] = useState({
-    name: "",
-    colonyName: "",
-    radius: 250,
-    coordinate: {},
-    address: "",
-    safe: true,
-  });
-
-  const resetNewSpot = () => {
-    setNewSpot({
-      name: "",
-      colonyName: "",
-      radius: 250,
-      coordinate: {},
-      address: "",
-      safe: true,
-    });
-  };
-
-  // const colonyList = colonies.map((colony, index) => [
-  //   {
-  //     label: colony.name,
-  //     value: index + 1,
-  //   },
-  // ]);
-  // console.log(colonyList);
+  const [region, setRegion] = useState(currentSpot.coordinate);
+  const [newSpot, setNewSpot] = useState(currentSpot);
 
   const [spotNameError, setSpotNameError] = useState(null);
-  const [colonyNameError, setColonyNameError] = useState(null);
-
-  // // Animated values
-  // const spotListOpacity = new Animated.Value(1);
-  // const addSpotOpacity = new Animated.Value(0);
-  // const addSpotTranslateX = new Animated.Value(300);
-  // const spotListTranslateX = new Animated.Value(-300);
 
   const handleInputChange = (key, value) => {
     setNewSpot({ ...newSpot, [key]: value });
     // Clear the error when the user starts typing
     key === "name" && setSpotNameError(null);
-    key === "colonyName" && setColonyNameError(null);
   };
 
   const resetValues = () => {
@@ -93,26 +55,29 @@ const EditSpot = ({
       longitude: mapRegion.longitude,
     });
     setCircleRadius(50);
-    // setShowAddSpot(false);
     setShowSpotList(true);
     setSpotNameError(false);
-    setColonyNameError(false);
-    resetNewSpot();
   };
+
+  useEffect(() => {
+    // geocode();
+    console.log(newSpot.coordinate);
+    setRegion({
+      latitude: newSpot.coordinate.latitude,
+      longitude: newSpot.coordinate.longitude,
+      latitudeDelta: 0.005,
+      longitudeDelta: 0.005,
+    });
+    Keyboard.dismiss();
+  }, [newSpot.address]);
 
   const validateInputs = () => {
     let isValid = true;
 
-    if (!newSpot.name.trim()) {
+    if (!newSpot.spotName.trim()) {
       setSpotNameError("Spot Name is required");
       isValid = false;
     }
-
-    if (!newSpot.colonyName.trim()) {
-      setColonyNameError("Colony Name is required");
-      isValid = false;
-    }
-
     return isValid;
   };
 
@@ -122,63 +87,6 @@ const EditSpot = ({
       safe: !prevSpot.safe,
     }));
   };
-
-  // useEffect(() => {
-  //   // Animate the content switch
-  //   if (showAddSpot) {
-  //     // Spot list slides out to the left
-  //     Animated.timing(spotListTranslateX, {
-  //       toValue: -300,
-  //       duration: 500,
-  //       useNativeDriver: false,
-  //     }).start();
-
-  //     // Add spot form fades in and slides in from the right
-  //     Animated.parallel([
-  //       Animated.timing(addSpotOpacity, {
-  //         toValue: 1,
-  //         duration: 500,
-  //         useNativeDriver: false,
-  //       }),
-  //       Animated.spring(addSpotTranslateX, {
-  //         toValue: 0,
-  //         useNativeDriver: false,
-  //       }),
-  //     ]).start();
-  //   } else {
-  //     // Spot list slides in from the left
-  //     Animated.timing(spotListTranslateX, {
-  //       toValue: 0,
-  //       duration: 200,
-  //       useNativeDriver: false,
-  //     }).start();
-
-  //     // Add spot form fades out and slides out to the right
-  //     Animated.parallel([
-  //       Animated.timing(addSpotOpacity, {
-  //         toValue: 0,
-  //         duration: 500,
-  //         useNativeDriver: false,
-  //       }),
-  //       Animated.spring(addSpotTranslateX, {
-  //         toValue: 300,
-  //         useNativeDriver: false,
-  //       }),
-  //     ]).start();
-  //   }
-  // }, [showAddSpot]);
-
-  // const renderSpotItem = ({ item }) => {
-  //   return (
-  //     <TouchableOpacity style={styles.addSpotButton}>
-  //       <Image
-  //         style={styles.spotListImage}
-  //         source={require("../assets/marker.png")}
-  //       />
-  //       <Text style={styles.addSpotText}>{item.name}</Text>
-  //     </TouchableOpacity>
-  //   );
-  // };
 
   const renderSpotItem = ({ item }) => {
     // Find the associated colony
@@ -230,24 +138,99 @@ const EditSpot = ({
 
   let feetValue = metersToFeet(circleRadius);
 
+  const updateSpot = () => {
+    // Find the index of the current spot in the allSpots array
+
+    console.log(
+      allSpots.map((item) => {
+        console.log(item.name);
+        console.log(item.colonyName);
+        console.log(item.coordinate);
+      })
+    );
+    console.log("CURRENT SPOT:");
+    console.log(currentSpot.spotName);
+    console.log(currentSpot.colonyName);
+    console.log(currentSpot.coordinate);
+    const spotIndex = allSpots.findIndex(
+      (spot) => spot.name === currentSpot.spotName
+    );
+    console.log(spotIndex);
+
+    if (spotIndex !== -1) {
+      // Create a copy of allSpots
+      const updatedSpots = [...allSpots];
+
+      // Update the spot at the identified index with the new values
+      updatedSpots[spotIndex] = {
+        ...currentSpot,
+        name: newSpot.spotName,
+        colonyName: newSpot.colonyName,
+        address: newSpot.address,
+        safe: newSpot.safe,
+        radius: circleRadius,
+        coordinate: circleCenter,
+      };
+
+      // Set the state with the updated array
+      setAllSpots(updatedSpots);
+
+      // Hide the modal and reset values
+      hideModal();
+      resetValues();
+
+      console.log("Spot Edited:\n", currentSpot, "to", updatedSpots[spotIndex]);
+    }
+    // }
+  };
+
+  const deleteSpot = () => {
+    // Find the index of the current spot in the allSpots array
+    console.log(
+      allSpots.map((item) => {
+        console.log(item.name);
+        console.log(item.colonyName);
+        console.log(item.coordinate);
+      })
+    );
+    console.log("CURRENT SPOT:");
+    console.log(currentSpot.spotName);
+    console.log(currentSpot.colonyName);
+    console.log(currentSpot.coordinate);
+    const spotIndex = allSpots.findIndex(
+      (spot) => spot.name === currentSpot.spotName
+    );
+
+    if (spotIndex !== -1) {
+      // Create a copy of allSpots
+      const updatedSpots = [...allSpots];
+
+      // Remove the spot at the identified index
+      updatedSpots.splice(spotIndex, 1);
+
+      // Set the state with the updated array
+      setAllSpots(updatedSpots);
+
+      // Hide the modal and reset values
+      hideModal();
+      resetValues();
+
+      console.log("Spot Deleted:\n", currentSpot);
+    }
+  };
+
   return (
     <Modal
       animationIn="slideInUp"
       animationOut="slideOutDown"
       isVisible={isModalVisible}
       onBackdropPress={() => {
-        // setShowAddSpot(false);
         setShowSpotList(true);
         hideModal();
-        // cancelCreateSpot();
-        // resetNewSpot();
       }}
       onSwipeComplete={() => {
-        // setShowAddSpot(false);
         setShowSpotList(true);
         hideModal();
-        // cancelCreateSpot();
-        // resetNewSpot();
       }}
       swipeThreshold={200}
       swipeDirection={showSpotList ? "down" : null}
@@ -257,97 +240,43 @@ const EditSpot = ({
       <KeyboardAvoidingView behavior="padding" style={styles.modalContainer}>
         <View style={styles.modalContent}>
           <Bar style={styles.bar} color={COLORS.secondary} />
-          {/* {showSpotList ? (
-            <View
-              style={{
-                flex: 1,
-              }}
-            >
-              <View style={styles.header}>
-                <Text style={styles.modalTitle}>{currentSpot.spotName}</Text>
-              </View>
-              <View style={styles.spotContainer}>
-                <TouchableOpacity
-                  style={styles.addSpotButton}
-                  onPress={() => {
-                    // setShowAddSpot(true);
-                    setShowSpotList(false);
-                    console.log(mapRegion);
-                  }}
-                >
-                  <AntDesign
-                    style={styles.addSpotImage}
-                    name="pluscircle"
-                    size={40}
-                    color={COLORS.secondary}
-                  />
-                  <Text style={styles.addSpotText}>Add a new Spot</Text>
-                </TouchableOpacity>
-                <FlatList
-                  data={allSpots}
-                  keyExtractor={(item, index) => index.toString()}
-                  renderItem={renderSpotItem}
-                  style={styles.spotList}
-                />
-              </View>
-            </View> */}
-          {/* ) : ( */}
           <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
             <View
               style={{
                 flex: 1,
               }}
             >
-              <View style={styles.addSpotHeader}>
-                {/* <TouchableOpacity
-                  onPress={() => {
-                    hideModal();
-                    resetValues();
-                  }}
-                >
-                  <Image
-                    source={require("../assets/back-button-secondary-color.png")}
-                    style={styles.backButton}
-                  />
-                </TouchableOpacity> */}
-                <Text style={styles.addSpotTitle}>{currentSpot.spotName}</Text>
-              </View>
-              <Text
-                style={{
-                  justifyContent: "center",
-                  textAlign: "center",
-                  fontWeight: "bold",
-                  color: COLORS.secondary,
-                  fontSize: 16,
-                }}
-              >
-                {currentSpot.colonyName}
-              </Text>
               <View style={styles.infoContainer}>
-                <View style={styles.inputContainer}>
+                <View style={styles.addSpotHeader}>
                   <TextInput
-                    style={[styles.input, spotNameError && styles.inputError]}
-                    placeholder="Edit Spot Name"
+                    style={[
+                      styles.addSpotTitle,
+                      spotNameError && styles.inputError,
+                    ]}
+                    placeholder={
+                      currentSpot.spotName
+                        ? currentSpot.spotName
+                        : currentSpot.name
+                    }
                     placeholderTextColor={COLORS.secondary}
-                    value={newSpot.name}
-                    onChangeText={(text) => handleInputChange("name", text)}
+                    value={newSpot.spotName}
+                    onChangeText={(text) => handleInputChange("spotName", text)}
                   />
-                  {spotNameError && (
-                    <Text style={styles.errorMessage}>{spotNameError}</Text>
-                  )}
-                  {/* <TextInput
-                      style={[
-                        styles.input,
-                        colonyNameError && styles.inputError,
-                      ]}
-                      placeholder="Colony Name *"
-                      placeholderTextColor={COLORS.secondary}
-                      value={newSpot.colonyName}
-                      onChangeText={(text) =>
-                        handleInputChange("colonyName", text)
-                      }
-                    /> */}
-                  <Dropdown
+                  <Image
+                    source={require("../assets/pencil.png")}
+                    style={{
+                      tintColor: COLORS.secondary,
+                      width: 25,
+                      height: 25,
+                      resizeMode: "contain",
+                      justifyContent: "center",
+                      // marginLeft: 10,
+                      marginTop: 15,
+                    }}
+                  />
+                </View>
+                <View style={styles.inputContainer}>
+                  {/* <Dropdown
                     style={styles.input}
                     placeholderStyle={styles.placeholderStyle}
                     selectedTextStyle={styles.placeholderStyle}
@@ -365,17 +294,14 @@ const EditSpot = ({
                     }
                     value={newSpot.colonyName}
                     onChange={(item) => {
-                      // const statusValue = item.value - 1;
-                      // setUser({ ...user, statusCode: statusValue });
-                      // console.log(statusIdentifiers[statusValue].label);
                       handleInputChange("colonyName", item.name);
                     }}
                   />
                   {colonyNameError && (
                     <Text style={styles.errorMessage}>{colonyNameError}</Text>
-                  )}
+                  )} */}
                   <View style={styles.findLocationContainer}>
-                    <TextInput
+                    {/* <TextInput
                       style={[styles.input, { width: "80%" }]}
                       placeholder="Find Address"
                       placeholderTextColor={COLORS.secondary}
@@ -389,7 +315,22 @@ const EditSpot = ({
                       style={styles.findLocationButton}
                     >
                       <Text style={styles.findLocationText}>Find</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
+                    <GooglePlacesInput
+                      placeholderText="Find new address on map"
+                      placeholderTextColor={COLORS.secondary}
+                      textInputStyle={[
+                        styles.input,
+                        {
+                          backgroundColor: "transparent",
+                          paddingHorizontal: 0,
+                          borderRadius: 0,
+                        },
+                      ]}
+                      addressValue={newSpot.address}
+                      coordinateValue={newSpot.coordinate}
+                      handleInputChange={handleInputChange}
+                    />
                   </View>
                 </View>
                 <View style={styles.switchContainer}>
@@ -406,7 +347,6 @@ const EditSpot = ({
                   style={styles.map}
                   region={currentSpot.coordinate}
                   userInterfaceStyle="light"
-                  // onPress={handleMapPress}
                   onRegionChange={(newRegion) => {
                     setCircleCenter(newRegion);
                   }}
@@ -414,38 +354,18 @@ const EditSpot = ({
                     setCircleCenter(newRegion);
                   }}
                 >
-                  {/* <View
-                      style={{
-                        position: "absolute",
-                        top: "50%",
-                        left: "50%",
-                      }}
-                    >
-                      <Marker coordinate={circleCenter}>
-                        <Image
-                          source={require("../assets/marker.png")}
-                          style={{ width: 30, height: 30 }}
-                        />
-                      </Marker>
-                      <Circle
-                        center={circleCenter}
-                        radius={circleRadius}
-                        strokeWidth={1}
-                        strokeColor={newSpot.safe ? "#2C6765" : "#FF5555"}
-                        fillColor={
-                          newSpot.safe
-                            ? "rgba(44, 103, 101, .3)"
-                            : "rgba(255, 85, 85, .3)"
-                        } // transparent versions of COLORS.primary/COLORS.active
-                      />
-                    </View> */}
                   <Spot
-                    coordinate={circleCenter}
-                    spotName={currentSpot.spotName}
-                    colonyName={currentSpot.colonyName}
-                    isSafe={currentSpot.safe}
+                    coordinate={
+                      circleCenter &&
+                      circleCenter.latitude != undefined &&
+                      circleCenter.longitude != undefined
+                        ? circleCenter
+                        : currentSpot.coordinate
+                    }
+                    spotName={newSpot.spotName}
+                    colonyName={newSpot.colonyName}
+                    isSafe={newSpot.safe}
                     spotRadius={circleRadius}
-                    isEditSpotVisible={isModalVisible}
                   />
                 </MapView>
 
@@ -463,50 +383,25 @@ const EditSpot = ({
                 </View>
 
                 <View style={styles.buttonContainer}>
-                  {/* <TouchableOpacity
-                    style={styles.buttonNormal}
-                    onPress={() => {
-                      hideModal();
-                      cancelCreateSpot();
-                      resetNewSpot();
-                    }}
-                  >
-                    <Text style={styles.buttonText}>Cancel</Text>
-                  </TouchableOpacity> */}
                   <TouchableOpacity
                     style={styles.buttonNormal}
                     onPress={() => {
-                      // Validate inputs before proceeding
-                      if (validateInputs()) {
-                        // Save the event object or perform other actions here
-                        const updatedSpot = {
-                          ...newSpot,
-                          id: Date.now(),
-                          radius: circleRadius,
-                          coordinate: circleCenter,
-                        };
-                        setAllSpots([...allSpots, updatedSpot]);
-                        // setShowAddSpot(false);
-                        setShowSpotList(true);
-                        // hideModal();
-                        console.log(
-                          "Spot Edited:\n",
-                          currentSpot,
-                          "to",
-                          newSpot
-                        );
-                        hideModal();
-                        resetValues();
-                      }
+                      hideModal();
+                      deleteSpot();
                     }}
                   >
-                    <Text style={styles.buttonText}>Edit</Text>
+                    <Text style={styles.buttonText}>Delete</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.buttonNormal}
+                    onPress={() => updateSpot()}
+                  >
+                    <Text style={styles.buttonText}>Save</Text>
                   </TouchableOpacity>
                 </View>
               </View>
             </View>
           </TouchableWithoutFeedback>
-          {/* )} */}
         </View>
       </KeyboardAvoidingView>
     </Modal>
@@ -515,21 +410,15 @@ const EditSpot = ({
 
 const styles = StyleSheet.create({
   modalContainer: {
-    // flex: 1,
     justifyContent: "flex-end",
-    // // alignItems: "center",
     margin: 0,
-    // backgroundColor: COLORS.primary,
-    // height: "50%",
   },
   modalContent: {
     backgroundColor: COLORS.primary,
     borderTopRightRadius: 50,
     borderTopLeftRadius: 50,
-    // padding: 20,
     height: "95%",
     width: "100%",
-    // alignItems: "center",
   },
   modalTitle: {
     fontSize: 40,
@@ -568,12 +457,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: "100%",
     justifyContent: "center",
+    marginBottom: 20,
   },
   buttonNormal: {
     borderRadius: 30,
     width: "45%",
-    borderWidth: 1.5,
-    borderColor: "#ccc",
+    marginHorizontal: 10,
     marginVertical: 10,
     alignItems: "center",
     backgroundColor: COLORS.secondary,
@@ -608,7 +497,6 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     marginBottom: 10,
     paddingBottom: 0,
-    // borderRadius: 10,
     color: COLORS.secondary,
     fontWeight: "bold",
     fontSize: 20,
@@ -628,18 +516,17 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   addSpotTitle: {
-    fontSize: 40,
+    fontSize: 30,
     fontWeight: "bold",
-    marginBottom: 10,
     color: COLORS.secondary,
     textAlign: "center",
     justifyContent: "center",
-    paddingTop: 10,
     paddingHorizontal: 10,
     marginTop: 10,
   },
   infoContainer: {
     paddingHorizontal: 20,
+    flex: 1,
   },
   spotListImage: {
     width: 40,
@@ -654,18 +541,20 @@ const styles = StyleSheet.create({
     marginBottom: 0,
   },
   map: {
-    height: "30%",
+    height: "35%",
     width: "100%",
     borderWidth: 1,
     borderColor: COLORS.secondary,
     borderRadius: 10,
     marginVertical: 10,
+    overflow: "hidden",
   },
   sliderContainer: {
     flex: 1,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    padding: 10,
   },
   sliderText: {
     color: COLORS.secondary,
@@ -675,6 +564,7 @@ const styles = StyleSheet.create({
   findLocationContainer: {
     flexDirection: "row",
     alignItems: "center",
+    paddingHorizontal: 10,
   },
   findLocationButton: {
     backgroundColor: COLORS.secondary,
@@ -689,13 +579,9 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 18,
   },
-  // inputError: {
-  //   borderColor: "red",
-  // },
   errorMessage: {
     color: COLORS.active,
     fontSize: 14,
-    // marginTop: 5,
     marginLeft: 10,
     fontWeight: "bold",
   },
