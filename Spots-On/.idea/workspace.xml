@@ -5,8 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bb950c41-3fac-4440-952a-f7c0da027e3a" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/components/chatModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/chatModal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/colonyChatList.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/colonyChatList.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/editSpot.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/editSpot.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/spotsModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/spotsModal.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/mainMap.js" beforeDir="false" afterPath="$PROJECT_DIR$/pages/mainMap.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

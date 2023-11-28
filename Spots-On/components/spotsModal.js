@@ -32,12 +32,13 @@ const CreateSpotModal = ({
   isModalVisible,
   hideModal,
   allSpots,
-  setAllSpots,
   mapRegion,
   colonies,
   showModal,
   currentSpot,
   setCurrentSpot,
+  getUsersSpotsInColony,
+  setSpots,
 }) => {
   const [showSpotList, setShowSpotList] = useState(true);
   const [circleRadius, setCircleRadius] = useState(50);
@@ -105,6 +106,7 @@ const CreateSpotModal = ({
 
       // Successfully created spot
       console.log("Spot created successfully: " + response);
+      setSpots(await getUsersSpotsInColony(spotData.cid));
     } catch (error) {
       console.error("Error:", error);
       // Handle other errors as needed

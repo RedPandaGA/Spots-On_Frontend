@@ -25,15 +25,19 @@ import * as Location from "expo-location";
 import { Dropdown } from "react-native-element-dropdown";
 import GooglePlacesInput from "./googlePlacesInput";
 import { useHandler } from "react-native-reanimated";
+import Config from "../.config.js";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+const papiUrl = Config.PAPI_URL;
 
 const EditSpot = ({
   isModalVisible,
   hideModal,
-  allSpots,
-  setAllSpots,
   mapRegion,
   colonies,
   currentSpot,
+  getUsersSpotsInColony,
+  setSpots,
 }) => {
   const [showSpotList, setShowSpotList] = useState(true);
   const [circleRadius, setCircleRadius] = useState(currentSpot.radius);
@@ -47,6 +51,56 @@ const EditSpot = ({
   });
 
   const [spotNameError, setSpotNameError] = useState(null);
+
+  const updateSpot = async () => {
+    try {
+      // Get the authorization token from AsyncStorage
+      const authToken = await AsyncStorage.getItem("token");
+
+      if (!authToken) {
+        // Handle the case where the token is not available
+        console.error("Authorization token not found.");
+        return;
+      }
+
+      console.log(JSON.stringify(newSpot));
+
+      const spotData = {
+        ...currentSpot,
+        name: newSpot.spotName,
+        id: currentSpot.id,
+        safe: newSpot.safe,
+        radius: circleRadius,
+        coordinate: circleCenter
+      };
+
+      
+      console.log(spotData);
+      const response = await fetch(`${papiUrl}/updateSpot`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`, // Attach the token to the Authorization header
+        },
+        body: JSON.stringify(spotData),
+      });
+
+      if (!response.ok) {
+        // Handle error, e.g., display an error message
+        console.error("Error creating spot:", response.status);
+        return;
+      }
+
+      // Successfully created spot
+      console.log("Spot created successfully: " + response);
+      setSpots(await getUsersSpotsInColony(spotData.id));
+      hideModal();
+      resetValues();
+    } catch (error) {
+      console.error("Error:", error);
+      // Handle other errors as needed
+    }
+  };
 
   const handleInputChange = (key, value) => {
     setNewSpot({ ...newSpot, [key]: value });
@@ -143,86 +197,86 @@ const EditSpot = ({
 
   let feetValue = metersToFeet(circleRadius);
 
-  const updateSpot = () => {
-    // Find the index of the current spot in the allSpots array
+//   const updateSpot = () => {
+//     // Find the index of the current spot in the allSpots array
 
-    console.log(
-      allSpots.map((item) => {
-        console.log(item.name);
-        console.log(item.colonyName);
-        console.log(item.coordinate);
-      })
-    );
-    console.log("CURRENT SPOT:");
-    console.log(currentSpot.spotName);
-    console.log(currentSpot.colonyName);
-    console.log(currentSpot.coordinate);
-    const spotIndex = allSpots.findIndex(
-      (spot) => spot.name === currentSpot.spotName
-    );
-    console.log(spotIndex);
+//     console.log(
+//       allSpots.map((item) => {
+//         console.log(item.name);
+//         console.log(item.colonyName);
+//         console.log(item.coordinate);
+//       })
+//     );
+//     console.log("CURRENT SPOT:");
+//     console.log(currentSpot);
+//     console.log(currentSpot.colonyName);
+//     console.log(currentSpot.coordinate);
+//     const spotIndex = allSpots.findIndex(
+//       (spot) => spot.name === currentSpot.spotName
+//     );
+//     console.log(spotIndex);
 
-    if (spotIndex !== -1) {
-      // Create a copy of allSpots
-      const updatedSpots = [...allSpots];
+//     if (spotIndex !== -1) {
+//       // Create a copy of allSpots
+//       const updatedSpots = [...allSpots];
 
-      // Update the spot at the identified index with the new values
-      updatedSpots[spotIndex] = {
-        ...currentSpot,
-        name: newSpot.spotName,
-        colonyName: newSpot.colonyName,
-        address: newSpot.address,
-        safe: newSpot.safe,
-        radius: circleRadius,
-        coordinate: circleCenter,
-      };
+//       // Update the spot at the identified index with the new values
+//       updatedSpots[spotIndex] = {
+//         ...currentSpot,
+//         name: newSpot.spotName,
+//         colonyName: newSpot.colonyName,
+//         address: newSpot.address,
+//         safe: newSpot.safe,
+//         radius: circleRadius,
+//         coordinate: circleCenter,
+//       };
 
-      // Set the state with the updated array
-      setAllSpots(updatedSpots);
+//       // Set the state with the updated array
+//       setAllSpots(updatedSpots);
 
-      // Hide the modal and reset values
-      hideModal();
-      resetValues();
+//       // Hide the modal and reset values
+//       hideModal();
+//       resetValues();
 
-      console.log("Spot Edited:\n", currentSpot, "to", updatedSpots[spotIndex]);
-    }
-    // }
-  };
+//       console.log("Spot Edited:\n", currentSpot, "to", updatedSpots[spotIndex]);
+//     }
+//     // }
+//   };
 
-  const deleteSpot = () => {
-    // Find the index of the current spot in the allSpots array
-    console.log(
-      allSpots.map((item) => {
-        console.log(item.name);
-        console.log(item.colonyName);
-        console.log(item.coordinate);
-      })
-    );
-    console.log("CURRENT SPOT:");
-    console.log(currentSpot.spotName);
-    console.log(currentSpot.colonyName);
-    console.log(currentSpot.coordinate);
-    const spotIndex = allSpots.findIndex(
-      (spot) => spot.name === currentSpot.spotName
-    );
+//   const deleteSpot = () => {
+//     // Find the index of the current spot in the allSpots array
+//     console.log(
+//       allSpots.map((item) => {
+//         console.log(item.name);
+//         console.log(item.colonyName);
+//         console.log(item.coordinate);
+//       })
+//     );
+//     console.log("CURRENT SPOT:");
+//     console.log(currentSpot.spotName);
+//     console.log(currentSpot.colonyName);
+//     console.log(currentSpot.coordinate);
+//     const spotIndex = allSpots.findIndex(
+//       (spot) => spot.name === currentSpot.spotName
+//     );
 
-    if (spotIndex !== -1) {
-      // Create a copy of allSpots
-      const updatedSpots = [...allSpots];
+//     if (spotIndex !== -1) {
+//       // Create a copy of allSpots
+//       const updatedSpots = [...allSpots];
 
-      // Remove the spot at the identified index
-      updatedSpots.splice(spotIndex, 1);
+//       // Remove the spot at the identified index
+//       updatedSpots.splice(spotIndex, 1);
 
-      // Set the state with the updated array
-      setAllSpots(updatedSpots);
+//       // Set the state with the updated array
+//       setAllSpots(updatedSpots);
 
-      // Hide the modal and reset values
-      hideModal();
-      resetValues();
+//       // Hide the modal and reset values
+//       hideModal();
+//       resetValues();
 
-      console.log("Spot Deleted:\n", currentSpot);
-    }
-  };
+//       console.log("Spot Deleted:\n", currentSpot);
+//     }
+//   };
 
   return (
     <Modal

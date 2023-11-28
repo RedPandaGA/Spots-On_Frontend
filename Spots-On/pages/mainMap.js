@@ -67,7 +67,7 @@ export default function MainMap({ navigation }) {
   const [currentSpot, setCurrentSpot] = useState({
     spotName: "",
     coordinate: {},
-    safe: "",
+    safe: false,
     colonyName: "",
     radius: 250,
   });
@@ -277,14 +277,18 @@ export default function MainMap({ navigation }) {
     }
   };
 
-  const getUsersSpotsInColony = async () => {
+  const getUsersSpotsInColony = async (cid) => {
     console.log("colonies: " + JSON.stringify(colonies));
-    selectedColony = findSelectedColony(colonies);
+    if(cid == undefined){
+        selectedColony = findSelectedColony(colonies).cid;
+    } else {
+        selectedColony = cid;
+    }
     console.log("selectedColony: " + JSON.stringify(selectedColony));
     try {
       const authToken = await AsyncStorage.getItem("token");
       const response = await fetch(
-        `${papiUrl}/allSpotsByColony/${selectedColony.cid}`,
+        `${papiUrl}/allSpotsByColony/${selectedColony}`,
         {
           method: "GET",
           headers: {
@@ -310,6 +314,10 @@ export default function MainMap({ navigation }) {
       return [];
     }
   };
+
+  useEffect(() => {
+    displayAllSpots();
+  }, [users])
 
   // GRAB LOCATION FROM USER AND STORE IN DATABASE
   useEffect(() => {
@@ -357,7 +365,7 @@ export default function MainMap({ navigation }) {
       updateUserLocation();
       //setColonies(await getUserColonies());
       //setUsers([]);
-      displayAllSpots();
+    //   displayAllSpots();
     }, 30000); // 30 seconds
 
     // Clean up the interval when the component is unmounted
@@ -1061,7 +1069,6 @@ const setIncognitoStatus = async () => {
               isModalVisible={modals.editSpot}
               hideModal={() => hideModal("editSpot")}
               allSpots={spots}
-              setAllSpots={setSpots}
               mapRegion={{
                 latitude: user.currentLocation.latitude,
                 longitude: user.currentLocation.longitude,
@@ -1070,6 +1077,8 @@ const setIncognitoStatus = async () => {
               }}
               colonies={colonies}
               currentSpot={currentSpot}
+              getUsersSpotsInColony={getUsersSpotsInColony}
+              setSpots={setSpots}
             />
 
             {/* Spots Modal Button */}
@@ -1086,7 +1095,6 @@ const setIncognitoStatus = async () => {
               isModalVisible={modals.spots}
               hideModal={() => hideModal("spots")}
               allSpots={spots}
-              setAllSpots={setSpots}
               mapRegion={{
                 latitude: user.currentLocation.latitude,
                 longitude: user.currentLocation.longitude,
@@ -1097,6 +1105,8 @@ const setIncognitoStatus = async () => {
               showModal={showModal}
               currentSpot={currentSpot}
               setCurrentSpot={setCurrentSpot}
+              getUsersSpotsInColony={getUsersSpotsInColony}
+              setSpots={setSpots}
             />
             {/* Settings Button */}
             <MapButton
