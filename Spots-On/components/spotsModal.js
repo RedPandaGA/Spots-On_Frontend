@@ -91,7 +91,7 @@ const CreateSpotModal = ({
         }
     
         // Successfully created spot
-        console.log('Spot created successfully: ' + response);
+        console.log('Spot created successfully: ' + response.json());
       } catch (error) {
         console.error('Error:', error);
         // Handle other errors as needed
