@@ -356,7 +356,7 @@ export default function MainMap({ navigation }) {
       console.log("Updated user's location!");
       updateUserLocation();
       //setColonies(await getUserColonies());
-      setUsers([]);
+      //setUsers([]);
       displayAllSpots();
     }, 30000); // 30 seconds
 
