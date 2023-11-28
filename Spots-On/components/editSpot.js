@@ -39,7 +39,12 @@ const EditSpot = ({
   const [circleRadius, setCircleRadius] = useState(currentSpot.radius);
   const [circleCenter, setCircleCenter] = useState(currentSpot.coordinate);
   const [region, setRegion] = useState(currentSpot.coordinate);
-  const [newSpot, setNewSpot] = useState(currentSpot);
+  const [newSpot, setNewSpot] = useState({
+    ...currentSpot,
+    spotName: currentSpot.name,
+    safe: currentSpot.safe,
+    radius: currentSpot.radius,
+  });
 
   const [spotNameError, setSpotNameError] = useState(null);
 
@@ -227,6 +232,7 @@ const EditSpot = ({
       onBackdropPress={() => {
         setShowSpotList(true);
         hideModal();
+        console.log(currentSpot);
       }}
       onSwipeComplete={() => {
         setShowSpotList(true);
