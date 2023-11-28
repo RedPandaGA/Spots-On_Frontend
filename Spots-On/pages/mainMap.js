@@ -446,33 +446,9 @@ export default function MainMap({ navigation }) {
       setUser({ ...user, incognito: false });
     } else {
       setUser({ ...user, incognito: true });
-    }
-    const authToken =  AsyncStorage.getItem('token');
-    //console.log(JSON.stringify({ location: user.currentLocation }))
-    if (!authToken) {
-      // Handle the case where the token is not available
-      console.error('Authorization token not found.');
-      return;
-    }
-    const incognito = false;
-
-    // Use a fetch request to get the incognito status from the backend
-    try {
-        const response = fetch(`${papiUrl}/handleIncognito`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${authToken}`, // Attach the token to the Authorization header
-            },
-            body: JSON.stringify({ incognito: user.incognito })
-          });
-
-        
-    } catch (error) {
-      console.error('Error:', error);
-      // Handle other errors as needed
-    }
   };
+}
+
 //   const fetchIncognitoStatus = async () => {
 //     // Get the authorization token from AsyncStorage
 //     const authToken = await AsyncStorage.getItem('token');
@@ -486,7 +462,7 @@ export default function MainMap({ navigation }) {
 
 //     // Use a fetch request to get the incognito status from the backend
 //     try {
-//         const response = await fetch(`${papiUrl}/fetchIncognitoStatus`, {
+//         const response = await fetch(`${papiUrl}/updateIncog`, {
 //             method: 'POST',
 //             headers: {
 //                 'Content-Type': 'application/json',
@@ -501,8 +477,49 @@ export default function MainMap({ navigation }) {
 //       // Handle other errors as needed
 //     }
 // };
+const fetchIncognitoStatus = async () => {
+  // Get the authorization token from AsyncStorage
+  const authToken = await AsyncStorage.getItem('token');
+  //console.log(JSON.stringify({ location: user.currentLocation }))
+  if (!authToken) {
+      // Handle the case where the token is not available
+      console.error('Authorization token not found.');
+      return;
+  }
+
+  // Use a fetch request to get the incognito status from the backend
+  try {
+      const response = await fetch(`${papiUrl}/updateIncog`, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${authToken}`, // Attach the token to the Authorization header
+          },
+          body: JSON.stringify({ incog: user.incognito }), // Adjust this based on your requirements
+      });
+
+      // Check if the response is successful
+      if (response.ok) {
+          // Handle success
+          const data = await response.json();
+          console.log('Incognito status fetched successfully:', data);
+
+          // Update the local state based on the server response
+          setUser({ ...user, incognito: data.incognito });
+      } else {
+          // Handle error
+          const errorData = await response.json();
+          console.error('Error fetching incognito status:', errorData.error);
+          // You might want to show an error message to the user or take other actions
+      }
+  } catch (error) {
+      console.error('Error:', error);
+      // Handle other errors as needed
+  }
+};
 
   
+
 
   // Create a state variable to control the visibility of all modals
   const [modals, setModals] = useState({
@@ -911,7 +928,9 @@ export default function MainMap({ navigation }) {
               style={styles.incognitoButton}
               onPress={() => {
                 handleIncognito();
+                fetchIncognitoStatus();
             }}
+
               width={45}
               height={45}
               active={user.incognito}
@@ -1001,6 +1020,7 @@ export default function MainMap({ navigation }) {
     </KeyboardAvoidingView>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
