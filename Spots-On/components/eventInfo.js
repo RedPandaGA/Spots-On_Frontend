@@ -7,6 +7,7 @@ import {
   ScrollView,
   Linking,
   Platform,
+  TouchableWithoutFeedback,
 } from "react-native";
 import COLORS from "./colors";
 import Modal from "react-native-modal";
@@ -87,6 +88,7 @@ const EventInfo = ({ isModalVisible, hideModal, showModal, event }) => {
           showModal("viewEvents");
         }, 500);
       }}
+      backdropOpacity={0}
       swipeThreshold={200}
       swipeDirection="down"
       propagateSwipe
@@ -105,17 +107,19 @@ const EventInfo = ({ isModalVisible, hideModal, showModal, event }) => {
               <Text style={styles.eventColony}>{event.colonyName}</Text>
             </View>
             <ScrollView style={{ width: "100%" }}>
-              <View style={styles.eventInfo}>
-                <Text style={styles.eventText}>{`When: ${eventDateString(
-                  event
-                )}`}</Text>
-                <Text
-                  style={styles.eventText}
-                >{`Where: ${event.address}`}</Text>
-                <Text
-                  style={styles.eventText}
-                >{`Description: ${event.description}`}</Text>
-              </View>
+              <TouchableWithoutFeedback>
+                <View style={styles.eventInfo}>
+                  <Text style={styles.eventText}>{`When: ${eventDateString(
+                    event
+                  )}`}</Text>
+                  <Text
+                    style={styles.eventText}
+                  >{`Where: ${event.address}`}</Text>
+                  <Text
+                    style={styles.eventText}
+                  >{`Description: ${event.description}`}</Text>
+                </View>
+              </TouchableWithoutFeedback>
             </ScrollView>
 
             <MapView
@@ -164,7 +168,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   eventTitle: {
-    fontSize: 40,
+    fontSize: 36,
     fontWeight: "bold",
     color: COLORS.primary,
     textAlign: "center",
@@ -172,9 +176,9 @@ const styles = StyleSheet.create({
     paddingBottom: 0,
   },
   eventColony: {
-    fontSize: 26,
+    fontSize: 24,
     fontWeight: "bold",
-    color: COLORS.primary,
+    color: COLORS.lighterprimary,
     textAlign: "center",
   },
   eventText: {

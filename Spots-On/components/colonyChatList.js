@@ -51,7 +51,7 @@ const ColonyChatList = ({ isModalVisible, hideModal, navigation }) => {
     </TouchableOpacity>
   );
 
-  const modalPosition = -490;
+  // const modalPosition = -490;
 
   return (
     <Modal

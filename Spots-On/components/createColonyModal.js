@@ -13,8 +13,8 @@ import {
 } from "react-native";
 import Bar from "./bar";
 import COLORS from "./colors";
-import Config from '../.config.js';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import Config from "../.config.js";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const papiUrl = Config.PAPI_URL;
 import Modal from "react-native-modal";
@@ -30,83 +30,38 @@ const CreateColonyModal = ({ isModalVisible, hideModal, showModal, user }) => {
 
   const createColony = async () => {
     try {
-        // Get the authorization token from AsyncStorage
-        const authToken = await AsyncStorage.getItem('token');
-        if (!authToken) {
-          // Handle the case where the token is not available
-          console.error('Authorization token not found.');
-          return;
-        }
-    
-        const response = await fetch(`${papiUrl}/createColony`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${authToken}`, // Attach the token to the Authorization header
-          },
-          body: JSON.stringify({
-            cname: colonyName,
-          }),
-        });
-    
-        if (!response.ok) {
-          // Handle error, e.g., display an error message
-          console.error('Error creating colony:', response.status);
-          return;
-        }
-    
-        // Successfully created colony
-        console.log('Colony created successfully:', response);
-      } catch (error) {
-        console.error('Error:', error);
-        // Handle other errors as needed
+      // Get the authorization token from AsyncStorage
+      const authToken = await AsyncStorage.getItem("token");
+      if (!authToken) {
+        // Handle the case where the token is not available
+        console.error("Authorization token not found.");
+        return;
       }
-  }
 
-//   const panResponder = PanResponder.create({
-//     onStartShouldSetPanResponder: (e, gestureState) => {
-//       // Calculate the threshold based on a percentage of the screen height
-//       const threshold = screenHeight * percentageThreshold;
-//       return e.nativeEvent.pageY < threshold;
-//     },
-//     onPanResponderMove: (event, gestureState) => {
-//       if (gestureState.dy > 0) {
-//         if (gestureState.dy < screenHeight * percentageThreshold) {
-//           modalPosition.setValue(gestureState.dy);
-//         }
-//       }
-//     },
-//     onPanResponderRelease: (event, gestureState) => {
-//       if (gestureState.dy > 200) {
-//         hideModal();
-//       } else {
-//         modalPosition.setValue(0);
-//       }
-//     },
-//   });
-  // const panResponder = PanResponder.create({
-  //   onStartShouldSetPanResponder: (e, gestureState) => {
-  //     // Calculate the threshold based on a percentage of the screen height
-  //     const threshold = screenHeight * percentageThreshold;
-  //     return e.nativeEvent.pageY < threshold;
-  //   },
-  //   onPanResponderMove: (event, gestureState) => {
-  //     if (gestureState.dy > 0) {
-  //       if (gestureState.dy < screenHeight * percentageThreshold) {
-  //         modalPosition.setValue(gestureState.dy);
-  //       }
-  //     }
-  //   },
-  //   onPanResponderRelease: (event, gestureState) => {
-  //     if (gestureState.dy > 200) {
-  //       hideModal();
-  //     } else {
-  //       modalPosition.setValue(0);
-  //     }
-  //   },
-  // });
+      const response = await fetch(`${papiUrl}/createColony`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`, // Attach the token to the Authorization header
+        },
+        body: JSON.stringify({
+          cname: colonyName,
+        }),
+      });
 
-  // const modalPosition = new Animated.Value(0);
+      if (!response.ok) {
+        // Handle error, e.g., display an error message
+        console.error("Error creating colony:", response.status);
+        return;
+      }
+
+      // Successfully created colony
+      console.log("Colony created successfully:", response);
+    } catch (error) {
+      console.error("Error:", error);
+      // Handle other errors as needed
+    }
+  };
 
   return (
     <Modal
@@ -117,7 +72,7 @@ const CreateColonyModal = ({ isModalVisible, hideModal, showModal, user }) => {
       onSwipeComplete={hideModal}
       swipeDirection="down"
       style={styles.modalContainer}
-      backdropOpacity={0}
+      backdropOpacity={0.4}
     >
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <KeyboardAvoidingView

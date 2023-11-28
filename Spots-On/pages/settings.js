@@ -1,10 +1,20 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  ScrollView,
+} from "react-native";
 import COLORS from "../components/colors";
 
 export default function Settings({ navigation }) {
-
-  const colonyList = ["Notifications", "Colony Management", "Location/Status Sharing"];
+  const colonyList = [
+    "Notifications",
+    "Colony Management",
+    "Location/Status Sharing",
+  ];
 
   const colonyButtonActions = [
     () => {
@@ -29,19 +39,24 @@ export default function Settings({ navigation }) {
       navigation.navigate("Account");
     },
     () => {
-        console.log('Privacy & Security clicked');
+      console.log("Privacy & Security clicked");
     },
     () => {
       console.log("About clicked");
     },
     () => {
       console.log("Log out clicked");
-    }
+      navigation.navigate("Login");
+    },
   ];
 
   const renderColonyButton = (text, index) => {
     return (
-      <TouchableOpacity style={styles.buttons} onPress={colonyButtonActions[index]} key={text}>
+      <TouchableOpacity
+        style={styles.buttons}
+        onPress={colonyButtonActions[index]}
+        key={text}
+      >
         <Text style={styles.buttonText}>{text}</Text>
       </TouchableOpacity>
     );
@@ -49,7 +64,11 @@ export default function Settings({ navigation }) {
 
   const renderUniversalButton = (text, index) => {
     return (
-      <TouchableOpacity style={styles.buttons} onPress={universalButtonActions[index]} key={text}>
+      <TouchableOpacity
+        style={styles.buttons}
+        onPress={universalButtonActions[index]}
+        key={text}
+      >
         <Text style={styles.buttonText}>{text}</Text>
       </TouchableOpacity>
     );
@@ -57,12 +76,14 @@ export default function Settings({ navigation }) {
 
   return (
     <ScrollView style={styles.container}>
-      <View >
+      <View>
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => {
-            navigation.navigate("Home");
-            console.log("Pressed back button");
-          }}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Home");
+              console.log("Pressed back button");
+            }}
+          >
             <View style={styles.backButton}>
               <Image
                 source={require("../assets/backButton.png")}
@@ -74,11 +95,15 @@ export default function Settings({ navigation }) {
         </View>
         <Text style={styles.subtitle}>ColonyName settings</Text>
         <View style={styles.settingsItems}>
-          {colonyList.map((buttonText, index) => renderColonyButton(buttonText, index))}
+          {colonyList.map((buttonText, index) =>
+            renderColonyButton(buttonText, index)
+          )}
         </View>
         <Text style={styles.subtitle}>Universal settings</Text>
         <View style={styles.settingsItems}>
-          {universalList.map((buttonText, index) => renderUniversalButton(buttonText, index))}
+          {universalList.map((buttonText, index) =>
+            renderUniversalButton(buttonText, index)
+          )}
         </View>
       </View>
     </ScrollView>
@@ -107,14 +132,14 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginBottom: -15,
     paddingTop: 20,
-    opacity: .9
+    opacity: 0.9,
   },
   image: {
     height: 50,
     width: 50,
     position: "absolute",
     left: 20,
-    tintColor: COLORS.secondary
+    tintColor: COLORS.secondary,
   },
   settingsItems: {
     marginTop: 20,
@@ -132,6 +157,5 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: COLORS.primary,
     fontWeight: "bold",
-  }
-})
-
+  },
+});

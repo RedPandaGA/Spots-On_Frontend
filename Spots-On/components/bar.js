@@ -7,7 +7,7 @@ export default function Bar({ color, style }) {
 
 const styles = StyleSheet.create({
   bar: {
-    width: "80%", // Adjust the width as needed
+    width: "60%", // Adjust the width as needed
     height: 5, // Adjust the height as needed
     borderRadius: 50,
     marginBottom: 20,

@@ -15,12 +15,12 @@ import SearchBarModal from "../components/searchBarModal";
 import COLORS from "./colors";
 import { AntDesign } from "@expo/vector-icons";
 
-const FriendsModal = ({ isModalVisible, hideModal, navigation, users}) => {
-    if (Platform.OS === "android") {
+const FriendsModal = ({ isModalVisible, hideModal, navigation, users }) => {
+  if (Platform.OS === "android") {
     if (UIManager.setLayoutAnimationEnabledExperimental) {
-        UIManager.setLayoutAnimationEnabledExperimental(true);
+      UIManager.setLayoutAnimationEnabledExperimental(true);
     }
-    }
+  }
 
   const [addingFriend, setAddingFriend] = useState(false);
 
@@ -35,68 +35,68 @@ const FriendsModal = ({ isModalVisible, hideModal, navigation, users}) => {
   };
 
   // Define an array of friends and their statuses
-//   const friendsList = [
-//     {
-//       name: "Michelle Vo",
-//       status: "volunteering at the hospital",
-//     },
-//     {
-//       name: "Faris Khattak",
-//       status: "working on OOD 2",
-//     },
-//     {
-//       name: "Gavin Avery",
-//       status: "watching utube",
-//     },
-//     {
-//       name: "Richard Jiang",
-//       status: "chilling in PFT commons",
-//     },
-//     {
-//       name: "Milan Nguyen",
-//       status: "studyingggg",
-//     },
-//     {
-//       name: "Aeryn Shadingdong",
-//       status: "volunteering at the hospital",
-//     },
-//     {
-//       name: "Sacaen winds",
-//       status: "working on OOD 2",
-//     },
-//     {
-//       name: "bawmba",
-//       status: "watching utube",
-//     },
-//     {
-//       name: "anviii",
-//       status: "chilling in PFT commons",
-//     },
-//     {
-//       name: "sycosyclopse",
-//       status: "studyingggg",
-//     },
-//     {
-//       name: "austin",
-//       status: "volunteering at the hospital",
-//     },
-//     {
-//       name: "kelli dinh",
-//       status: "working on OOD 2",
-//     },
-//     {
-//       name: "Fred juley",
-//       status: "watching utube",
-//     },
-//     {
-//       name: "betsi cao",
-//       status: "chilling in PFT commons",
-//     },
-//     {
-//       name: "Rot Nguyen",
-//       status: "studyingggg",
-//     },
-//   ];
+  //   const friendsList = [
+  //     {
+  //       name: "Michelle Vo",
+  //       status: "volunteering at the hospital",
+  //     },
+  //     {
+  //       name: "Faris Khattak",
+  //       status: "working on OOD 2",
+  //     },
+  //     {
+  //       name: "Gavin Avery",
+  //       status: "watching utube",
+  //     },
+  //     {
+  //       name: "Richard Jiang",
+  //       status: "chilling in PFT commons",
+  //     },
+  //     {
+  //       name: "Milan Nguyen",
+  //       status: "studyingggg",
+  //     },
+  //     {
+  //       name: "Aeryn Shadingdong",
+  //       status: "volunteering at the hospital",
+  //     },
+  //     {
+  //       name: "Sacaen winds",
+  //       status: "working on OOD 2",
+  //     },
+  //     {
+  //       name: "bawmba",
+  //       status: "watching utube",
+  //     },
+  //     {
+  //       name: "anviii",
+  //       status: "chilling in PFT commons",
+  //     },
+  //     {
+  //       name: "sycosyclopse",
+  //       status: "studyingggg",
+  //     },
+  //     {
+  //       name: "austin",
+  //       status: "volunteering at the hospital",
+  //     },
+  //     {
+  //       name: "kelli dinh",
+  //       status: "working on OOD 2",
+  //     },
+  //     {
+  //       name: "Fred juley",
+  //       status: "watching utube",
+  //     },
+  //     {
+  //       name: "betsi cao",
+  //       status: "chilling in PFT commons",
+  //     },
+  //     {
+  //       name: "Rot Nguyen",
+  //       status: "studyingggg",
+  //     },
+  //   ];
 
   const renderItem = ({ item }) => (
     <TouchableOpacity
@@ -128,6 +128,7 @@ const FriendsModal = ({ isModalVisible, hideModal, navigation, users}) => {
       swipeDirection="left"
       propagateSwipe
       style={{ margin: 0 }}
+      backdropOpacity={0.4}
     >
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>

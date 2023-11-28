@@ -22,8 +22,8 @@ import Slider from "@react-native-community/slider";
 import Spot from "./spot";
 import * as Location from "expo-location";
 import { Dropdown } from "react-native-element-dropdown";
-import Config from '../.config.js';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import Config from "../.config.js";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const apiUrl = Config.PAPI_URL;
 import GooglePlacesInput from "./googlePlacesInput";
@@ -51,65 +51,77 @@ const CreateSpotModal = ({
     colonyName: "",
     colonyId: "",
     radius: 250,
-    coordinate: {},
+    coordinate: {
+      latitude: mapRegion.latitude,
+      longitude: mapRegion.longitude,
+    },
     address: "",
     safe: true,
   });
 
+  useEffect(() => {
+    setNewSpot((prevNewSpot) => ({
+      ...prevNewSpot,
+      coordinate: {
+        latitude: mapRegion.latitude,
+        longitude: mapRegion.longitude,
+      },
+    }));
+  }, []);
+
   const createSpot = async () => {
     try {
-        // Get the authorization token from AsyncStorage
-        const authToken = await AsyncStorage.getItem('token');
-    
-        if (!authToken) {
-          // Handle the case where the token is not available
-          console.error('Authorization token not found.');
-          return;
-        }
-    
-        const spotData = {
-          sname: newSpot.name,
-          location: newSpot.coordinate,
-          danger: newSpot.safe,
-          cid: newSpot.colonyId,
-          radius: newSpot.radius,
-        };
-        console.log(spotData);
-        const response = await fetch(`${apiUrl}/createSpot`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${authToken}`, // Attach the token to the Authorization header
-          },
-          body: JSON.stringify(spotData),
-        });
-    
-        if (!response.ok) {
-          // Handle error, e.g., display an error message
-          console.error('Error creating spot:', response.status);
-          return;
-        }
-    
-        // Successfully created spot
-        console.log('Spot created successfully: ' + response.json());
-      } catch (error) {
-        console.error('Error:', error);
-        // Handle other errors as needed
+      // Get the authorization token from AsyncStorage
+      const authToken = await AsyncStorage.getItem("token");
+
+      if (!authToken) {
+        // Handle the case where the token is not available
+        console.error("Authorization token not found.");
+        return;
       }
-  }
 
+      const spotData = {
+        sname: newSpot.name,
+        location: newSpot.coordinate,
+        danger: newSpot.safe,
+        cid: newSpot.colonyId,
+        radius: newSpot.radius,
+      };
+      console.log(spotData);
+      const response = await fetch(`${apiUrl}/createSpot`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`, // Attach the token to the Authorization header
+        },
+        body: JSON.stringify(spotData),
+      });
 
-  const resetNewSpot = () => {
-    setNewSpot({
-      name: "",
-      colonyName: "",
-      colonyId: "",
-      radius: 250,
-      coordinate: {},
-      address: "",
-      safe: true,
-    });
+      if (!response.ok) {
+        // Handle error, e.g., display an error message
+        console.error("Error creating spot:", response.status);
+        return;
+      }
+
+      // Successfully created spot
+      console.log("Spot created successfully: " + response);
+    } catch (error) {
+      console.error("Error:", error);
+      // Handle other errors as needed
+    }
   };
+
+  // const resetNewSpot = () => {
+  //   setNewSpot({
+  //     name: "",
+  //     colonyName: "",
+  //     colonyId: "",
+  //     radius: 250,
+  //     coordinate: {},
+  //     address: "",
+  //     safe: true,
+  //   });
+  // };
 
   const [spotNameError, setSpotNameError] = useState(null);
   const [colonyNameError, setColonyNameError] = useState(null);
@@ -130,7 +142,7 @@ const CreateSpotModal = ({
     setShowSpotList(true);
     setSpotNameError(false);
     setColonyNameError(false);
-    resetNewSpot();
+    // resetNewSpot();
   };
 
   const validateInputs = () => {
@@ -157,60 +169,49 @@ const CreateSpotModal = ({
   };
 
   // Use a ref to store the previous currentSpot value
-  const prevCurrentSpotRef = useRef();
+  // const prevCurrentSpotRef = useRef();
 
-  useEffect(() => {
-    // Update the local state when currentSpot prop changes
-    if (currentSpot && currentSpot !== prevCurrentSpotRef.current) {
-      setNewSpot({
-        name: currentSpot.name,
-        colonyName: currentSpot.colonyName,
-        radius: currentSpot.radius,
-        coordinate: currentSpot.coordinate,
-        address: currentSpot.address,
-        safe: currentSpot.safe,
-      });
+  // useEffect(() => {
+  //   // Update the local state when currentSpot prop changes
+  //   if (currentSpot && currentSpot !== prevCurrentSpotRef.current) {
+  //     setNewSpot({
+  //       name: currentSpot.name,
+  //       colonyName: currentSpot.colonyName,
+  //       radius: currentSpot.radius,
+  //       coordinate: currentSpot.coordinate,
+  //       address: currentSpot.address,
+  //       safe: currentSpot.safe,
+  //     });
 
-      // Save the currentSpot to the ref for the next comparison
-      prevCurrentSpotRef.current = currentSpot;
-    }
-  }, [currentSpot]);
+  //     // Save the currentSpot to the ref for the next comparison
+  //     prevCurrentSpotRef.current = currentSpot;
+  //   }
+  // }, [currentSpot]);
 
   const renderSpotItem = ({ item }) => {
-    // Find the associated colony
-    const associatedColony = colonies.find(
-      (colony) => colony.name === item.colonyName
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          hideModal();
+          setCurrentSpot(item);
+
+          console.log("Current Spot:", currentSpot);
+          console.log("Item:", item);
+          setTimeout(() => {
+            showModal("editSpot");
+          }, 1000);
+          // showModal("editSpot");
+          // console.log(item.coordinate);
+        }}
+        style={styles.addSpotButton}
+      >
+        <Image
+          style={styles.spotListImage}
+          source={require("../assets/marker.png")}
+        />
+        <Text style={styles.addSpotText}>{item.name}</Text>
+      </TouchableOpacity>
     );
-
-    // Display the spot only if the associated colony is selected
-    if (associatedColony && associatedColony.selected) {
-      return (
-        <TouchableOpacity
-          onPress={() => {
-            hideModal();
-            setCurrentSpot(item);
-
-            console.log("Current Spot:", currentSpot);
-            console.log("Item:", item);
-            setTimeout(() => {
-              showModal("editSpot");
-            }, 1000);
-            // showModal("editSpot");
-            // console.log(item.coordinate);
-          }}
-          style={styles.addSpotButton}
-        >
-          <Image
-            style={styles.spotListImage}
-            source={require("../assets/marker.png")}
-          />
-          <Text style={styles.addSpotText}>{item.name}</Text>
-        </TouchableOpacity>
-      );
-    }
-
-    // If the associated colony is not selected, return null to render nothing
-    return null;
   };
 
   const geocode = async () => {
@@ -266,6 +267,7 @@ const CreateSpotModal = ({
       swipeDirection={showSpotList ? "down" : null}
       propagateSwipe
       style={styles.modalContainer}
+      backdropOpacity={0.4}
     >
       <KeyboardAvoidingView behavior="padding" style={styles.modalContainer}>
         <View style={styles.modalContent}>
@@ -401,8 +403,8 @@ const CreateSpotModal = ({
                   <View style={styles.switchContainer}>
                     <Text style={styles.switchText}>Safe Spot?</Text>
                     <Switch
-                      trackColor={{ false: "#767577", true: "#E7EFCA" }}
-                      thumbColor={newSpot.safe ? "#2C6765" : "#f4f3f4"}
+                      trackColor={{ false: "#767577", true: COLORS.secondary }}
+                      thumbColor={newSpot.safe ? COLORS.gold : "#f4f3f4"}
                       ios_backgroundColor="#3e3e3e"
                       onValueChange={toggleSafety}
                       value={newSpot.safe}
@@ -411,7 +413,9 @@ const CreateSpotModal = ({
                   <MapView
                     style={styles.map}
                     region={
-                      newSpot.coordinate
+                      newSpot.coordinate &&
+                      newSpot.coordinate.latitude != undefined &&
+                      newSpot.coordinate.longitude != undefined
                         ? {
                             latitude: newSpot.coordinate.latitude,
                             longitude: newSpot.coordinate.longitude,
@@ -445,6 +449,7 @@ const CreateSpotModal = ({
                       value={circleRadius}
                       onValueChange={(value) => setCircleRadius(value)}
                       minimumTrackTintColor={COLORS.secondary}
+                      thumbTintColor={COLORS.gold}
                       style={{ width: "70%" }}
                     />
                     <Text style={styles.sliderText}>{feetValue} feet</Text>
@@ -466,23 +471,22 @@ const CreateSpotModal = ({
                       onPress={() => {
                         // Validate inputs before proceeding
                         if (validateInputs()) {
-                            
-                            // Save the event object or perform other actions here
-                            const updatedSpot = {
-                                ...newSpot,
-                                id: Date.now(),
-                                radius: circleRadius,
-                                coordinate: circleCenter,
-                            };
-                            newSpot.coordinate = circleCenter;
-                            newSpot.radius = circleRadius;
-                            //setAllSpots([...allSpots, updatedSpot]);
-                            // setShowAddSpot(false);
-                            setShowSpotList(true);
-                            // hideModal();
-                            createSpot();
-                            console.log("Spot Created:\n", newSpot);
-                            resetValues();
+                          // Save the event object or perform other actions here
+                          const updatedSpot = {
+                            ...newSpot,
+                            id: Date.now(),
+                            radius: circleRadius,
+                            coordinate: circleCenter,
+                          };
+                          newSpot.coordinate = circleCenter;
+                          newSpot.radius = circleRadius;
+                          //setAllSpots([...allSpots, updatedSpot]);
+                          // setShowAddSpot(false);
+                          setShowSpotList(true);
+                          // hideModal();
+                          createSpot();
+                          console.log("Spot Created:\n", newSpot);
+                          resetValues();
                         }
                       }}
                     >
@@ -595,7 +599,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignContent: "space-between",
     flexDirection: "row",
-    marginVertical: 10,
     marginHorizontal: 10,
   },
   switchText: {
