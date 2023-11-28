@@ -16,6 +16,12 @@ import { Picker } from "@react-native-picker/picker";
 import { SelectList } from "react-native-dropdown-select-list";
 import { Dropdown } from "react-native-element-dropdown";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import Config from "../.config.js";
+
+
+const papiUrl = Config.PAPI_URL;
+
 
 const StatusModal = ({
   isModalVisible,
@@ -41,7 +47,9 @@ const StatusModal = ({
       setWantsCustomStatus(true);
     }
   };
-  const updateUserStatus = async () => {
+
+
+  const updateUserStatusCode = async () => {
     try {
       // Get the authorization token from AsyncStorage
       const authToken = await AsyncStorage.getItem('token');
@@ -51,25 +59,42 @@ const StatusModal = ({
         return;
       }
   
-      const response = await fetch(`${apiUrl}/updateStatus`, {
+      const response = await fetch(`${papiUrl}/updateStatusCode`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${authToken}`, // Attach the token to the Authorization header
         },
         body: JSON.stringify({
-          status: user.statusCode
+          statusCode: user.statusCode
         }),
       });
   
       if (!response.ok) {
         // Handle error, e.g., display an error message
         console.error('Error updating user status:', response.status);
+        
+        // If the server sends a JSON response, you might want to parse and log it
+        try {
+          const errorData = await response.json();
+          console.error('Server error data:', errorData);
+        } catch (parseError) {
+          console.error('Error parsing server error data:', parseError);
+        }
+  
         return;
       }
   
       // Successfully updated user status
       console.log('User status updated successfully:', response);
+  
+      // If the server sends a JSON response, you might want to parse and log it
+      try {
+        const responseData = await response.json();
+        console.log('Server response data:', responseData);
+      } catch (parseError) {
+        console.error('Error parsing server response data:', parseError);
+      }
     } catch (error) {
       console.error('Error:', error);
       // Handle other errors as needed
@@ -85,7 +110,6 @@ const StatusModal = ({
       onBackdropPress={() => {
         setWantsCustomStatus(false);
         setUser({ ...user, statusCode: prevStatus });
-        updateUserStatus();
         hideModal();
         console.log("Exited status");
       }}
@@ -164,6 +188,7 @@ const StatusModal = ({
                   if (!wantsCustomStatus) {
                     setUser({ ...user, status: "" });
                   }
+                  updateUserStatusCode();
                   setWantsCustomStatus(false);
                   hideModal();
                   console.log(
