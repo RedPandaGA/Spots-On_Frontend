@@ -15,7 +15,18 @@ import SearchBarModal from "../components/searchBarModal";
 import COLORS from "./colors";
 import { AntDesign } from "@expo/vector-icons";
 
-const FriendsModal = ({ isModalVisible, hideModal, navigation, users}) => {
+const FriendsModal = ({ isModalVisible, 
+    hideModal, 
+    navigation, 
+    users, 
+    colonies,
+    setColonies, 
+    getSpots,
+    spots,
+    setSpots,
+    setUsers,
+    getUsersInColony,
+    findSelectedColony}) => {
     if (Platform.OS === "android") {
     if (UIManager.setLayoutAnimationEnabledExperimental) {
         UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -140,7 +151,16 @@ const FriendsModal = ({ isModalVisible, hideModal, navigation, users}) => {
 
           <View style={styles.sliderContainer}>
             {/* Colony Buttons Slider */}
-            <ColonySliderModal />
+            <ColonySliderModal 
+                colonies={colonies}
+                setColonies={setColonies}
+                getSpots={getSpots}
+                spots={spots}
+                setSpots={setSpots}
+                setUsers={setUsers}
+                getUsersInColony={getUsersInColony}
+                findSelectedColony={findSelectedColony}
+            />
 
             {/* Add Friends Button */}
             {/* <TouchableOpacity style={styles.plusButton}>

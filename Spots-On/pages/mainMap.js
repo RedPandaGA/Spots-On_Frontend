@@ -87,6 +87,47 @@ export default function MainMap({ navigation }) {
     console.log(user);
   };
 
+  const getUserInfo = async () => {
+    try {
+        // Get the authorization token from AsyncStorage
+        const authToken = await AsyncStorage.getItem('token');
+        //console.log(JSON.stringify({ location: user.currentLocation }))
+        if (!authToken) {
+          // Handle the case where the token is not available
+          console.error('Authorization token not found.');
+          return;
+        }
+
+        const apiUrl = `${papiUrl}/getUserInfo/${await AsyncStorage.getItem('uid')}`;
+
+        const response = await fetch(apiUrl, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`, // Include the authorization token
+            },
+            });
+
+            if (!response.ok) {
+                // Handle error, e.g., display an error message
+                console.error('Error getting users in colony:', response.status);
+                return;
+            }
+            console.log(response);
+            let userData = await response.json();
+            userData = userData.user;
+            console.log(userData);
+            userData.currentLocation = user.currentLocation;
+            console.log(userData);
+            setUser(userData);
+            return; // Adjust based on the actual response structure
+    } catch (error) {
+        console.error('Error:', error);
+        // Handle other errors as needed
+        return;
+    }
+  }
+
   const updateUserLocation = async () => {
     try {
         // Get the authorization token from AsyncStorage
@@ -292,6 +333,7 @@ export default function MainMap({ navigation }) {
         longitudeDelta: 0.005,
       };
 
+      getUserInfo();
       setInitialRegion(initialRegion);
       setCurrentRegion(initialRegion);
       updateUserLocation();
@@ -838,6 +880,14 @@ export default function MainMap({ navigation }) {
               hideModal={() => hideModal("friends")}
               navigation={navigation}
               users={users}
+              colonies={colonies}
+              setColonies={setColonies}
+              getSpots={getUsersSpotsInColony}
+              spots={spots}
+              setSpots={setSpots}
+              setUsers={setUsers}
+              getUsersInColony={getUsersInColony}
+              findSelectedColony={findSelectedColony}
             />
 
             {/* Social Button */}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -8,28 +8,43 @@ import {
 } from "react-native";
 import COLORS from "./colors";
 
-export default function ColonySliderModal({ style }) {
-  const [colony, setColony] = useState([
-    { name: "SASE", key: 1 },
-    { name: "lsu engineering", key: 2 },
-    { name: "swim friends", key: 3 },
-    { name: "ood group", key: 4 },
-    { name: "best friends", key: 5 },
-    { name: "volleyball", key: 6 },
-    { name: "oopah", key: 7 },
-    { name: "vsa", key: 8 },
-  ]);
+export default function ColonySliderModal({ 
+    style, 
+    colonies, 
+    setColonies, 
+    getSpots,
+    spots,
+    setSpots,
+    setUsers,
+    getUsersInColony,
+    findSelectedColony }) {
 
-  const onPress = (name) => {
-    console.log(name);
-  };
+    useEffect(() => {
+        async function grabColonyInfo() {
+            if (Object.keys(findSelectedColony(colonies)).length > 0) {
+                setSpots(await getSpots());
+                setUsers(await getUsersInColony());
+            }
+        }
+        grabColonyInfo();
+        }, [colonies])
+    
+        const onPress = async (name) => {
+        // Update the selected state for each colony
+        const updatedColony = colonies.map((item) => ({
+            ...item,
+            selected: item.name === name,
+        }));
+        setColonies(updatedColony);
+        //console.log("colonies: " + JSON.stringify(colonies));
+        };
 
   return (
     <View style={style}>
       <FlatList
         style={styles.list}
         horizontal
-        data={colony}
+        data={colonies}
         showsHorizontalScrollIndicator={false}
         renderItem={({ item }) => (
           <TouchableOpacity
