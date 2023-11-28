@@ -59,7 +59,7 @@ export default function ColonyChat({ navigation }) {
   const [isChatListVisible, setIsChatListVisible] = useState(false);
 
   const route = useRoute();
-  const { item } = route.params;
+  const { item, colonies } = route.params;
 
   const onSend = () => {
     if (inputText.trim() === "") {
@@ -129,6 +129,7 @@ export default function ColonyChat({ navigation }) {
         isModalVisible={isChatListVisible}
         hideModal={toggleChatList}
         navigation={navigation}
+        colonies={colonies}
       />
       <GiftedChat
         messages={messages}

@@ -12,32 +12,32 @@ import Bar from "./bar";
 import COLORS from "./colors";
 import Modal from "react-native-modal";
 
-const ColonyChatList = ({ isModalVisible, hideModal, navigation }) => {
-  const chatList = [
-    {
-      name: "Bestiesss",
-      memberCount: 3,
-    },
-    {
-      name: "Volleyball squad",
-      memberCount: 4,
-    },
-    {
-      name: "OOD group",
-      memberCount: 5,
-    },
-    {
-      name: "CSC 3102",
-      memberCount: 20,
-    },
-    {
-      name: "SASE people",
-      memberCount: 28,
-    },
-  ];
+const ColonyChatList = ({ isModalVisible, hideModal, navigation, colonies }) => {
+//   const chatList = [
+//     {
+//       name: "Bestiesss",
+//       memberCount: 3,
+//     },
+//     {
+//       name: "Volleyball squad",
+//       memberCount: 4,
+//     },
+//     {
+//       name: "OOD group",
+//       memberCount: 5,
+//     },
+//     {
+//       name: "CSC 3102",
+//       memberCount: 20,
+//     },
+//     {
+//       name: "SASE people",
+//       memberCount: 28,
+//     },
+//   ];
 
   const renderItem = ({ item }) => (
-    <TouchableOpacity onPress={() => navigation.navigate("ColonyChat")}>
+    <TouchableOpacity onPress={() => navigation.navigate("ColonyChat",{ item: item, colonies: colonies })}>
       <View style={styles.chatItem}>
         <View>
           <Image
@@ -69,7 +69,7 @@ const ColonyChatList = ({ isModalVisible, hideModal, navigation }) => {
         {/* Display the list of friends and statuses using FlatList */}
         <View style={styles.listContainer}>
           <FlatList
-            data={chatList}
+            data={colonies}
             renderItem={renderItem}
             keyExtractor={(item, index) => index.toString()}
             showsVerticalScrollIndicator={false}
