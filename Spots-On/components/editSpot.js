@@ -93,7 +93,7 @@ const EditSpot = ({
 
       // Successfully created spot
       console.log("Spot created successfully: " + response);
-      setSpots(await getUsersSpotsInColony(spotData.id));
+      setSpots(await getUsersSpotsInColony(spotData.cid));
       hideModal();
       resetValues();
     } catch (error) {
