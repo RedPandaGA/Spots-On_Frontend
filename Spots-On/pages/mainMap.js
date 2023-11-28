@@ -26,8 +26,8 @@ import Spot from "../components/spot";
 import Splash from "./splash";
 import { isPointWithinRadius } from "geolib";
 import StatusModal from "../components/statusModal";
-import Config from '../.config.js';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import Config from "../.config.js";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 // import users from "../components/users";
 import EditSpot from "../components/editSpot";
 import EventInfo from "../components/eventInfo";
@@ -89,181 +89,188 @@ export default function MainMap({ navigation }) {
 
   const updateUserLocation = async () => {
     try {
-        // Get the authorization token from AsyncStorage
-        const authToken = await AsyncStorage.getItem('token');
-        //console.log(JSON.stringify({ location: user.currentLocation }))
-        if (!authToken) {
-          // Handle the case where the token is not available
-          console.error('Authorization token not found.');
-          return;
-        }
-    
-        const response = await fetch(`${papiUrl}/updateUserLocation`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${authToken}`, // Attach the token to the Authorization header
-          },
-          body: JSON.stringify({ location: user.currentLocation }),
-        });
-    
-        if (!response.ok) {
-          // Handle error, e.g., display an error message
-          console.error('Error updating user location:', response.status);
-          return;
-        }
-    
-        // Successfully updated user location
-        //console.log('User location updated successfully ' + JSON.stringify(response));
-      } catch (error) {
-        console.error('Error:', error);
-        // Handle other errors as needed
+      // Get the authorization token from AsyncStorage
+      const authToken = await AsyncStorage.getItem("token");
+      //console.log(JSON.stringify({ location: user.currentLocation }))
+      if (!authToken) {
+        // Handle the case where the token is not available
+        console.error("Authorization token not found.");
+        return;
       }
+
+      const response = await fetch(`${papiUrl}/updateUserLocation`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`, // Attach the token to the Authorization header
+        },
+        body: JSON.stringify({ location: user.currentLocation }),
+      });
+
+      if (!response.ok) {
+        // Handle error, e.g., display an error message
+        console.error("Error updating user location:", response.status);
+        return;
+      }
+
+      // Successfully updated user location
+      //console.log('User location updated successfully ' + JSON.stringify(response));
+    } catch (error) {
+      console.error("Error:", error);
+      // Handle other errors as needed
+    }
   };
 
   const getUsersInColony = async () => {
     try {
-        // Get the authorization token from AsyncStorage
-        const authToken = await AsyncStorage.getItem('token');
-        //console.log(JSON.stringify({ location: user.currentLocation }))
-        if (!authToken) {
-          // Handle the case where the token is not available
-          console.error('Authorization token not found.');
-          return [];
-        }
-
-        const apiUrl = `${papiUrl}/usersInColony/${findSelectedColony(colonies).cid}`;
-
-        // Send the GET request
-        const response = await fetch(apiUrl, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${authToken}`, // Include the authorization token
-        },
-        });
-
-        if (!response.ok) {
-            // Handle error, e.g., display an error message
-            console.error('Error getting users in colony:', response.status);
-            return [];
-        }
-
-        // Parse the response JSON and return the array of users
-        const responseData = await response.json();
-        console.log("ReturnedUsers: " + responseData);
-        return responseData; // Adjust based on the actual response structure
-    } catch (error) {
-        console.error('Error:', error);
-        // Handle other errors as needed
+      // Get the authorization token from AsyncStorage
+      const authToken = await AsyncStorage.getItem("token");
+      //console.log(JSON.stringify({ location: user.currentLocation }))
+      if (!authToken) {
+        // Handle the case where the token is not available
+        console.error("Authorization token not found.");
         return [];
+      }
+
+      const apiUrl = `${papiUrl}/usersInColony/${
+        findSelectedColony(colonies).cid
+      }`;
+
+      // Send the GET request
+      const response = await fetch(apiUrl, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`, // Include the authorization token
+        },
+      });
+
+      if (!response.ok) {
+        // Handle error, e.g., display an error message
+        console.error("Error getting users in colony:", response.status);
+        return [];
+      }
+
+      // Parse the response JSON and return the array of users
+      const responseData = await response.json();
+      console.log("ReturnedUsers: " + responseData);
+      return responseData; // Adjust based on the actual response structure
+    } catch (error) {
+      console.error("Error:", error);
+      // Handle other errors as needed
+      return [];
     }
-};
+  };
 
   const getNumOfMembers = async (colonyId) => {
     try {
-        // Get the authorization token from AsyncStorage
-        const authToken = await AsyncStorage.getItem('token');
-        if (!authToken) {
-          // Handle the case where the token is not available
-          console.error('Authorization token not found.');
-          return null;
-        }
-
-         // Construct the URL with the colony ID as a parameter
-        const apiUrl = `${papiUrl}/getNumMems/${colonyId}`;
-
-        // Send the GET request
-        const response = await fetch(apiUrl, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${authToken}`, // Include the authorization token
-        },
-        });
-
-        if (!response.ok) {
-        // Handle error, e.g., display an error message
-            console.error('Error getting number of members:', response.status);
-            return null;
-        }
-
-        // Parse the response JSON and return the number
-        const responseData = await response.json();
-        const numberOfMembers = responseData.number; // Adjust based on the actual response structure
-
-        return numberOfMembers;
-    } catch (error) {
-        console.error('Error:', error);
-        // Handle other errors as needed
+      // Get the authorization token from AsyncStorage
+      const authToken = await AsyncStorage.getItem("token");
+      if (!authToken) {
+        // Handle the case where the token is not available
+        console.error("Authorization token not found.");
         return null;
+      }
+
+      // Construct the URL with the colony ID as a parameter
+      const apiUrl = `${papiUrl}/getNumMems/${colonyId}`;
+
+      // Send the GET request
+      const response = await fetch(apiUrl, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`, // Include the authorization token
+        },
+      });
+
+      if (!response.ok) {
+        // Handle error, e.g., display an error message
+        console.error("Error getting number of members:", response.status);
+        return null;
+      }
+
+      // Parse the response JSON and return the number
+      const responseData = await response.json();
+      const numberOfMembers = responseData.number; // Adjust based on the actual response structure
+
+      return numberOfMembers;
+    } catch (error) {
+      console.error("Error:", error);
+      // Handle other errors as needed
+      return null;
     }
-  }
+  };
 
   const getUserColonies = async () => {
     try {
-        const authToken = await AsyncStorage.getItem('token');
-        const response = await fetch(`${papiUrl}/usersColonies/${await AsyncStorage.getItem('uid')}`, {
-          method: 'GET',
+      const authToken = await AsyncStorage.getItem("token");
+      const response = await fetch(
+        `${papiUrl}/usersColonies/${await AsyncStorage.getItem("uid")}`,
+        {
+          method: "GET",
           headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${authToken}`
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
           },
-        });
-    
-        if (!response.ok) {
-          // Handle error, e.g., display an error message
-          console.error('Error fetching user colonies:', response.status);
-          return [];
         }
-    
-        const data = await response.json();
-        data.forEach((colony) => {
-            colony.selected = false;
-        })
-        for (const colony of data){
-            colony.memberCount = await getNumOfMembers(colony.cid);
-        }
-        console.log("DATAARG: " + JSON.stringify(data))
-        return data;
-    } catch (error) {
-        console.error('Error:', error);
-        // Handle other errors as needed
+      );
+
+      if (!response.ok) {
+        // Handle error, e.g., display an error message
+        console.error("Error fetching user colonies:", response.status);
         return [];
+      }
+
+      const data = await response.json();
+      data.forEach((colony) => {
+        colony.selected = false;
+      });
+      for (const colony of data) {
+        colony.memberCount = await getNumOfMembers(colony.cid);
+      }
+      console.log("DATAARG: " + JSON.stringify(data));
+      return data;
+    } catch (error) {
+      console.error("Error:", error);
+      // Handle other errors as needed
+      return [];
     }
-  }
+  };
 
   const getUsersSpotsInColony = async () => {
     console.log("colonies: " + JSON.stringify(colonies));
     selectedColony = findSelectedColony(colonies);
     console.log("selectedColony: " + JSON.stringify(selectedColony));
     try {
-        const authToken = await AsyncStorage.getItem('token');
-        const response = await fetch(`${papiUrl}/allSpotsByColony/${selectedColony.cid}`, {
-          method: 'GET',
+      const authToken = await AsyncStorage.getItem("token");
+      const response = await fetch(
+        `${papiUrl}/allSpotsByColony/${selectedColony.cid}`,
+        {
+          method: "GET",
           headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${authToken}`
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
           },
-        });
-    
-        if (!response.ok) {
-          // Handle error, e.g., display an error message
-          console.error('Error fetching colonies\' spots:', response.status);
-          return [];
         }
-    
-        const data = await response.json();
-        //console.log("SPOTDATAHERE: " + JSON.stringify(data));
+      );
 
-        return data;
-    } catch (error) {
-        console.error('Error:', error);
-        // Handle other errors as needed
+      if (!response.ok) {
+        // Handle error, e.g., display an error message
+        console.error("Error fetching colonies' spots:", response.status);
         return [];
-    }
-  }
+      }
 
+      const data = await response.json();
+      //console.log("SPOTDATAHERE: " + JSON.stringify(data));
+
+      return data;
+    } catch (error) {
+      console.error("Error:", error);
+      // Handle other errors as needed
+      return [];
+    }
+  };
 
   // GRAB LOCATION FROM USER AND STORE IN DATABASE
   useEffect(() => {
@@ -284,7 +291,6 @@ export default function MainMap({ navigation }) {
       console.log("Received current position!");
       user.currentLocation = location.coords;
 
-
       const initialRegion = {
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
@@ -296,7 +302,7 @@ export default function MainMap({ navigation }) {
       setCurrentRegion(initialRegion);
       updateUserLocation();
       setColonies(await getUserColonies());
-      displayAllSpots()
+      displayAllSpots();
     };
 
     getLocation();
@@ -388,16 +394,16 @@ export default function MainMap({ navigation }) {
   };
 
   const findSelectedColony = (colonies) => {
-    if(colonies.length > 0){
-        console.log("inhere: "+ JSON.stringify(colonies));
-        selectedColony = colonies.find((colony) => colony.selected == true);
-        if(selectedColony != undefined){
-            return selectedColony
-        } else {
-            return {};
-        }    
-    } else {
+    if (colonies.length > 0) {
+      console.log("inhere: " + JSON.stringify(colonies));
+      selectedColony = colonies.find((colony) => colony.selected == true);
+      if (selectedColony != undefined) {
+        return selectedColony;
+      } else {
         return {};
+      }
+    } else {
+      return {};
     }
   };
 
@@ -595,46 +601,22 @@ export default function MainMap({ navigation }) {
     setSpots(updatedSpots);
   };
 
-  // const displayAllSpots = () => {
-  //   return spots.map((spot) => (
-  //     <Spot
-  //       key={spot.id}
-  //       coordinate={spot.coordinate}
-  //       spotName={spot.name}
-  //       colonyName={spot.colonyName}
-  //       spotRadius={spot.radius}
-  //       isSafe={spot.safe}
-  //       onDrag={(e) => handleSpotDrag(e, spot.id)}
-  //       onDragEnd={(e) => handleSpotDragEnd(e, spot.id)}
-  //     />
-  //   ));
-  // };
-//   .filter((spot) => {
-    //     // Find the associated colony
-    //     // const associatedColony = colonies.find(
-    //     //   (colony) => colony.name === spot.colonyName
-    //     // );
-
-    //     // Display the spot only if the associated colony is selected
-    //     return associatedColony && associatedColony.selected;
-    //   })
   const displayAllSpots = () => {
-    return spots
-      .map((spot) => (
-        <Spot
-          key={spot.id}
-          coordinate={spot.coordinate}
-          spotName={spot.name}
-          colonyName={spot.colonyName}
-          spotRadius={spot.radius}
-          isSafe={spot.safe}
-          onDrag={(e) => handleSpotDrag(e, spot.id)}
-          onDragEnd={(e) => handleSpotDragEnd(e, spot.id)}
-          showModal={showModal}
-          setCurrentSpot={setCurrentSpot}
-          isEditSpotVisible={modals.editSpot}
-        />
-      ));
+    return spots.map((spot) => (
+      <Spot
+        key={spot.id}
+        coordinate={spot.coordinate}
+        spotName={spot.name}
+        colonyName={spot.colonyName}
+        spotRadius={spot.radius}
+        isSafe={spot.safe}
+        onDrag={(e) => handleSpotDrag(e, spot.id)}
+        onDragEnd={(e) => handleSpotDragEnd(e, spot.id)}
+        showModal={showModal}
+        setCurrentSpot={setCurrentSpot}
+        isEditSpotVisible={modals.editSpot}
+      />
+    ));
   };
 
   // GET ALL COLONIES FROM DATABASE AND STORE INTO VARIABLES TO USE AND DISPLAY
@@ -789,7 +771,7 @@ export default function MainMap({ navigation }) {
               {displayAllSpots()}
               {renderUsersOnMap(users, colonies)}
               {user.currentLocation && showCurrentLocation()}
-              <Circle
+              {/* <Circle
                 center={{
                   latitude: 30.41699914895536,
                   longitude: -91.17555990815163,
@@ -818,7 +800,7 @@ export default function MainMap({ navigation }) {
                 strokeWidth={1}
                 strokeColor="#rgba(255, 85, 85, 1)"
                 fillColor="rgba(255, 85, 85, .3)"
-              />
+              /> */}
             </MapView>
 
             {/* ------ MAIN NAV BUTTONS ------ */}
