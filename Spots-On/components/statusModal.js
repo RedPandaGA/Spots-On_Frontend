@@ -29,6 +29,7 @@ const StatusModal = ({
   user,
   setUser,
   statusIdentifiers,
+  getUserInfo,
 }) => {
   //   const [userStatus, setUserStatus] = useState({
   //     overallStatus: 0,
@@ -66,7 +67,8 @@ const StatusModal = ({
           Authorization: `Bearer ${authToken}`, // Attach the token to the Authorization header
         },
         body: JSON.stringify({
-          statusCode: user.statusCode
+          statusCode: user.statusCode,
+          status: user.status
         }),
       });
   
@@ -87,7 +89,7 @@ const StatusModal = ({
   
       // Successfully updated user status
       console.log('User status updated successfully:', response);
-  
+      await getUserInfo();
       // If the server sends a JSON response, you might want to parse and log it
       try {
         const responseData = await response.json();

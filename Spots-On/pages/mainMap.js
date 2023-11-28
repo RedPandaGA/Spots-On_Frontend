@@ -128,7 +128,7 @@ export default function MainMap({ navigation }) {
     }
   }
 
-  const getUserInfo = async () => {
+  const updateUserLocation = async () => {
     try {
         // Get the authorization token from AsyncStorage
         const authToken = await AsyncStorage.getItem('token');
@@ -579,12 +579,13 @@ export default function MainMap({ navigation }) {
     } else {
       setUser({ ...user, incognito: true });
   }
-  await fetchIncognitoStatus();
+  await setIncognitoStatus();
+  await getUserInfo();
 
 }
 
 
-const fetchIncognitoStatus = async () => {
+const setIncognitoStatus = async () => {
   // Get the authorization token from AsyncStorage
   const authToken = await AsyncStorage.getItem('token');
   //console.log(JSON.stringify({ location: user.currentLocation }))
@@ -1043,6 +1044,7 @@ const fetchIncognitoStatus = async () => {
               user={user}
               setUser={setUser}
               statusIdentifiers={statusIdentifiers}
+              getUserInfo={getUserInfo}
             />
             {/* Change Map View Button */}
             <MapButton
