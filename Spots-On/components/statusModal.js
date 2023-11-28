@@ -41,6 +41,41 @@ const StatusModal = ({
       setWantsCustomStatus(true);
     }
   };
+  const updateUserStatus = async () => {
+    try {
+      // Get the authorization token from AsyncStorage
+      const authToken = await AsyncStorage.getItem('token');
+      if (!authToken) {
+        // Handle the case where the token is not available
+        console.error('Authorization token not found.');
+        return;
+      }
+  
+      const response = await fetch(`${apiUrl}/updateStatus`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authToken}`, // Attach the token to the Authorization header
+        },
+        body: JSON.stringify({
+          status: user.statusCode
+        }),
+      });
+  
+      if (!response.ok) {
+        // Handle error, e.g., display an error message
+        console.error('Error updating user status:', response.status);
+        return;
+      }
+  
+      // Successfully updated user status
+      console.log('User status updated successfully:', response);
+    } catch (error) {
+      console.error('Error:', error);
+      // Handle other errors as needed
+    }
+  };
+  
 
   return (
     <Modal
@@ -50,6 +85,7 @@ const StatusModal = ({
       onBackdropPress={() => {
         setWantsCustomStatus(false);
         setUser({ ...user, statusCode: prevStatus });
+        updateUserStatus();
         hideModal();
         console.log("Exited status");
       }}
