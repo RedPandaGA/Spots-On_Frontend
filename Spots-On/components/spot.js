@@ -13,7 +13,6 @@ const Spot = ({
   onDragEnd,
   showModal,
   setCurrentSpot,
-  isEditSpotVisible,
 }) => {
   const chosenSpot = {
     spotName: spotName,
@@ -34,6 +33,7 @@ const Spot = ({
         onDragEnd={onDragEnd}
         onPress={() => {
           if (setCurrentSpot) setCurrentSpot(chosenSpot);
+          console.log("Spot clicked:", chosenSpot);
         }}
       >
         <Image

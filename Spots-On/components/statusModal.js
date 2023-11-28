@@ -16,6 +16,12 @@ import { Picker } from "@react-native-picker/picker";
 import { SelectList } from "react-native-dropdown-select-list";
 import { Dropdown } from "react-native-element-dropdown";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import Config from "../.config.js";
+
+
+const papiUrl = Config.PAPI_URL;
+
 
 const StatusModal = ({
   isModalVisible,
@@ -41,115 +47,166 @@ const StatusModal = ({
       setWantsCustomStatus(true);
     }
   };
+
+
+  const updateUserStatusCode = async () => {
+    try {
+      // Get the authorization token from AsyncStorage
+      const authToken = await AsyncStorage.getItem('token');
+      if (!authToken) {
+        // Handle the case where the token is not available
+        console.error('Authorization token not found.');
+        return;
+      }
   
-  if(user){
-    return (
-        <Modal
-          animationIn="slideInUp"
-          animationOut="slideOutDown"
-          isVisible={isModalVisible}
-          onBackdropPress={() => {
-            setWantsCustomStatus(false);
-            setUser({ ...user, statusCode: prevStatus });
-            hideModal();
-            console.log("Exited status");
-          }}
-          style={{ flex: 1 }}
-        >
-          <TouchableWithoutFeedback
-            onPress={() => {
-              Keyboard.dismiss();
-            }}
-          >
-            <KeyboardAvoidingView behavior="padding" style={styles.modalContainer}>
-              <View style={styles.modalContent}>
-                <View style={styles.header}>
-                  <Text style={styles.modalTitle}>Change Status</Text>
-                </View>
-                <View style={styles.inputContainer}>
-                  <Dropdown
-                    style={styles.dropdown}
-                    placeholderStyle={styles.placeholderStyle}
-                    selectedTextStyle={styles.placeholderStyle}
-                    itemTextStyle={styles.itemTextStyle}
-                    iconStyle={styles.iconStyle}
-                    data={statusIdentifiers}
-                    search={false}
-                    maxHeight={300}
-                    labelField="label"
-                    valueField="value"
-                    placeholder={statusIdentifiers[user.statusCode].label}
-                    value={user.statusCode}
-                    onChange={(item) => {
-                      const statusValue = item.value - 1;
-                      setUser({ ...user, statusCode: statusValue });
-                      console.log(statusIdentifiers[statusValue].label);
-                    }}
-                  />
-                </View>
-                <View style={styles.switchContainer}>
-                  <Text style={styles.switchText}>Set a custom status?</Text>
-                  <Switch
-                    trackColor={{ false: "#767577", true: "#E7EFCA" }}
-                    thumbColor={wantsCustomStatus ? "#2C6765" : "#f4f3f4"}
-                    ios_backgroundColor="#3e3e3e"
-                    onValueChange={toggleCustomStatus}
-                    value={wantsCustomStatus}
-                  />
-                </View>
-                <View style={styles.inputContainer}>
-                  {wantsCustomStatus && (
-                    <TextInput
-                      style={styles.input}
-                      placeholder="What are you feeling today?"
-                      placeholderTextColor={COLORS.secondary}
-                      value={user.status}
-                      onChangeText={(text) => setUser({ ...user, status: text })}
-                    />
-                  )}
-                </View>
-                <View style={styles.buttonContainer}>
-                  <TouchableOpacity
-                    style={styles.buttonNormal}
-                    onPress={() => {
-                      setWantsCustomStatus(false);
-                      setUser({ ...user, statusCode: prevStatus });
-                      hideModal();
-                      console.log("Canceled changing status");
-                    }}
-                  >
-                    <Text style={styles.buttonText}>Cancel</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={styles.buttonNormal}
-                    onPress={() => {
-                      // Save the event object or perform other actions here
-                      setPrevStatus(user.statusCode);
-                      if (!wantsCustomStatus) {
-                        setUser({ ...user, status: "" });
-                      }
-                      setWantsCustomStatus(false);
-                      hideModal();
-                      console.log(
-                        `Status: ${
-                          statusIdentifiers[user.statusCode].label
-                        }, description: ${user.status}`
-                      );
-                      // console.log('Spot Created:\n', new);
-                    }}
-                  >
-                    <Text style={styles.buttonText}>Confirm</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </KeyboardAvoidingView>
-          </TouchableWithoutFeedback>
-        </Modal>
-      );
-  } else {
-    return;
-  }
+      const response = await fetch(`${papiUrl}/updateStatusCode`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authToken}`, // Attach the token to the Authorization header
+        },
+        body: JSON.stringify({
+          statusCode: user.statusCode
+        }),
+      });
   
+      if (!response.ok) {
+        // Handle error, e.g., display an error message
+        console.error('Error updating user status:', response.status);
+        
+        // If the server sends a JSON response, you might want to parse and log it
+        try {
+          const errorData = await response.json();
+          console.error('Server error data:', errorData);
+        } catch (parseError) {
+          console.error('Error parsing server error data:', parseError);
+        }
+  
+        return;
+      }
+  
+      // Successfully updated user status
+      console.log('User status updated successfully:', response);
+  
+      // If the server sends a JSON response, you might want to parse and log it
+      try {
+        const responseData = await response.json();
+        console.log('Server response data:', responseData);
+      } catch (parseError) {
+        console.error('Error parsing server response data:', parseError);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      // Handle other errors as needed
+    }
+  };
+  
+
+  return (
+    <Modal
+      animationIn="slideInUp"
+      animationOut="slideOutDown"
+      isVisible={isModalVisible}
+      onBackdropPress={() => {
+        setWantsCustomStatus(false);
+        setUser({ ...user, statusCode: prevStatus });
+        hideModal();
+        console.log("Exited status");
+      }}
+      style={{ flex: 1 }}
+      backdropOpacity={0.4}
+    >
+      <TouchableWithoutFeedback
+        onPress={() => {
+          Keyboard.dismiss();
+        }}
+      >
+        <KeyboardAvoidingView behavior="padding" style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <View style={styles.header}>
+              <Text style={styles.modalTitle}>Change Status</Text>
+            </View>
+            <View style={styles.inputContainer}>
+              <Dropdown
+                style={styles.dropdown}
+                placeholderStyle={styles.placeholderStyle}
+                selectedTextStyle={styles.placeholderStyle}
+                itemTextStyle={styles.itemTextStyle}
+                iconStyle={styles.iconStyle}
+                data={statusIdentifiers}
+                search={false}
+                maxHeight={300}
+                labelField="label"
+                valueField="value"
+                placeholder={statusIdentifiers[user.statusCode].label}
+                value={user.statusCode}
+                onChange={(item) => {
+                  const statusValue = item.value - 1;
+                  setUser({ ...user, statusCode: statusValue });
+                  console.log(statusIdentifiers[statusValue].label);
+                }}
+              />
+            </View>
+            <View style={styles.switchContainer}>
+              <Text style={styles.switchText}>Set a custom status?</Text>
+              <Switch
+                trackColor={{ false: "#767577", true: COLORS.secondary }}
+                thumbColor={wantsCustomStatus ? COLORS.gold : "#f4f3f4"}
+                ios_backgroundColor="#3e3e3e"
+                onValueChange={toggleCustomStatus}
+                value={wantsCustomStatus}
+              />
+            </View>
+            <View style={styles.inputContainer}>
+              {wantsCustomStatus && (
+                <TextInput
+                  style={styles.input}
+                  placeholder="How are you feeling today?"
+                  placeholderTextColor={COLORS.secondary}
+                  value={user.status}
+                  onChangeText={(text) => setUser({ ...user, status: text })}
+                />
+              )}
+            </View>
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                style={styles.buttonNormal}
+                onPress={() => {
+                  setWantsCustomStatus(false);
+                  setUser({ ...user, statusCode: prevStatus });
+                  hideModal();
+                  console.log("Canceled changing status");
+                }}
+              >
+                <Text style={styles.buttonText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.buttonNormal}
+                onPress={() => {
+                  // Save the event object or perform other actions here
+                  setPrevStatus(user.statusCode);
+                  if (!wantsCustomStatus) {
+                    setUser({ ...user, status: "" });
+                  }
+                  updateUserStatusCode();
+                  setWantsCustomStatus(false);
+                  hideModal();
+                  console.log(
+                    `Status: ${
+                      statusIdentifiers[user.statusCode].label
+                    }, description: ${user.status}`
+                  );
+                  // console.log('Spot Created:\n', new);
+                }}
+              >
+                <Text style={styles.buttonText}>Confirm</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
+    </Modal>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -181,11 +238,11 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
     width: "100%",
-    justifyContent: "space-between",
+    justifyContent: "space-around",
   },
   buttonNormal: {
     borderRadius: 30,
-    width: "45%",
+    width: "40%",
     borderWidth: 1.5,
     borderColor: COLORS.secondary,
     marginVertical: 10,
@@ -212,11 +269,10 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 60,
-    borderColor: COLORS.secondary,
-    borderBottomWidth: 1,
+    borderColor: COLORS.lighterprimary,
+    borderWidth: 2,
     margin: 16,
     padding: 10,
-    paddingBottom: 0,
     borderRadius: 10,
     color: COLORS.secondary,
     fontWeight: "bold",
@@ -239,8 +295,7 @@ const styles = StyleSheet.create({
     height: 50,
     borderColor: COLORS.secondary,
     borderBottomWidth: 1,
-    borderRadius: 10,
-    padding: 10,
+    paddingVertical: 10,
   },
   placeholderStyle: {
     fontSize: 20,

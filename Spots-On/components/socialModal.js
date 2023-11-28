@@ -11,8 +11,8 @@ import {
 } from "react-native";
 import Bar from "./bar";
 import COLORS from "./colors";
-import Config from '../.config.js';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import Config from "../.config.js";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const papiUrl = Config.PAPI_URL;
 import Modal from "react-native-modal";
@@ -25,38 +25,38 @@ const SocialModal = ({ isModalVisible, hideModal, showModal }) => {
 
   const joinColony = async () => {
     try {
-        // Get the authorization token from AsyncStorage
-        const authToken = await AsyncStorage.getItem('token');
-        if (!authToken) {
+      // Get the authorization token from AsyncStorage
+      const authToken = await AsyncStorage.getItem("token");
+      if (!authToken) {
         // Handle the case where the token is not available
-        console.error('Authorization token not found.');
+        console.error("Authorization token not found.");
         return;
-        }
+      }
 
-        const response = await fetch(`${papiUrl}/joinColony`, {
-        method: 'POST',
+      const response = await fetch(`${papiUrl}/joinColony`, {
+        method: "POST",
         headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${authToken}`, // Attach the token to the Authorization header
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`, // Attach the token to the Authorization header
         },
         body: JSON.stringify({
-            invite: joinColonyCode,
+          invite: joinColonyCode,
         }),
-        });
+      });
 
-        if (!response.ok) {
+      if (!response.ok) {
         // Handle error, e.g., display an error message
-        console.error('Error joining colony:', response.status);
+        console.error("Error joining colony:", response.status);
         return;
-        }
+      }
 
-        // Successfully joined colony
-        console.log('Successfully joined colony:', response);
+      // Successfully joined colony
+      console.log("Successfully joined colony:", response);
     } catch (error) {
-        console.error('Error:', error);
-        // Handle other errors as needed
+      console.error("Error:", error);
+      // Handle other errors as needed
     }
-  }
+  };
 
   const handleJoinColonyFocus = () => {
     setIsJoinColonyInputFocused(true);
@@ -187,7 +187,7 @@ const SocialModal = ({ isModalVisible, hideModal, showModal }) => {
       onSwipeComplete={hideModal}
       swipeDirection="down"
       style={styles.modalContainer}
-      backdropOpacity={0}
+      backdropOpacity={0.4}
     >
       <KeyboardAvoidingView
         style={styles.modalContainer}

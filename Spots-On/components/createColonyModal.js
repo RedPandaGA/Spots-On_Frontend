@@ -13,8 +13,8 @@ import {
 } from "react-native";
 import Bar from "./bar";
 import COLORS from "./colors";
-import Config from '../.config.js';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import Config from "../.config.js";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const papiUrl = Config.PAPI_URL;
 import Modal from "react-native-modal";
@@ -119,7 +119,7 @@ const CreateColonyModal = ({ isModalVisible, hideModal, showModal, user, getUser
       onSwipeComplete={hideModal}
       swipeDirection="down"
       style={styles.modalContainer}
-      backdropOpacity={0}
+      backdropOpacity={0.4}
     >
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <KeyboardAvoidingView

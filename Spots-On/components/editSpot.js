@@ -24,6 +24,7 @@ import Spot from "./spot";
 import * as Location from "expo-location";
 import { Dropdown } from "react-native-element-dropdown";
 import GooglePlacesInput from "./googlePlacesInput";
+import { useHandler } from "react-native-reanimated";
 
 const EditSpot = ({
   isModalVisible,
@@ -38,16 +39,19 @@ const EditSpot = ({
   const [circleRadius, setCircleRadius] = useState(currentSpot.radius);
   const [circleCenter, setCircleCenter] = useState(currentSpot.coordinate);
   const [region, setRegion] = useState(currentSpot.coordinate);
-  const [newSpot, setNewSpot] = useState(currentSpot);
+  const [newSpot, setNewSpot] = useState({
+    ...currentSpot,
+    spotName: currentSpot.name,
+    safe: currentSpot.safe,
+    radius: currentSpot.radius,
+  });
 
   const [spotNameError, setSpotNameError] = useState(null);
-  const [colonyNameError, setColonyNameError] = useState(null);
 
   const handleInputChange = (key, value) => {
     setNewSpot({ ...newSpot, [key]: value });
     // Clear the error when the user starts typing
     key === "name" && setSpotNameError(null);
-    key === "colonyName" && setColonyNameError(null);
   };
 
   const resetValues = () => {
@@ -58,7 +62,6 @@ const EditSpot = ({
     setCircleRadius(50);
     setShowSpotList(true);
     setSpotNameError(false);
-    setColonyNameError(false);
   };
 
   useEffect(() => {
@@ -80,12 +83,6 @@ const EditSpot = ({
       setSpotNameError("Spot Name is required");
       isValid = false;
     }
-
-    if (!newSpot.colonyName.trim()) {
-      setColonyNameError("Colony Name is required");
-      isValid = false;
-    }
-
     return isValid;
   };
 
@@ -235,6 +232,7 @@ const EditSpot = ({
       onBackdropPress={() => {
         setShowSpotList(true);
         hideModal();
+        console.log(currentSpot);
       }}
       onSwipeComplete={() => {
         setShowSpotList(true);
@@ -243,7 +241,6 @@ const EditSpot = ({
       swipeThreshold={200}
       swipeDirection={showSpotList ? "down" : null}
       propagateSwipe
-      backdropOpacity={0}
       style={styles.modalContainer}
     >
       <KeyboardAvoidingView behavior="padding" style={styles.modalContainer}>
@@ -262,7 +259,11 @@ const EditSpot = ({
                       styles.addSpotTitle,
                       spotNameError && styles.inputError,
                     ]}
-                    placeholder="Edit Spot Name"
+                    placeholder={
+                      currentSpot.spotName
+                        ? currentSpot.spotName
+                        : currentSpot.name
+                    }
                     placeholderTextColor={COLORS.secondary}
                     value={newSpot.spotName}
                     onChangeText={(text) => handleInputChange("spotName", text)}
@@ -275,13 +276,13 @@ const EditSpot = ({
                       height: 25,
                       resizeMode: "contain",
                       justifyContent: "center",
-                      marginLeft: 20,
-                      marginTop: 10,
+                      // marginLeft: 10,
+                      marginTop: 15,
                     }}
                   />
                 </View>
                 <View style={styles.inputContainer}>
-                  <Dropdown
+                  {/* <Dropdown
                     style={styles.input}
                     placeholderStyle={styles.placeholderStyle}
                     selectedTextStyle={styles.placeholderStyle}
@@ -304,7 +305,7 @@ const EditSpot = ({
                   />
                   {colonyNameError && (
                     <Text style={styles.errorMessage}>{colonyNameError}</Text>
-                  )}
+                  )} */}
                   <View style={styles.findLocationContainer}>
                     {/* <TextInput
                       style={[styles.input, { width: "80%" }]}
@@ -322,7 +323,7 @@ const EditSpot = ({
                       <Text style={styles.findLocationText}>Find</Text>
                     </TouchableOpacity> */}
                     <GooglePlacesInput
-                      placeholderText="Find address on map"
+                      placeholderText="Find new address on map"
                       placeholderTextColor={COLORS.secondary}
                       textInputStyle={[
                         styles.input,
@@ -350,7 +351,7 @@ const EditSpot = ({
                 </View>
                 <MapView
                   style={styles.map}
-                  region={region}
+                  region={currentSpot.coordinate}
                   userInterfaceStyle="light"
                   onRegionChange={(newRegion) => {
                     setCircleCenter(newRegion);
@@ -360,12 +361,17 @@ const EditSpot = ({
                   }}
                 >
                   <Spot
-                    coordinate={circleCenter}
+                    coordinate={
+                      circleCenter &&
+                      circleCenter.latitude != undefined &&
+                      circleCenter.longitude != undefined
+                        ? circleCenter
+                        : currentSpot.coordinate
+                    }
                     spotName={newSpot.spotName}
                     colonyName={newSpot.colonyName}
                     isSafe={newSpot.safe}
                     spotRadius={circleRadius}
-                    isEditSpotVisible={isModalVisible}
                   />
                 </MapView>
 
@@ -457,6 +463,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: "100%",
     justifyContent: "center",
+    marginBottom: 20,
   },
   buttonNormal: {
     borderRadius: 30,
@@ -515,13 +522,11 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   addSpotTitle: {
-    fontSize: 40,
+    fontSize: 30,
     fontWeight: "bold",
-    marginBottom: 10,
     color: COLORS.secondary,
     textAlign: "center",
     justifyContent: "center",
-    paddingTop: 10,
     paddingHorizontal: 10,
     marginTop: 10,
   },
@@ -565,6 +570,7 @@ const styles = StyleSheet.create({
   findLocationContainer: {
     flexDirection: "row",
     alignItems: "center",
+    paddingHorizontal: 10,
   },
   findLocationButton: {
     backgroundColor: COLORS.secondary,
