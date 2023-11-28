@@ -243,6 +243,40 @@ const EditSpot = ({
 //     // }
 //   };
 
+const deleteSpot = async () => {
+    console.log(currentSpot.id);
+    try {
+      const authToken = await AsyncStorage.getItem("token");
+      const response = await fetch(
+        `${papiUrl}/deleteSpot/${currentSpot.id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        // Handle error, e.g., display an error message
+        console.error("Error fetching colonies' spots:", response.status);
+        return;
+      }
+
+      const data = await response.json();
+      console.log(data);
+      //console.log("SPOTDATAHERE: " + JSON.stringify(data));
+      setSpots(await getUsersSpotsInColony(currentSpot.cid));
+      hideModal();
+      resetValues();
+    } catch (error) {
+      console.error("Error:", error);
+      // Handle other errors as needed
+      return;
+    }
+  };
+
 //   const deleteSpot = () => {
 //     // Find the index of the current spot in the allSpots array
 //     console.log(
