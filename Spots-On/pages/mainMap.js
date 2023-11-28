@@ -532,43 +532,18 @@ export default function MainMap({ navigation }) {
     },
   ];
 
-  const handleIncognito = () => {
+  const handleIncognito = async () => {
     console.log("Pressed incognito button");
     if (user.incognito) {
       setUser({ ...user, incognito: false });
     } else {
       setUser({ ...user, incognito: true });
-  };
+  }
+  await fetchIncognitoStatus();
+
 }
 
-//   const fetchIncognitoStatus = async () => {
-//     // Get the authorization token from AsyncStorage
-//     const authToken = await AsyncStorage.getItem('token');
-//     //console.log(JSON.stringify({ location: user.currentLocation }))
-//     if (!authToken) {
-//       // Handle the case where the token is not available
-//       console.error('Authorization token not found.');
-//       return;
-//     }
-//     const incognito = true;
 
-//     // Use a fetch request to get the incognito status from the backend
-//     try {
-//         const response = await fetch(`${papiUrl}/updateIncog`, {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json',
-//                 Authorization: `Bearer ${authToken}`, // Attach the token to the Authorization header
-//             },
-//             body: JSON.stringify({ incognito: user.incognito })
-//           });
-
-        
-//     } catch (error) {
-//       console.error('Error:', error);
-//       // Handle other errors as needed
-//     }
-// };
 const fetchIncognitoStatus = async () => {
   // Get the authorization token from AsyncStorage
   const authToken = await AsyncStorage.getItem('token');
@@ -596,8 +571,7 @@ const fetchIncognitoStatus = async () => {
           const data = await response.json();
           console.log('Incognito status fetched successfully:', data);
 
-          // Update the local state based on the server response
-          setUser({ ...user, incognito: data.incognito });
+         
       } else {
           // Handle error
           const errorData = await response.json();
@@ -1000,11 +974,7 @@ const fetchIncognitoStatus = async () => {
             <MapButton
               imageSource={require("../assets/incognito.png")}
               style={styles.incognitoButton}
-              onPress={() => {
-                handleIncognito();
-                fetchIncognitoStatus();
-            }}
-
+              onPress={() => handleIncognito()}
               width={45}
               height={45}
               active={user.incognito}
