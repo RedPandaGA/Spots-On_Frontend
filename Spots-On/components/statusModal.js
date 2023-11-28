@@ -54,6 +54,7 @@ const StatusModal = ({
         console.log("Exited status");
       }}
       style={{ flex: 1 }}
+      backdropOpacity={0.4}
     >
       <TouchableWithoutFeedback
         onPress={() => {
@@ -89,8 +90,8 @@ const StatusModal = ({
             <View style={styles.switchContainer}>
               <Text style={styles.switchText}>Set a custom status?</Text>
               <Switch
-                trackColor={{ false: "#767577", true: "#E7EFCA" }}
-                thumbColor={wantsCustomStatus ? "#2C6765" : "#f4f3f4"}
+                trackColor={{ false: "#767577", true: COLORS.secondary }}
+                thumbColor={wantsCustomStatus ? COLORS.gold : "#f4f3f4"}
                 ios_backgroundColor="#3e3e3e"
                 onValueChange={toggleCustomStatus}
                 value={wantsCustomStatus}
@@ -100,7 +101,7 @@ const StatusModal = ({
               {wantsCustomStatus && (
                 <TextInput
                   style={styles.input}
-                  placeholder="What are you feeling today?"
+                  placeholder="How are you feeling today?"
                   placeholderTextColor={COLORS.secondary}
                   value={user.status}
                   onChangeText={(text) => setUser({ ...user, status: text })}
@@ -176,11 +177,11 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
     width: "100%",
-    justifyContent: "space-between",
+    justifyContent: "space-around",
   },
   buttonNormal: {
     borderRadius: 30,
-    width: "45%",
+    width: "40%",
     borderWidth: 1.5,
     borderColor: COLORS.secondary,
     marginVertical: 10,
@@ -207,11 +208,10 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 60,
-    borderColor: COLORS.secondary,
-    borderBottomWidth: 1,
+    borderColor: COLORS.lighterprimary,
+    borderWidth: 2,
     margin: 16,
     padding: 10,
-    paddingBottom: 0,
     borderRadius: 10,
     color: COLORS.secondary,
     fontWeight: "bold",
@@ -234,8 +234,7 @@ const styles = StyleSheet.create({
     height: 50,
     borderColor: COLORS.secondary,
     borderBottomWidth: 1,
-    borderRadius: 10,
-    padding: 10,
+    paddingVertical: 10,
   },
   placeholderStyle: {
     fontSize: 20,

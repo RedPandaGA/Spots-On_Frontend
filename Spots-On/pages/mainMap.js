@@ -614,7 +614,6 @@ export default function MainMap({ navigation }) {
         onDragEnd={(e) => handleSpotDragEnd(e, spot.id)}
         showModal={showModal}
         setCurrentSpot={setCurrentSpot}
-        isEditSpotVisible={modals.editSpot}
       />
     ));
   };
@@ -960,22 +959,20 @@ export default function MainMap({ navigation }) {
               width={45}
               height={45}
             />
-            {modals.editSpot && (
-              <EditSpot
-                isModalVisible={modals.editSpot}
-                hideModal={() => hideModal("editSpot")}
-                allSpots={spots}
-                setAllSpots={setSpots}
-                mapRegion={{
-                  latitude: user.currentLocation.latitude,
-                  longitude: user.currentLocation.longitude,
-                  latitudeDelta: 0.005,
-                  longitudeDelta: 0.005,
-                }}
-                colonies={colonies}
-                currentSpot={currentSpot}
-              />
-            )}
+            <EditSpot
+              isModalVisible={modals.editSpot}
+              hideModal={() => hideModal("editSpot")}
+              allSpots={spots}
+              setAllSpots={setSpots}
+              mapRegion={{
+                latitude: user.currentLocation.latitude,
+                longitude: user.currentLocation.longitude,
+                latitudeDelta: 0.005,
+                longitudeDelta: 0.005,
+              }}
+              colonies={colonies}
+              currentSpot={currentSpot}
+            />
 
             {/* Spots Modal Button */}
             <MapButton

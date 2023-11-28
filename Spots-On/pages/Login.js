@@ -11,9 +11,9 @@ import {
   Keyboard,
 } from "react-native";
 import COLORS from "../components/colors";
-import CustomAlert from '../components/alert';
-import Config from '../.config.js';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import CustomAlert from "../components/alert";
+import Config from "../.config.js";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const apiUrl = Config.API_URL;
 
@@ -45,37 +45,37 @@ const Login = ({ navigation }) => {
     }
 
     const userData = {
-        pnum: phoneNumber,
-        pass: password,
+      pnum: phoneNumber,
+      pass: password,
     };
 
     try {
-        const response = await fetch(`${apiUrl}/login`, {
-            method: 'POST',
-            headers: {
-            'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(userData),
-        });
+      const response = await fetch(`${apiUrl}/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
 
-        if (!response.ok) {
-            console.error('Error logging in: ', response.status);
-            return;
-        }
+      if (!response.ok) {
+        console.error("Error logging in: ", response.status);
+        return;
+      }
 
-        const data = await response.json();
-        const receivedToken = data.token;
-        const newuid = data.uid;
+      const data = await response.json();
+      const receivedToken = data.token;
+      const newuid = data.uid;
 
-        // Store the token in AsyncStorage
-        await AsyncStorage.setItem('token', receivedToken);
-        await AsyncStorage.setItem('uid', newuid);
+      // Store the token in AsyncStorage
+      await AsyncStorage.setItem("token", receivedToken);
+      // await AsyncStorage.setItem('uid', newuid);
 
-        console.log('Logged Into Account: ' + await AsyncStorage.getItem('token') + " uid: " + await AsyncStorage.getItem('uid'));
-        navigation.navigate('Home');
+      // console.log('Logged Into Account: ' + await AsyncStorage.getItem('token') + " uid: " + await AsyncStorage.getItem('uid'));
+      navigation.navigate("Home");
     } catch (error) {
-        console.error('Error:', error);
-        // Handle other errors as needed
+      console.error("Error:", error);
+      // Handle other errors as needed
     }
   };
 

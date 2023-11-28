@@ -10,36 +10,35 @@ import {
 import SearchBarModal from "./searchBarModal";
 import Modal from "react-native-modal";
 import COLORS from "./colors";
-import Config from '../.config.js';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import Config from "../.config.js";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const papiUrl = Config.PAPI_URL;
 
-const ChatModal = ({ isModalVisible, hideModal, navigation, colonies}) => {
-
+const ChatModal = ({ isModalVisible, hideModal, navigation, colonies }) => {
   // Define an array of friends and their statuses
-//   const chatList = [
-//     {
-//       name: "Bestiesss",
-//       memberCount: 3,
-//     },
-//     {
-//       name: "Volleyball squad",
-//       memberCount: 4,
-//     },
-//     {
-//       name: "OOD group",
-//       memberCount: 5,
-//     },
-//     {
-//       name: "CSC 3102",
-//       memberCount: 20,
-//     },
-//     {
-//       name: "SASE people",
-//       memberCount: 28,
-//     },
-//   ];
+  //   const chatList = [
+  //     {
+  //       name: "Bestiesss",
+  //       memberCount: 3,
+  //     },
+  //     {
+  //       name: "Volleyball squad",
+  //       memberCount: 4,
+  //     },
+  //     {
+  //       name: "OOD group",
+  //       memberCount: 5,
+  //     },
+  //     {
+  //       name: "CSC 3102",
+  //       memberCount: 20,
+  //     },
+  //     {
+  //       name: "SASE people",
+  //       memberCount: 28,
+  //     },
+  //   ];
 
   const [isColoniesPressed, setIsColoniesPressed] = useState(true);
   const [isFriendsPressed, setIsFriendsPressed] = useState(false);
@@ -51,7 +50,7 @@ const ChatModal = ({ isModalVisible, hideModal, navigation, colonies}) => {
       onPress={() => {
         setIsClickingChat(true);
         hideModal();
-        navigation.navigate("ColonyChat", {item});
+        navigation.navigate("ColonyChat", { item });
       }}
     >
       <View style={styles.chatItem}>
@@ -83,6 +82,7 @@ const ChatModal = ({ isModalVisible, hideModal, navigation, colonies}) => {
       swipeDirection="right"
       propagateSwipe
       style={{ margin: 0 }}
+      backdropOpacity={0.4}
     >
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>

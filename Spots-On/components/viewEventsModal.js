@@ -72,7 +72,7 @@ const ViewEventsModal = ({
       swipeDirection="down"
       propagateSwipe
       style={styles.modalContainer}
-      backdropOpacity={0}
+      backdropOpacity={0.4}
     >
       <View style={[styles.modalContent, styles.shadow]}>
         <Bar color={COLORS.primary} />
