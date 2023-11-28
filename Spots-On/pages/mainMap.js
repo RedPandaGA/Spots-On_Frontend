@@ -601,29 +601,6 @@ export default function MainMap({ navigation }) {
     setSpots(updatedSpots);
   };
 
-  // const displayAllSpots = () => {
-  //   return spots.map((spot) => (
-  //     <Spot
-  //       key={spot.id}
-  //       coordinate={spot.coordinate}
-  //       spotName={spot.name}
-  //       colonyName={spot.colonyName}
-  //       spotRadius={spot.radius}
-  //       isSafe={spot.safe}
-  //       onDrag={(e) => handleSpotDrag(e, spot.id)}
-  //       onDragEnd={(e) => handleSpotDragEnd(e, spot.id)}
-  //     />
-  //   ));
-  // };
-  //   .filter((spot) => {
-  //     // Find the associated colony
-  //     // const associatedColony = colonies.find(
-  //     //   (colony) => colony.name === spot.colonyName
-  //     // );
-
-  //     // Display the spot only if the associated colony is selected
-  //     return associatedColony && associatedColony.selected;
-  //   })
   const displayAllSpots = () => {
     return spots.map((spot) => (
       <Spot
