@@ -19,7 +19,7 @@ import { Dropdown } from "react-native-element-dropdown";
 import CheckBox from "expo-checkbox";
 import Modal from "react-native-modal";
 import GooglePlacesInput from "./googlePlacesInput";
-import { ScrollView } from "react-native-virtualized-view";
+import { ScrollView } from "react-native-gesture-handler";
 
 const CreateEventModal = ({
   isModalVisible,
