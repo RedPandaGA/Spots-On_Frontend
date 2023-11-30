@@ -20,6 +20,12 @@ import CheckBox from "expo-checkbox";
 import Modal from "react-native-modal";
 import GooglePlacesInput from "./googlePlacesInput";
 import { ScrollView } from "react-native-gesture-handler";
+import moment from 'moment-timezone';
+import * as Localization from 'expo-localization';
+import Config from "../.config.js";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+const papiUrl = Config.PAPI_URL;
 
 const CreateEventModal = ({
   isModalVisible,
@@ -32,6 +38,9 @@ const CreateEventModal = ({
   eventsUpcoming,
   setEventsToday,
   setEventsUpcoming,
+  getUsersSpotsInColony,
+  setSpots,
+  user,
 }) => {
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
@@ -109,7 +118,141 @@ const CreateEventModal = ({
     coordinate: {},
     description: "",
     spotName: "",
+    sid: "",
+    cid: "",
   });
+
+  const createSpotRetsid = async () => {
+    try {
+      // Get the authorization token from AsyncStorage
+      const authToken = await AsyncStorage.getItem("token");
+
+      if (!authToken) {
+        // Handle the case where the token is not available
+        console.error("Authorization token not found.");
+        return;
+      }
+
+      const spotData = {
+        sname: event.name,
+        location: event.coordinate,
+        danger: 0,
+        cid: event.cid,
+        radius: 250,
+      };
+      console.log(spotData);
+      const response = await fetch(`${papiUrl}/createSpot`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`, // Attach the token to the Authorization header
+        },
+        body: JSON.stringify(spotData),
+      });
+
+      if (!response.ok) {
+        // Handle error, e.g., display an error message
+        console.error("Error creating spot:", response.status);
+        return;
+      }
+
+      // Successfully created spot
+      console.log("Spot created successfully: " + response);
+      setSpots(await getUsersSpotsInColony(spotData.cid));
+      return response[0].sid;
+    } catch (error) {
+      console.error("Error:", error);
+      // Handle other errors as needed
+    }
+  };
+
+  const createEvent = async () => {
+    try {
+        // Get the authorization token from AsyncStorage
+        const authToken = await AsyncStorage.getItem('token');
+        if (!authToken) {
+          // Handle the case where the token is not available
+          console.error('Authorization token not found.');
+          return;
+        }
+    
+        // const  parsedDate = moment(event.date + " " + event.time, 'MM/DD/YYYY h:mm a');
+        const localTimezone = Localization.timezone;
+
+        // Input date string in the given format
+        const inputDateString = event.date + " " + event.time;
+        console.log(inputDateString);
+
+        // Parse the input string using moment and set the local timezone
+        const localDateTime = moment(event.date);
+        const postgresTimestamp = localDateTime.utc().format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
+
+        // Convert the local date/time to UTC
+        const utcDateTime = localDateTime.utc();
+
+        console.log('Local Time:', localDateTime.format('MM/DD/YYYY h:mm a'));
+        console.log('UTC Time for PostgreSQL:', postgresTimestamp);
+        console.log(event);
+        let createEvent = {};
+
+        if(!event.isCustomAddress){
+            console.log("spot");
+            console.log(event);
+            createEvent = JSON.stringify({
+                ename: event.name,
+                etime: postgresTimestamp,
+                description: event.description,
+                creator: user.uid,
+                cid: event.cid,
+                location_sid: event.sid,
+                address: event.spotName,
+            });
+        } else {
+            console.log(event.sid);
+            console.log("customadd");
+            event.sid = await createSpotRetsid();
+            console.log(event.sid);
+            createEvent = JSON.stringify({
+                ename: event.name,
+                etime: postgresTimestamp,
+                description: event.description,
+                creator: user.uid,
+                cid: event.cid,
+                location_sid: event.sid,
+                address: event.address,
+            });
+        }
+
+        console.log("Create Event: " + createEvent);
+        const response = await fetch(`${papiUrl}/createEvent`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authToken}`, // Attach the token to the Authorization header
+          },
+          body: createEvent
+        });
+    
+        if (!response.ok) {
+          // Handle error, e.g., display an error message
+          console.error('Error creating Event:', response.status);
+          return;
+        }
+
+        // Successfully created colony
+        console.log('Event created successfully:', response);
+      } catch (error) {
+        console.error('Error:', error);
+        // Handle other errors as needed
+      }
+  }
+
+  const geocode = async () => {
+    const geocodedLocation = await Location.geocodeAsync(event.address);
+    console.log("Geocoded Address: \n", geocodedLocation);
+    Keyboard.dismiss();
+    return geocodedLocation;
+  };
 
   const resetEventState = () => {
     const reset = {
@@ -173,12 +316,7 @@ const CreateEventModal = ({
     }
   };
 
-  const geocode = async () => {
-    const geocodedLocation = await Location.geocodeAsync(event.address);
-    console.log("Geocoded Address: \n", geocodedLocation);
-    Keyboard.dismiss();
-    return geocodedLocation;
-  };
+  
 
   const onChange = (e, selectedDate) => {
     const currentDate = selectedDate || eventDate;
@@ -225,13 +363,17 @@ const CreateEventModal = ({
   const onChangeColony = (item) => {
     const selectedColonyName = item.name;
     handleInputChange("colonyName", selectedColonyName);
-
+    handleInputChange("cid", item.cid);
+    const getUser = async () => {
+        setSpots(await getUsersSpotsInColony(item.cid));
+    }
+    getUser();
     // Filter spots based on the selected colony name
-    const spotsInColony = allSpots.filter(
-      (spot) => spot.colonyName === selectedColonyName
-    );
-    setFilteredSpots(spotsInColony);
-    console.log("These are the arrays of spots in the colony\n", spotsInColony);
+    // const spotsInColony = allSpots.filter(
+    //   (spot) => spot.colonyName === selectedColonyName
+    // );
+    setFilteredSpots(allSpots);
+    console.log("These are the arrays of spots in the colony\n", allSpots);
     setErrors({ ...errors, ["colonyName"]: "" });
   };
 
@@ -379,6 +521,7 @@ const CreateEventModal = ({
                         // setErrors({ ...errors, ["spotName"]: "" });
                         console.log("Selected spot:", item.name);
                         handleInputChange("spotName", item.name);
+                        handleInputChange("sid", item.id);
                         handleInputChange("coordinate", item.coordinate);
                         setErrors({ ...errors, ["spotName"]: "" });
                       }}
@@ -495,7 +638,7 @@ const CreateEventModal = ({
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.buttonNormal}
-                  onPress={handleCreateEvent}
+                  onPress={createEvent}
                 >
                   <Text style={styles.buttonText}>Create</Text>
                 </TouchableOpacity>
