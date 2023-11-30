@@ -1157,6 +1157,7 @@ export default function MainMap({ navigation }) {
               findSelectedColony={findSelectedColony}
               filteredColonies={filteredColonies}
               setFilteredColonies={setFilteredColonies}
+              renderUsersOnMap={renderUsersOnMap}
             />
 
             {/* ------ SIDE BUTTONS ------ */}

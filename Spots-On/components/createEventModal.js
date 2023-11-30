@@ -136,7 +136,7 @@ const CreateEventModal = ({
       const spotData = {
         sname: event.name,
         location: event.coordinate,
-        danger: 0,
+        danger: 1,
         cid: event.cid,
         radius: 250,
       };
@@ -191,7 +191,7 @@ const CreateEventModal = ({
       console.log(event);
       let createEvent = {};
 
-      if (isCustomAddress) {
+      if (!isCustomAddress) {
         console.log("spot");
         console.log(event);
         createEvent = JSON.stringify({
