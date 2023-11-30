@@ -197,51 +197,6 @@ const EditSpot = ({
 
   let feetValue = metersToFeet(circleRadius);
 
-//   const updateSpot = () => {
-//     // Find the index of the current spot in the allSpots array
-
-//     console.log(
-//       allSpots.map((item) => {
-//         console.log(item.name);
-//         console.log(item.colonyName);
-//         console.log(item.coordinate);
-//       })
-//     );
-//     console.log("CURRENT SPOT:");
-//     console.log(currentSpot);
-//     console.log(currentSpot.colonyName);
-//     console.log(currentSpot.coordinate);
-//     const spotIndex = allSpots.findIndex(
-//       (spot) => spot.name === currentSpot.spotName
-//     );
-//     console.log(spotIndex);
-
-//     if (spotIndex !== -1) {
-//       // Create a copy of allSpots
-//       const updatedSpots = [...allSpots];
-
-//       // Update the spot at the identified index with the new values
-//       updatedSpots[spotIndex] = {
-//         ...currentSpot,
-//         name: newSpot.spotName,
-//         colonyName: newSpot.colonyName,
-//         address: newSpot.address,
-//         safe: newSpot.safe,
-//         radius: circleRadius,
-//         coordinate: circleCenter,
-//       };
-
-//       // Set the state with the updated array
-//       setAllSpots(updatedSpots);
-
-//       // Hide the modal and reset values
-//       hideModal();
-//       resetValues();
-
-//       console.log("Spot Edited:\n", currentSpot, "to", updatedSpots[spotIndex]);
-//     }
-//     // }
-//   };
 
 const deleteSpot = async () => {
     console.log(currentSpot.id);
@@ -277,40 +232,6 @@ const deleteSpot = async () => {
     }
   };
 
-//   const deleteSpot = () => {
-//     // Find the index of the current spot in the allSpots array
-//     console.log(
-//       allSpots.map((item) => {
-//         console.log(item.name);
-//         console.log(item.colonyName);
-//         console.log(item.coordinate);
-//       })
-//     );
-//     console.log("CURRENT SPOT:");
-//     console.log(currentSpot.spotName);
-//     console.log(currentSpot.colonyName);
-//     console.log(currentSpot.coordinate);
-//     const spotIndex = allSpots.findIndex(
-//       (spot) => spot.name === currentSpot.spotName
-//     );
-
-//     if (spotIndex !== -1) {
-//       // Create a copy of allSpots
-//       const updatedSpots = [...allSpots];
-
-//       // Remove the spot at the identified index
-//       updatedSpots.splice(spotIndex, 1);
-
-//       // Set the state with the updated array
-//       setAllSpots(updatedSpots);
-
-//       // Hide the modal and reset values
-//       hideModal();
-//       resetValues();
-
-//       console.log("Spot Deleted:\n", currentSpot);
-//     }
-//   };
 
   return (
     <Modal

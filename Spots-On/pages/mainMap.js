@@ -31,6 +31,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 // import users from "../components/users";
 import EditSpot from "../components/editSpot";
 import EventInfo from "../components/eventInfo";
+import moment from "moment";
 
 const papiUrl = Config.PAPI_URL;
 
@@ -256,8 +257,80 @@ export default function MainMap({ navigation }) {
             "Content-Type": "application/json",
             Authorization: `Bearer ${authToken}`,
           },
+        });
+    
+        if (!response.ok) {
+          // Handle error, e.g., display an error message
+          console.error('Error fetching Events Today:', response.status);
+          return [];
         }
-      );
+    
+        const data = await response.json();
+
+        for (let colony of data){
+            colony.memberCount = await getNumOfMembers(colony.cid);
+            colony.selected = false;
+        }
+        console.log("DATAARG: " + JSON.stringify(data))
+        return data;
+    } catch (error) {
+      console.error("Error:", error);
+      // Handle other errors as needed
+      return [];
+    }
+  };
+
+  const getEventToday = async () => {
+    try {
+      const authToken = await AsyncStorage.getItem("token");
+      const response = await fetch(
+        `${papiUrl}/allEventsIn24/${await AsyncStorage.getItem("uid")}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        });
+    
+        if (!response.ok) {
+          // Handle error, e.g., display an error message
+          console.error('Error fetching Events Today:', response.status);
+          return [];
+        }
+    
+        const data = await response.json();
+        for (let event of data){
+            event.dateTime = moment(event.dateTime).local();
+            event.dateTime = event.dateTime.format('MMMM D, YYYY h:mm A');
+        }
+        console.log("Events Today: " + JSON.stringify(data))
+        setEventsToday(data);
+    } catch (error) {
+      console.error("Error:", error);
+      // Handle other errors as needed
+      return [];
+    }
+  };
+
+  const getEventUpcoming = async () => {
+    try {
+      const authToken = await AsyncStorage.getItem("token");
+      const response = await fetch(
+        `${papiUrl}/allEventsOut24/${await AsyncStorage.getItem("uid")}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        });
+    
+        if (!response.ok) {
+          // Handle error, e.g., display an error message
+          console.error('Error fetching user colonies:', response.status);
+          return [];
+        }
 
       if (!response.ok) {
         // Handle error, e.g., display an error message
@@ -975,6 +1048,9 @@ export default function MainMap({ navigation }) {
               eventsUpcoming={eventsUpcoming}
               currentEvent={currentEvent}
               setCurrentEvent={setCurrentEvent}
+              user={user}
+              getEventToday={getEventToday}
+              getEventUpcoming={getEventUpcoming}
             />
             <EventInfo
               isModalVisible={modals.eventInfo}
@@ -992,7 +1068,9 @@ export default function MainMap({ navigation }) {
               eventsUpcoming={eventsUpcoming}
               setEventsToday={setEventsToday}
               setEventsUpcoming={setEventsUpcoming}
-              getSpots={getUsersSpotsInColony}
+              user={user}
+              setSpots={setSpots}
+              getUsersSpotsInColony={getUsersSpotsInColony}
             />
 
             <CreateColonyModal
