@@ -18,6 +18,8 @@ export default function ColonySlider({
   setUsers,
   getUsersInColony,
   findSelectedColony,
+  filteredColonies,
+  setFilteredColonies,
 }) {
   useEffect(() => {
     async function grabColonyInfo() {
@@ -36,6 +38,11 @@ export default function ColonySlider({
       selected: item.name === name,
     }));
     setColonies(updatedColony);
+    const updatedFilteredColony = filteredColonies.map((item) => ({
+      ...item,
+      selected: item.name === name,
+    }));
+    setFilteredColonies(updatedFilteredColony);
     //console.log("colonies: " + JSON.stringify(colonies));
   };
 
@@ -44,7 +51,7 @@ export default function ColonySlider({
       <FlatList
         style={styles.list}
         horizontal
-        data={colonies}
+        data={filteredColonies}
         keyExtractor={(item, index) => index.toString()}
         showsHorizontalScrollIndicator={false}
         renderItem={({ item }) => (

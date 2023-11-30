@@ -2,7 +2,24 @@ import React from "react";
 import { StyleSheet, Image, View, TextInput } from "react-native";
 import COLORS from "./colors";
 
-export default function SearchBar({ imageSource, style, color }) {
+export default function SearchBar({
+  imageSource,
+  style,
+  color,
+  colonies,
+  filteredColonies,
+  setFilteredColonies,
+}) {
+  const handleSearch = (text) => {
+    // Filter colonies based on the entered text
+    const filtered = colonies.filter((colony) =>
+      colony.name.toLowerCase().includes(text.toLowerCase())
+    );
+    // Update the state with the filtered colonies
+    setFilteredColonies(filtered);
+    console.log(filtered);
+  };
+
   return (
     <View style={[style, styles.shadow]}>
       <View style={styles.button}>
@@ -10,8 +27,8 @@ export default function SearchBar({ imageSource, style, color }) {
           style={styles.input}
           placeholder="Search for colonies"
           placeholderTextColor={COLORS.white}
-          // value={searchText}
-          // onChangeText={setSearchText}
+          value={filteredColonies}
+          onChangeText={handleSearch}
         />
         <Image source={imageSource} style={styles.image} />
       </View>

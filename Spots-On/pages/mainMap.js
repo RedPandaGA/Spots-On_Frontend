@@ -257,22 +257,23 @@ export default function MainMap({ navigation }) {
             "Content-Type": "application/json",
             Authorization: `Bearer ${authToken}`,
           },
-        });
-    
-        if (!response.ok) {
-          // Handle error, e.g., display an error message
-          console.error('Error fetching Events Today:', response.status);
-          return [];
         }
-    
-        const data = await response.json();
+      );
 
-        for (let colony of data){
-            colony.memberCount = await getNumOfMembers(colony.cid);
-            colony.selected = false;
-        }
-        console.log("DATAARG: " + JSON.stringify(data))
-        return data;
+      if (!response.ok) {
+        // Handle error, e.g., display an error message
+        console.error("Error fetching Events Today:", response.status);
+        return [];
+      }
+
+      const data = await response.json();
+
+      for (let colony of data) {
+        colony.memberCount = await getNumOfMembers(colony.cid);
+        colony.selected = false;
+      }
+      console.log("DATAARG: " + JSON.stringify(data));
+      return data;
     } catch (error) {
       console.error("Error:", error);
       // Handle other errors as needed
@@ -291,21 +292,22 @@ export default function MainMap({ navigation }) {
             "Content-Type": "application/json",
             Authorization: `Bearer ${authToken}`,
           },
-        });
-    
-        if (!response.ok) {
-          // Handle error, e.g., display an error message
-          console.error('Error fetching Events Today:', response.status);
-          return [];
         }
-    
-        const data = await response.json();
-        for (let event of data){
-            event.dateTime = moment(event.dateTime).local();
-            event.dateTime = event.dateTime.format('MMMM D, YYYY h:mm A');
-        }
-        console.log("Events Today: " + JSON.stringify(data))
-        setEventsToday(data);
+      );
+
+      if (!response.ok) {
+        // Handle error, e.g., display an error message
+        console.error("Error fetching Events Today:", response.status);
+        return [];
+      }
+
+      const data = await response.json();
+      for (let event of data) {
+        event.dateTime = moment(event.dateTime).local();
+        event.dateTime = event.dateTime.format("MMMM D, YYYY h:mm A");
+      }
+      console.log("Events Today: " + JSON.stringify(data));
+      setEventsToday(data);
     } catch (error) {
       console.error("Error:", error);
       // Handle other errors as needed
@@ -324,13 +326,14 @@ export default function MainMap({ navigation }) {
             "Content-Type": "application/json",
             Authorization: `Bearer ${authToken}`,
           },
-        });
-    
-        if (!response.ok) {
-          // Handle error, e.g., display an error message
-          console.error('Error fetching user colonies:', response.status);
-          return [];
         }
+      );
+
+      if (!response.ok) {
+        // Handle error, e.g., display an error message
+        console.error("Error fetching user colonies:", response.status);
+        return [];
+      }
 
       if (!response.ok) {
         // Handle error, e.g., display an error message
@@ -785,6 +788,7 @@ export default function MainMap({ navigation }) {
   // GET ALL COLONIES FROM DATABASE AND STORE INTO VARIABLES TO USE AND DISPLAY
   // USE THE SELECTED VALUE OR SOMETHING SIMILAR TO GRAB SPECIFIC MEMBERS/SPOTS BASED ON THE SELECTED COLONY
   const [colonies, setColonies] = useState([]);
+  const [filteredColonies, setFilteredColonies] = useState([]);
 
   /*[
     { name: "SASE", selected: true, value: 1 },
@@ -940,7 +944,10 @@ export default function MainMap({ navigation }) {
               onRegionChange={handleRegionChange}
               mapType={mapType}
               // onPress={addSpot}
-              onPress={() => Keyboard.dismiss()}
+              onPress={() => {
+                setFilteredColonies(colonies);
+                Keyboard.dismiss();
+              }}
             >
               {/* FUNCTION TO DISPLAY ALL MEMBERS WITHIN SELECTED COLONY */}
               {displayAllSpots()}
@@ -1123,6 +1130,9 @@ export default function MainMap({ navigation }) {
                   : styles.searchBarIOS
               }
               onPress={() => console.log("Pressed search bar")}
+              colonies={colonies}
+              filteredColonies={filteredColonies}
+              setFilteredColonies={setFilteredColonies}
             />
 
             {/* Colony Buttons Slider */}
@@ -1140,6 +1150,8 @@ export default function MainMap({ navigation }) {
               setUsers={setUsers}
               getUsersInColony={getUsersInColony}
               findSelectedColony={findSelectedColony}
+              filteredColonies={filteredColonies}
+              setFilteredColonies={setFilteredColonies}
             />
 
             {/* ------ SIDE BUTTONS ------ */}
