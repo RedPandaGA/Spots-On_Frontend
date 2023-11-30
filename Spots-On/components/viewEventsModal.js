@@ -14,6 +14,10 @@ import {
 import Bar from "./bar";
 import COLORS from "./colors";
 import Modal from "react-native-modal";
+import Config from "../.config.js";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+const papiUrl = Config.PAPI_URL;
 
 const ViewEventsModal = ({
   isModalVisible,
@@ -42,10 +46,45 @@ const ViewEventsModal = ({
     getEventUpcoming();
   }, [isTodayPressed, isUpcomingPressed]);
 
+  const getSpotCoord = async (sid) => {
+    try {
+      const authToken = await AsyncStorage.getItem("token");
+      const response = await fetch(
+        `${papiUrl}/getSpot/${sid}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        // Handle error, e.g., display an error message
+        console.error("Error fetching spot:", response.status);
+        return;
+      }
+
+      const spot = await response.json();
+      console.log("Spot: " + JSON.stringify(spot));
+
+      return spot.location;
+    } catch (error) {
+      console.error("Error:", error);
+      // Handle other errors as needed
+      return;
+    }
+  }
+
   const renderItem = ({ item }) => (
     <View style={styles.eventItem}>
       <TouchableOpacity
-        onPress={() => {
+        onPress={async () => {
+        //   const asyncGetSpotCoord = async () => {
+        //     item.coordinate = await getSpotCoord(item.location_sid);
+        //   }
+          item.coordinate = await getSpotCoord(item.location_sid);
           setCurrentEvent(item);
           hideModal();
           setTimeout(() => {
