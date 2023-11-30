@@ -1,10 +1,21 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  ScrollView,
+} from "react-native";
 import COLORS from "../components/colors";
 
 export default function Account({ navigation, route }) {
-    const {colonies} = route.params;
-  const detailList = ["Edit Phone Number", "Edit Email Address", "Change Password"];
+  const { colonies } = route.params;
+  const detailList = [
+    "Edit Phone Number",
+    "Edit Email Address",
+    "Change Password",
+  ];
 
   const detailButtonActions = [
     () => {
@@ -26,12 +37,16 @@ export default function Account({ navigation, route }) {
     },
     () => {
       console.log("delete account clicked");
-    }
+    },
   ];
 
   const renderDetailButton = (text, index) => {
     return (
-      <TouchableOpacity style={styles.buttons} onPress={detailButtonActions[index]} key={text}>
+      <TouchableOpacity
+        style={styles.buttons}
+        onPress={detailButtonActions[index]}
+        key={text}
+      >
         <Text style={styles.buttonText}>{text}</Text>
       </TouchableOpacity>
     );
@@ -39,7 +54,11 @@ export default function Account({ navigation, route }) {
 
   const renderOtherButton = (text, index) => {
     return (
-      <TouchableOpacity style={styles.buttons} onPress={otherButtonActions[index]} key={text}>
+      <TouchableOpacity
+        style={styles.buttons}
+        onPress={otherButtonActions[index]}
+        key={text}
+      >
         <Text style={styles.buttonText}>{text}</Text>
       </TouchableOpacity>
     );
@@ -49,10 +68,12 @@ export default function Account({ navigation, route }) {
     <ScrollView style={styles.container}>
       <View>
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => {
-            navigation.navigate("Settings", {colonies: colonies});
-            console.log("Pressed back button");
-          }}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Settings", { colonies: colonies });
+              console.log("Pressed back button");
+            }}
+          >
             <View style={styles.backButton}>
               <Image
                 source={require("../assets/backButton.png")}
@@ -62,21 +83,34 @@ export default function Account({ navigation, route }) {
           </TouchableOpacity>
           <Text style={styles.title}>Account</Text>
         </View>
-        <Image source={require("../assets/profilePicture.png")} style={styles.profilePicture} />
+        <Image
+          source={require("../assets/faris.png")}
+          style={styles.profilePicture}
+        />
         <TouchableOpacity>
-        <Image source={require("../assets/editIcon.png")} style={styles.editIcon1}/>
+          <Image
+            source={require("../assets/editIcon.png")}
+            style={styles.editIcon1}
+          />
         </TouchableOpacity>
         <View>
           <Text style={styles.nameText}>Faris Khattak</Text>
           <TouchableOpacity>
-          <Image source={require("../assets/editIcon.png")} style={styles.editIcon2} />
+            <Image
+              source={require("../assets/editIcon.png")}
+              style={styles.editIcon2}
+            />
           </TouchableOpacity>
         </View>
         <View style={styles.settingsItems}>
-          {detailList.map((buttonText, index) => renderDetailButton(buttonText, index))}
+          {detailList.map((buttonText, index) =>
+            renderDetailButton(buttonText, index)
+          )}
         </View>
         <View style={styles.settingsItems}>
-          {otherList.map((buttonText, index) => renderOtherButton(buttonText, index))}
+          {otherList.map((buttonText, index) =>
+            renderOtherButton(buttonText, index)
+          )}
         </View>
       </View>
     </ScrollView>
@@ -108,7 +142,7 @@ const styles = StyleSheet.create({
     width: 50,
     position: "absolute",
     left: 20,
-    tintColor: COLORS.secondary
+    tintColor: COLORS.secondary,
   },
   settingsItems: {
     marginTop: 20,
@@ -148,7 +182,6 @@ const styles = StyleSheet.create({
     tintColor: COLORS.gold,
     position: "absolute",
     right: 15,
-    bottom: 3
-  }
-})
-
+    bottom: 3,
+  },
+});

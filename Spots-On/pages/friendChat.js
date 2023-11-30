@@ -94,12 +94,12 @@ export default function FriendChat({ navigation }) {
           onPress={toggleProfile}
         >
           <Image
-            source={require("../assets/profilePicture.png")}
+            source={require("../assets/michelle.png")}
             style={styles.profilePicture}
           />
         </TouchableOpacity>
         <TouchableOpacity onPress={toggleProfile}>
-          <Text style={styles.title}>Faris Khattak</Text>
+          <Text style={styles.title}>Michelle Vo</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {

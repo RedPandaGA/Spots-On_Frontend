@@ -374,6 +374,12 @@ const CreateEventModal = ({
     // );
     setFilteredSpots(allSpots);
     console.log("These are the arrays of spots in the colony\n", allSpots);
+    const spotsInColony = allSpots.filter(
+      (spot) => spot.colonyName === selectedColonyName
+    );
+    const spots = getSpots(item.id);
+    // setFilteredSpots(spots);
+    console.log("These are the arrays of spots in the colony\n", spots);
     setErrors({ ...errors, ["colonyName"]: "" });
   };
 
@@ -434,7 +440,10 @@ const CreateEventModal = ({
                 <Text style={styles.modalTitle}>Create Event</Text>
               </View>
 
-              <ScrollView>
+              <ScrollView
+                nestedScrollEnabled={true}
+                keyboardShouldPersistTaps="handled"
+              >
                 <View style={styles.inputContainer}>
                   <TextInput
                     style={styles.input}

@@ -15,19 +15,21 @@ import SearchBarModal from "../components/searchBarModal";
 import COLORS from "./colors";
 import { AntDesign } from "@expo/vector-icons";
 
-const FriendsModal = ({ isModalVisible, 
-    hideModal, 
-    navigation, 
-    users, 
-    colonies,
-    setColonies, 
-    getSpots,
-    spots,
-    setSpots,
-    setUsers,
-    getUsersInColony,
-    findSelectedColony}) => {
-    if (Platform.OS === "android") {
+const FriendsModal = ({
+  isModalVisible,
+  hideModal,
+  navigation,
+  users,
+  colonies,
+  setColonies,
+  getSpots,
+  spots,
+  setSpots,
+  setUsers,
+  getUsersInColony,
+  findSelectedColony,
+}) => {
+  if (Platform.OS === "android") {
     if (UIManager.setLayoutAnimationEnabledExperimental) {
       UIManager.setLayoutAnimationEnabledExperimental(true);
     }
@@ -109,22 +111,51 @@ const FriendsModal = ({ isModalVisible,
   //     },
   //   ];
 
+  const statusIdentifiers = [
+    {
+      label: "Online",
+      value: "1",
+    },
+    {
+      label: "Idle",
+      value: "2",
+    },
+    {
+      label: "Do not disturb",
+      value: "3",
+    },
+  ];
+
+  const images = [
+    require("../assets/michelle.png"),
+    require("../assets/milan.jpg"),
+    require("../assets/gavin.jpg"),
+    require("../assets/richard.jpg"),
+  ];
+
+  const usersWithImages = users.map((user, index) => ({
+    ...user,
+    image: images[index] || require("../assets/profile-user.png"),
+  }));
+
   const renderItem = ({ item }) => (
     <TouchableOpacity
       onPress={() => {
         hideModal();
         navigation.navigate("FriendChat");
+        console.log(item);
       }}
     >
       <View style={styles.friendItem}>
         <View styles={styles.infoContainer}>
-          <Image
-            style={styles.friendImage}
-            source={require("../assets/profile.png")}
-          />
+          <Image style={styles.friendImage} source={item.image} />
           <Text style={styles.friendName}>{item.nickname}</Text>
         </View>
-        <Text style={styles.friendStatus}>{item.status}Online</Text>
+        <Text style={styles.friendStatus}>
+          {item.status
+            ? item.status
+            : statusIdentifiers[item.status_code].label}
+        </Text>
       </View>
     </TouchableOpacity>
   );
@@ -152,15 +183,15 @@ const FriendsModal = ({ isModalVisible,
 
           <View style={styles.sliderContainer}>
             {/* Colony Buttons Slider */}
-            <ColonySliderModal 
-                colonies={colonies}
-                setColonies={setColonies}
-                getSpots={getSpots}
-                spots={spots}
-                setSpots={setSpots}
-                setUsers={setUsers}
-                getUsersInColony={getUsersInColony}
-                findSelectedColony={findSelectedColony}
+            <ColonySliderModal
+              colonies={colonies}
+              setColonies={setColonies}
+              getSpots={getSpots}
+              spots={spots}
+              setSpots={setSpots}
+              setUsers={setUsers}
+              getUsersInColony={getUsersInColony}
+              findSelectedColony={findSelectedColony}
             />
 
             {/* Add Friends Button */}
@@ -206,7 +237,7 @@ const FriendsModal = ({ isModalVisible,
               </TouchableOpacity>
             )}
             <FlatList
-              data={users}
+              data={usersWithImages}
               renderItem={renderItem}
               keyExtractor={(item, index) => index.toString()}
               showsVerticalScrollIndicator={false}
@@ -231,7 +262,7 @@ const styles = StyleSheet.create({
   },
   searchBar: {
     alignSelf: "center",
-    marginTop: 43,
+    marginTop: 45,
   },
   sliderContainer: {
     marginTop: 13,
@@ -279,7 +310,8 @@ const styles = StyleSheet.create({
     width: 40,
     left: 20,
     position: "absolute",
-    tintColor: COLORS.secondary,
+    // tintColor: COLORS.secondary,
+    borderRadius: 50,
   },
   addFriendButton: {
     flexDirection: "row",

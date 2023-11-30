@@ -90,77 +90,79 @@ export default function MainMap({ navigation }) {
 
   const getUserInfo = async () => {
     try {
-        // Get the authorization token from AsyncStorage
-        const authToken = await AsyncStorage.getItem('token');
-        //console.log(JSON.stringify({ location: user.currentLocation }))
-        if (!authToken) {
-          // Handle the case where the token is not available
-          console.error('Authorization token not found.');
-          return;
-        }
-
-        const apiUrl = `${papiUrl}/getUserInfo/${await AsyncStorage.getItem('uid')}`;
-
-        const response = await fetch(apiUrl, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${authToken}`, // Include the authorization token
-            },
-            });
-
-            if (!response.ok) {
-                // Handle error, e.g., display an error message
-                console.error('Error getting users in colony:', response.status);
-                return;
-            }
-            console.log(response);
-            let userData = await response.json();
-            userData = userData.user;
-            console.log(userData);
-            userData.currentLocation = user.currentLocation;
-            console.log(userData);
-            setUser(userData);
-            return; // Adjust based on the actual response structure
-    } catch (error) {
-        console.error('Error:', error);
-        // Handle other errors as needed
+      // Get the authorization token from AsyncStorage
+      const authToken = await AsyncStorage.getItem("token");
+      //console.log(JSON.stringify({ location: user.currentLocation }))
+      if (!authToken) {
+        // Handle the case where the token is not available
+        console.error("Authorization token not found.");
         return;
+      }
+
+      const apiUrl = `${papiUrl}/getUserInfo/${await AsyncStorage.getItem(
+        "uid"
+      )}`;
+
+      const response = await fetch(apiUrl, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`, // Include the authorization token
+        },
+      });
+
+      if (!response.ok) {
+        // Handle error, e.g., display an error message
+        console.error("Error getting users in colony:", response.status);
+        return;
+      }
+      console.log(response);
+      let userData = await response.json();
+      userData = userData.user;
+      console.log(userData);
+      userData.currentLocation = user.currentLocation;
+      console.log(userData);
+      setUser(userData);
+      return; // Adjust based on the actual response structure
+    } catch (error) {
+      console.error("Error:", error);
+      // Handle other errors as needed
+      return;
     }
-  }
+  };
 
   const updateUserLocation = async () => {
     try {
-        // Get the authorization token from AsyncStorage
-        const authToken = await AsyncStorage.getItem('token');
-        //console.log(JSON.stringify({ location: user.currentLocation }))
-        if (!authToken) {
-          // Handle the case where the token is not available
-          console.error('Authorization token not found.');
-          return;
-        }
-    
-        const response = await fetch(`${papiUrl}/updateUserLocation`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${authToken}`, // Attach the token to the Authorization header
-          },
-          body: JSON.stringify({ location: user.currentLocation }),
-        });
-    
-        if (!response.ok) {
-          // Handle error, e.g., display an error message
-          console.error('Error updating user location:', response.status);
-          return;
-        }
-    
-        // Successfully updated user location
-        //console.log('User location updated successfully ' + JSON.stringify(response));
-      } catch (error) {
-        console.error('Error:', error);
-        // Handle other errors as needed
+      // Get the authorization token from AsyncStorage
+      const authToken = await AsyncStorage.getItem("token");
+      //console.log(JSON.stringify({ location: user.currentLocation }))
+      if (!authToken) {
+        // Handle the case where the token is not available
+        console.error("Authorization token not found.");
+        return;
       }
+
+      const response = await fetch(`${papiUrl}/updateUserLocation`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`, // Attach the token to the Authorization header
+        },
+        body: JSON.stringify({ location: user.currentLocation }),
+      });
+
+      if (!response.ok) {
+        // Handle error, e.g., display an error message
+        console.error("Error updating user location:", response.status);
+        return;
+      }
+
+      // Successfully updated user location
+      //console.log('User location updated successfully ' + JSON.stringify(response));
+    } catch (error) {
+      console.error("Error:", error);
+      // Handle other errors as needed
+    }
   };
 
   const getUsersInColony = async () => {
@@ -329,11 +331,21 @@ export default function MainMap({ navigation }) {
           console.error('Error fetching user colonies:', response.status);
           return [];
         }
-    
-        const data = await response.json();
 
-        console.log("Events Upcoming: " + JSON.stringify(data))
-        setEventsUpcoming(data);
+      if (!response.ok) {
+        // Handle error, e.g., display an error message
+        console.error("Error fetching user colonies:", response.status);
+        return [];
+      }
+
+      const data = await response.json();
+
+      for (const colony of data) {
+        colony.memberCount = await getNumOfMembers(colony.cid);
+        colony.selected = false;
+      }
+      console.log("DATAARG: " + JSON.stringify(data));
+      return data;
     } catch (error) {
       console.error("Error:", error);
       // Handle other errors as needed
@@ -343,10 +355,10 @@ export default function MainMap({ navigation }) {
 
   const getUsersSpotsInColony = async (cid) => {
     console.log("colonies: " + JSON.stringify(colonies));
-    if(cid == undefined){
-        selectedColony = findSelectedColony(colonies).cid;
+    if (cid == undefined) {
+      selectedColony = findSelectedColony(colonies).cid;
     } else {
-        selectedColony = cid;
+      selectedColony = cid;
     }
     console.log("selectedColony: " + JSON.stringify(selectedColony));
     try {
@@ -381,7 +393,7 @@ export default function MainMap({ navigation }) {
 
   useEffect(() => {
     displayAllSpots();
-  }, [users])
+  }, [users]);
 
   // GRAB LOCATION FROM USER AND STORE IN DATABASE
   useEffect(() => {
@@ -429,7 +441,7 @@ export default function MainMap({ navigation }) {
       updateUserLocation();
       //setColonies(await getUserColonies());
       //setUsers([]);
-    //   displayAllSpots();
+      //   displayAllSpots();
     }, 30000); // 30 seconds
 
     // Clean up the interval when the component is unmounted
@@ -465,7 +477,7 @@ export default function MainMap({ navigation }) {
         // description="status description"
       >
         <Image
-          source={require("../assets/profilePicture.png")}
+          source={require("../assets/faris.png")}
           style={{
             width: 40,
             height: 40,
@@ -474,7 +486,7 @@ export default function MainMap({ navigation }) {
             borderColor: getStatusColor(user),
           }}
         />
-        <Callout>
+        <Callout onPress={() => console.log("Current user:", user)}>
           <View style={{ minWidth: 150 }}>
             <Text
               style={{
@@ -542,14 +554,14 @@ export default function MainMap({ navigation }) {
         }}
       >
         <Image
-          source={require("../assets/profile-user.png")}
+          source={user.image}
           style={{
             width: 40,
             height: 40,
             borderRadius: 100,
             borderWidth: 2,
             borderColor: COLORS.primary,
-            tintColor: getStatusColor(user),
+            // tintColor: getStatusColor(user),
           }}
         />
         <Callout>
@@ -650,55 +662,48 @@ export default function MainMap({ navigation }) {
       setUser({ ...user, incognito: false });
     } else {
       setUser({ ...user, incognito: true });
-  }
-  await setIncognitoStatus();
-  await getUserInfo();
+    }
+    await setIncognitoStatus();
+    await getUserInfo();
+  };
 
-}
-
-
-const setIncognitoStatus = async () => {
-  // Get the authorization token from AsyncStorage
-  const authToken = await AsyncStorage.getItem('token');
-  //console.log(JSON.stringify({ location: user.currentLocation }))
-  if (!authToken) {
+  const setIncognitoStatus = async () => {
+    // Get the authorization token from AsyncStorage
+    const authToken = await AsyncStorage.getItem("token");
+    //console.log(JSON.stringify({ location: user.currentLocation }))
+    if (!authToken) {
       // Handle the case where the token is not available
-      console.error('Authorization token not found.');
+      console.error("Authorization token not found.");
       return;
-  }
+    }
 
-  // Use a fetch request to get the incognito status from the backend
-  try {
+    // Use a fetch request to get the incognito status from the backend
+    try {
       const response = await fetch(`${papiUrl}/updateIncog`, {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${authToken}`, // Attach the token to the Authorization header
-          },
-          body: JSON.stringify({ incog: user.incognito }), // Adjust this based on your requirements
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`, // Attach the token to the Authorization header
+        },
+        body: JSON.stringify({ incog: user.incognito }), // Adjust this based on your requirements
       });
 
       // Check if the response is successful
       if (response.ok) {
-          // Handle success
-          const data = await response.json();
-          console.log('Incognito status fetched successfully:', data);
-
-         
+        // Handle success
+        const data = await response.json();
+        console.log("Incognito status fetched successfully:", data);
       } else {
-          // Handle error
-          const errorData = await response.json();
-          console.error('Error fetching incognito status:', errorData.error);
-          // You might want to show an error message to the user or take other actions
+        // Handle error
+        const errorData = await response.json();
+        console.error("Error fetching incognito status:", errorData.error);
+        // You might want to show an error message to the user or take other actions
       }
-  } catch (error) {
-      console.error('Error:', error);
+    } catch (error) {
+      console.error("Error:", error);
       // Handle other errors as needed
-  }
-};
-
-  
-
+    }
+  };
 
   // Create a state variable to control the visibility of all modals
   const [modals, setModals] = useState({
@@ -900,6 +905,18 @@ const setIncognitoStatus = async () => {
     },
   ]);
 
+  const images = [
+    require("../assets/michelle.png"),
+    require("../assets/milan.jpg"),
+    require("../assets/gavin.jpg"),
+    require("../assets/richard.jpg"),
+  ];
+
+  const usersWithImages = users.map((user, index) => ({
+    ...user,
+    image: images[index] || require("../assets/profile-user.png"),
+  }));
+
   // CREATE FUNCTION TO GET ALL MEMBERS WITHIN A SELECTED COLONY AND DISPLAY THEM ON THE MAP
 
   if (initialRegion === null || currentRegion == null) {
@@ -927,7 +944,7 @@ const setIncognitoStatus = async () => {
             >
               {/* FUNCTION TO DISPLAY ALL MEMBERS WITHIN SELECTED COLONY */}
               {displayAllSpots()}
-              {renderUsersOnMap(users, colonies)}
+              {renderUsersOnMap(usersWithImages, colonies)}
               {user.currentLocation && showCurrentLocation()}
               {/* <Circle
                 center={{
@@ -1184,7 +1201,7 @@ const setIncognitoStatus = async () => {
               style={styles.settingsButton}
               onPress={() => {
                 console.log("Pressed settings button");
-                navigation.navigate("Settings", {colonies: colonies});
+                navigation.navigate("Settings", { colonies: colonies });
               }}
               width={45}
               height={45}
@@ -1195,7 +1212,6 @@ const setIncognitoStatus = async () => {
     </KeyboardAvoidingView>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
