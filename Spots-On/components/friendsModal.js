@@ -143,6 +143,7 @@ const FriendsModal = ({
       onPress={() => {
         hideModal();
         navigation.navigate("FriendChat");
+        console.log(item);
       }}
     >
       <View style={styles.friendItem}>
@@ -151,7 +152,9 @@ const FriendsModal = ({
           <Text style={styles.friendName}>{item.nickname}</Text>
         </View>
         <Text style={styles.friendStatus}>
-          {item.status ? item.status : "Online~"}
+          {item.status
+            ? item.status
+            : statusIdentifiers[item.status_code].label}
         </Text>
       </View>
     </TouchableOpacity>
