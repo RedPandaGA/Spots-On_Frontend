@@ -108,15 +108,11 @@ const EventInfo = ({ isModalVisible, hideModal, showModal, event }) => {
             <ScrollView style={{ width: "100%" }}>
               <TouchableWithoutFeedback>
                 <View style={styles.eventInfo}>
-                  <Text style={styles.eventText}>{`When: ${eventDateString(
+                  <Text style={styles.eventText}>{`${eventDateString(
                     event
                   )}`}</Text>
-                  <Text
-                    style={styles.eventText}
-                  >{`Where: ${event.address}`}</Text>
-                  <Text
-                    style={styles.eventText}
-                  >{`Description: ${event.description}`}</Text>
+                  <Text style={styles.eventText}>{`${event.address}`}</Text>
+                  <Text style={styles.eventText}>{`${event.description}`}</Text>
                 </View>
               </TouchableWithoutFeedback>
             </ScrollView>
@@ -177,7 +173,7 @@ const styles = StyleSheet.create({
   eventColony: {
     fontSize: 24,
     fontWeight: "bold",
-    color: COLORS.lighterprimary,
+    color: COLORS.primary,
     textAlign: "center",
   },
   eventText: {
@@ -196,7 +192,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     height: 60,
     width: "50%",
-    borderRadius: 10,
+    borderRadius: 50,
     marginBottom: 25,
   },
   directionButtonText: {
