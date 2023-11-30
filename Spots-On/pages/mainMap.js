@@ -784,6 +784,9 @@ export default function MainMap({ navigation }) {
   const [colonies, setColonies] = useState([]);
   const [filteredColonies, setFilteredColonies] = useState(colonies);
 
+  useEffect(() => {
+    setFilteredColonies(colonies);
+  }, [colonies]);
   /*[
     { name: "SASE", selected: true, value: 1 },
     { name: "lsu engineering", selected: false, value: 1 },

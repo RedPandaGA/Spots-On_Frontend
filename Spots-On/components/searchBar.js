@@ -17,7 +17,7 @@ export default function SearchBar({
     );
     // Update the state with the filtered colonies
     setFilteredColonies(filtered);
-    console.log(filtered);
+    console.log("filterd:" + JSON.stringify(filtered));
   };
 
   return (
