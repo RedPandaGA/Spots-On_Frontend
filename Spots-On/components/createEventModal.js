@@ -377,9 +377,6 @@ const CreateEventModal = ({
     const spotsInColony = allSpots.filter(
       (spot) => spot.colonyName === selectedColonyName
     );
-    const spots = getSpots(item.id);
-    // setFilteredSpots(spots);
-    console.log("These are the arrays of spots in the colony\n", spots);
     setErrors({ ...errors, ["colonyName"]: "" });
   };
 
