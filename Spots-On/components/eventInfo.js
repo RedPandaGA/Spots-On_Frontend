@@ -63,12 +63,12 @@ const EventInfo = ({ isModalVisible, hideModal, showModal, event }) => {
   ];
 
   const eventDateString = (event) => {
-    const date = event.date.getDate();
-    const month = months[event.date.getMonth()];
-    const year = event.date.getFullYear();
-    const day = daysOfWeek[event.date.getDay()];
-
-    return `${day}, ${month} ${date}, ${year}`;
+    // const date = event.date.getDate();
+    // const month = months[event.date.getMonth()];
+    // const year = event.date.getFullYear();
+    // const day = daysOfWeek[event.date.getDay()];
+    return event.dateTime;
+    // return `${day}, ${month} ${date}, ${year}`;
   };
 
   return (
