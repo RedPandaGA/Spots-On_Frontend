@@ -5,7 +5,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bb950c41-3fac-4440-952a-f7c0da027e3a" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/assets/gavin.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/michelle.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/milan.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/richard.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/profilePicture.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/faris.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/createColonyModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/createColonyModal.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/createEventModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/createEventModal.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/friendsModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/friendsModal.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/profileModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/profileModal.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/accSettings.js" beforeDir="false" afterPath="$PROJECT_DIR$/pages/accSettings.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/friendChat.js" beforeDir="false" afterPath="$PROJECT_DIR$/pages/friendChat.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/locationSettings.js" beforeDir="false" afterPath="$PROJECT_DIR$/pages/locationSettings.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/mainMap.js" beforeDir="false" afterPath="$PROJECT_DIR$/pages/mainMap.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
