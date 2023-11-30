@@ -44,13 +44,27 @@ const EditSpot = ({
   const [circleCenter, setCircleCenter] = useState(currentSpot.coordinate);
   const [region, setRegion] = useState(currentSpot.coordinate);
   const [newSpot, setNewSpot] = useState({
-    ...currentSpot,
+    colonyName: currentSpot.colonyName,
     spotName: currentSpot.name,
     safe: currentSpot.safe,
     radius: currentSpot.radius,
+    id: currentSpot.id,
+    coordinate: currentSpot.coordinate,
   });
-
+  console.log("currentspot: "+JSON.stringify(currentSpot));
+  console.log("newspot: "+JSON.stringify(newSpot));
   const [spotNameError, setSpotNameError] = useState(null);
+
+  useEffect(() => {
+    setNewSpot({
+        colonyName: currentSpot.colonyName,
+        spotName: currentSpot.name,
+        safe: currentSpot.safe,
+        radius: currentSpot.radius,
+        id: currentSpot.id,
+        coordinate: currentSpot.coordinate,
+      });
+  }, [currentSpot])
 
   const updateSpot = async () => {
     try {
@@ -62,13 +76,12 @@ const EditSpot = ({
         console.error("Authorization token not found.");
         return;
       }
-
+      console.log("newspot: "+JSON.stringify(newSpot));
       console.log(JSON.stringify(newSpot));
 
       const spotData = {
-        ...currentSpot,
         name: newSpot.spotName,
-        id: currentSpot.id,
+        id: newSpot.id,
         safe: newSpot.safe,
         radius: circleRadius,
         coordinate: circleCenter
@@ -92,7 +105,7 @@ const EditSpot = ({
       }
 
       // Successfully created spot
-      console.log("Spot created successfully: " + response);
+      console.log("Spot created successfully: ");
       setSpots(await getUsersSpotsInColony(spotData.cid));
       hideModal();
       resetValues();
@@ -147,43 +160,43 @@ const EditSpot = ({
     }));
   };
 
-  const renderSpotItem = ({ item }) => {
-    // Find the associated colony
-    const associatedColony = colonies.find(
-      (colony) => colony.name === item.colonyName
-    );
+//   const renderSpotItem = ({ item }) => {
+//     // Find the associated colony
+//     const associatedColony = colonies.find(
+//       (colony) => colony.name === item.colonyName
+//     );
 
-    // Display the spot only if the associated colony is selected
-    if (associatedColony && associatedColony.selected) {
-      return (
-        <TouchableOpacity
-          onPress={() => console.log(item.coordinate)}
-          style={styles.addSpotButton}
-        >
-          <Image
-            style={styles.spotListImage}
-            source={require("../assets/marker.png")}
-          />
-          <Text style={styles.addSpotText}>{item.name}</Text>
-        </TouchableOpacity>
-      );
-    }
+//     // Display the spot only if the associated colony is selected
+//     if (associatedColony && associatedColony.selected) {
+//       return (
+//         <TouchableOpacity
+//           onPress={() => console.log(item.coordinate)}
+//           style={styles.addSpotButton}
+//         >
+//           <Image
+//             style={styles.spotListImage}
+//             source={require("../assets/marker.png")}
+//           />
+//           <Text style={styles.addSpotText}>{item.name}</Text>
+//         </TouchableOpacity>
+//       );
+//     }
 
     // If the associated colony is not selected, return null to render nothing
-    return null;
-  };
+//     return null;
+//   };
 
-  const geocode = async () => {
-    const geocodedLocation = await Location.geocodeAsync(newSpot.address);
-    console.log("Geocoded Address: \n", geocodedLocation);
-    setRegion({
-      latitude: geocodedLocation[0].latitude,
-      longitude: geocodedLocation[0].longitude,
-      latitudeDelta: 0.005,
-      longitudeDelta: 0.005,
-    });
-    Keyboard.dismiss();
-  };
+//   const geocode = async () => {
+//     const geocodedLocation = await Location.geocodeAsync(newSpot.address);
+//     console.log("Geocoded Address: \n", geocodedLocation);
+//     setRegion({
+//       latitude: geocodedLocation[0].latitude,
+//       longitude: geocodedLocation[0].longitude,
+//       latitudeDelta: 0.005,
+//       longitudeDelta: 0.005,
+//     });
+//     Keyboard.dismiss();
+//   };
 
   const metersToFeet = (meters) => {
     // 1 meter is approximately 3.28084 feet
