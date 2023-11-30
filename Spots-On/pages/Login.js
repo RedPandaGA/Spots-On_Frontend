@@ -69,7 +69,7 @@ const Login = ({ navigation }) => {
 
       // Store the token in AsyncStorage
       await AsyncStorage.setItem("token", receivedToken);
-      // await AsyncStorage.setItem('uid', newuid);
+      await AsyncStorage.setItem('uid', newuid);
 
       // console.log('Logged Into Account: ' + await AsyncStorage.getItem('token') + " uid: " + await AsyncStorage.getItem('uid'));
       navigation.navigate("Home");
