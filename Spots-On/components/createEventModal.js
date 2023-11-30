@@ -155,11 +155,11 @@ const CreateEventModal = ({
         console.error("Error creating spot:", response.status);
         return;
       }
-
+      responsedata = await response.json();
       // Successfully created spot
-      console.log("Spot created successfully: " + response);
-      setSpots(await getUsersSpotsInColony(spotData.cid));
-      return response[0].sid;
+      console.log("Spot created successfully: " + JSON.stringify(responsedata.dbres[0]));
+      setSpots(await getUsersSpotsInColony(event.cid));
+      return responsedata.dbres[0].sid;
     } catch (error) {
       console.error("Error:", error);
       // Handle other errors as needed
@@ -176,9 +176,6 @@ const CreateEventModal = ({
         return;
       }
 
-      // const  parsedDate = moment(event.date + " " + event.time, 'MM/DD/YYYY h:mm a');
-      const localTimezone = Localization.timezone;
-
       // Input date string in the given format
       const inputDateString = event.date + " " + event.time;
       console.log(inputDateString);
@@ -189,15 +186,12 @@ const CreateEventModal = ({
         .utc()
         .format("YYYY-MM-DDTHH:mm:ss.SSS[Z]");
 
-      // Convert the local date/time to UTC
-      const utcDateTime = localDateTime.utc();
-
       console.log("Local Time:", localDateTime.format("MM/DD/YYYY h:mm a"));
       console.log("UTC Time for PostgreSQL:", postgresTimestamp);
       console.log(event);
       let createEvent = {};
 
-      if (!event.isCustomAddress) {
+      if (event.isCustomAddress) {
         console.log("spot");
         console.log(event);
         createEvent = JSON.stringify({

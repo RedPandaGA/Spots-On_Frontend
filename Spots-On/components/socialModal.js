@@ -17,7 +17,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const papiUrl = Config.PAPI_URL;
 import Modal from "react-native-modal";
 
-const SocialModal = ({ isModalVisible, hideModal, showModal }) => {
+const SocialModal = ({ isModalVisible, hideModal, showModal, getEventToday, getEventUpcoming, }) => {
   const [joinColonyCode, setJoinColonyCode] = useState("");
 
   const [isJoinColonyInputFocused, setIsJoinColonyInputFocused] =
@@ -105,9 +105,12 @@ const SocialModal = ({ isModalVisible, hideModal, showModal }) => {
       handleUnfocus();
       Keyboard.dismiss();
       hideModal();
+      getEventToday();
+      getEventUpcoming();
       setTimeout(() => {
         showModal("viewEvents");
       }, 500);
+
       console.log("View Events clicked");
       // Handle specific action for Button 2
       // You can customize this function for each button
