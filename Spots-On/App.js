@@ -11,8 +11,12 @@ import Notifications from "./pages/notifSettings";
 import ColonyManagement from "./pages/colonymngmntSettings";
 import LocationSharing from "./pages/locationSettings";
 import Account from "./pages/accSettings";
-import ColonyChat from './pages/colonyChat';
-import FriendChat from './pages/friendChat';
+import ColonyChat from "./pages/colonyChat";
+import FriendChat from "./pages/friendChat";
+import { LogBox } from "react-native";
+
+LogBox.ignoreLogs(["Warning: ..."]); // Ignore log notification by message
+LogBox.ignoreAllLogs(); //Ignore all log notifications
 
 const Stack = createStackNavigator();
 
@@ -66,12 +70,12 @@ export default function App() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name='ColonyChat'
+          name="ColonyChat"
           component={ColonyChat}
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name='FriendChat'
+          name="FriendChat"
           component={FriendChat}
           options={{ headerShown: false }}
         />
