@@ -18,7 +18,7 @@ import { LayoutAnimation, UIManager } from "react-native";
 
 const papiUrl = Config.PAPI_URL;
 
-const ChatModal = ({ isModalVisible, hideModal, navigation, colonies }) => {
+const ChatModal = ({ isModalVisible, hideModal, navigation, colonies, user }) => {
   const [isColoniesPressed, setIsColoniesPressed] = useState(true);
   const [isFriendsPressed, setIsFriendsPressed] = useState(false);
 
@@ -41,7 +41,7 @@ const ChatModal = ({ isModalVisible, hideModal, navigation, colonies }) => {
       onPress={() => {
         setIsClickingChat(true);
         hideModal();
-        navigation.navigate("ColonyChat", { item: item, colonies: colonies });
+        navigation.navigate("ColonyChat", { item: item, colonies: colonies, user: user });
       }}
     >
       <View style={styles.chatItem}>

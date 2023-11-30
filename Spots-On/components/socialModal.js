@@ -15,9 +15,10 @@ import Config from "../.config.js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const papiUrl = Config.PAPI_URL;
+
 import Modal from "react-native-modal";
 
-const SocialModal = ({ isModalVisible, hideModal, showModal, getEventToday, getEventUpcoming, }) => {
+const SocialModal = ({ isModalVisible, hideModal, showModal, getEventToday, getEventUpcoming, getUserColonies, setColonies}) => {
   const [joinColonyCode, setJoinColonyCode] = useState("");
 
   const [isJoinColonyInputFocused, setIsJoinColonyInputFocused] =
@@ -52,6 +53,7 @@ const SocialModal = ({ isModalVisible, hideModal, showModal, getEventToday, getE
 
       // Successfully joined colony
       console.log("Successfully joined colony:", response);
+      setColonies(await getUserColonies());
     } catch (error) {
       console.error("Error:", error);
       // Handle other errors as needed

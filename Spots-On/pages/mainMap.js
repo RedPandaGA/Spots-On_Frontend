@@ -318,8 +318,7 @@ export default function MainMap({ navigation }) {
   const getEventUpcoming = async () => {
     try {
       const authToken = await AsyncStorage.getItem("token");
-      const response = await fetch(
-        `${papiUrl}/allEventsOut24/${await AsyncStorage.getItem("uid")}`,
+      const response = await fetch(`${papiUrl}/allEventsOut24/${await AsyncStorage.getItem("uid")}`,
         {
           method: "GET",
           headers: {
@@ -1045,6 +1044,8 @@ export default function MainMap({ navigation }) {
               showModal={showModal}
               getEventToday={getEventToday}
               getEventUpcoming={getEventUpcoming}
+              getUserColonies={getUserColonies}
+              setColonies={setColonies}
             />
             <ViewEventsModal
               isModalVisible={modals.viewEvents}
@@ -1117,6 +1118,7 @@ export default function MainMap({ navigation }) {
               hideModal={() => hideModal("chat")}
               navigation={navigation}
               colonies={colonies}
+              user={user}
             />
 
             {/* ------ SEARCH BAR ------ */}
