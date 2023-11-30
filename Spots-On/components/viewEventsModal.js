@@ -23,6 +23,8 @@ const ViewEventsModal = ({
   eventsUpcoming,
   currentEvent,
   setCurrentEvent,
+  getEventToday,
+  getEventUpcoming,
 }) => {
   const [isTodayPressed, setIsTodayPressed] = useState(true);
   const [isUpcomingPressed, setIsUpcomingPressed] = useState(false);
@@ -34,6 +36,11 @@ const ViewEventsModal = ({
 
     // Add any other logic or actions you want to perform after state update
   }, [currentEvent]); // Specify currentEvent as a dependency
+
+  useEffect(() => {
+    getEventToday();
+    getEventUpcoming();
+  }, [isTodayPressed, isUpcomingPressed]);
 
   const renderItem = ({ item }) => (
     <View style={styles.eventItem}>
@@ -56,7 +63,7 @@ const ViewEventsModal = ({
           <Text style={styles.eventTitle}>{item.name}</Text>
         </View>
         <Text style={styles.eventLocation}>
-          {item.address} @ {item.time}
+          {item.address} @ {item.dateTime}
         </Text>
       </TouchableOpacity>
     </View>
