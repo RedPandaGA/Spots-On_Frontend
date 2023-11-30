@@ -18,7 +18,13 @@ import { LayoutAnimation, UIManager } from "react-native";
 
 const papiUrl = Config.PAPI_URL;
 
-const ChatModal = ({ isModalVisible, hideModal, navigation, colonies, user }) => {
+const ChatModal = ({
+  isModalVisible,
+  hideModal,
+  navigation,
+  colonies,
+  user,
+}) => {
   const [isColoniesPressed, setIsColoniesPressed] = useState(true);
   const [isFriendsPressed, setIsFriendsPressed] = useState(false);
 
@@ -36,20 +42,33 @@ const ChatModal = ({ isModalVisible, hideModal, navigation, colonies, user }) =>
 
   const [isClickingChat, setIsClickingChat] = useState(false);
 
+  const images = [
+    require("../assets/sase.jpg"),
+    require("../assets/csc3102.jpg"),
+    require("../assets/milan.jpg"),
+    require("../assets/richard.jpg"),
+  ];
+
+  const coloniesWithImages = colonies.map((colony, index) => ({
+    ...colony,
+    image: images[index] || require("../assets/groupprofile.png"),
+  }));
+
   const renderItem = ({ item }) => (
     <TouchableOpacity
       onPress={() => {
         setIsClickingChat(true);
         hideModal();
-        navigation.navigate("ColonyChat", { item: item, colonies: colonies, user: user });
+        navigation.navigate("ColonyChat", {
+          item: item,
+          colonies: colonies,
+          user: user,
+        });
       }}
     >
       <View style={styles.chatItem}>
         <View styles={styles.infoContainer}>
-          <Image
-            style={styles.chatImage}
-            source={require("../assets/groupprofile.png")}
-          />
+          <Image style={styles.chatImage} source={item.image} />
           <Text style={styles.chatName}>{item.name}</Text>
         </View>
         <Text style={styles.memberCount}>{item.memberCount} members</Text>
@@ -120,7 +139,7 @@ const ChatModal = ({ isModalVisible, hideModal, navigation, colonies, user }) =>
           <View style={{ marginTop: "3%", flex: 1, width: "100%" }}>
             {isColoniesPressed && !isFriendsPressed && (
               <FlatList
-                data={colonies}
+                data={coloniesWithImages}
                 renderItem={renderItem}
                 keyExtractor={(item, index) => index.toString()}
                 showsVerticalScrollIndicator={false}
@@ -216,7 +235,7 @@ const styles = StyleSheet.create({
     width: 40,
     left: 20,
     position: "absolute",
-    tintColor: COLORS.secondary,
+    borderRadius: 50,
   },
   buttonContainer: {
     flexDirection: "row",

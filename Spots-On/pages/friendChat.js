@@ -99,7 +99,7 @@ export default function FriendChat({ navigation }) {
           onPress={toggleProfile}
         >
           <Image
-            source={require("../assets/michelle.png")}
+            source={require("../assets/richard.jpg")}
             style={styles.profilePicture}
           />
         </TouchableOpacity>

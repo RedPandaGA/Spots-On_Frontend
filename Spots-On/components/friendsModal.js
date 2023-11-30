@@ -28,6 +28,7 @@ const FriendsModal = ({
   setUsers,
   getUsersInColony,
   findSelectedColony,
+  getStatusColor,
 }) => {
   if (Platform.OS === "android") {
     if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -127,10 +128,10 @@ const FriendsModal = ({
   ];
 
   const images = [
+    require("../assets/richard.jpg"),
     require("../assets/michelle.png"),
     require("../assets/milan.jpg"),
     require("../assets/gavin.jpg"),
-    require("../assets/richard.jpg"),
   ];
 
   const usersWithImages = users.map((user, index) => ({
@@ -148,7 +149,13 @@ const FriendsModal = ({
     >
       <View style={styles.friendItem}>
         <View styles={styles.infoContainer}>
-          <Image style={styles.friendImage} source={item.image} />
+          <Image
+            style={[
+              styles.friendImage,
+              { borderWidth: 3, borderColor: getStatusColor(item) },
+            ]}
+            source={item.image}
+          />
           <Text style={styles.friendName}>{item.nickname}</Text>
         </View>
         <Text style={styles.friendStatus}>

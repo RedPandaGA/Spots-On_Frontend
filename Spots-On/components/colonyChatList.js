@@ -41,18 +41,30 @@ const ColonyChatList = ({
   //     },
   //   ];
 
+  const images = [
+    require("../assets/sase.jpg"),
+    require("../assets/csc3102.jpg"),
+    require("../assets/ood group.jpg"),
+  ];
+
+  const coloniesWithImages = colonies.map((colony, index) => ({
+    ...colony,
+    image: images[index] || require("../assets/groupprofile.png"),
+  }));
+
   const renderItem = ({ item }) => (
     <TouchableOpacity
       onPress={() =>
-        navigation.navigate("ColonyChat", { item: item, colonies: colonies })
+        navigation.navigate("ColonyChat", {
+          item: item,
+          colonies: colonies,
+          user: item,
+        })
       }
     >
       <View style={styles.chatItem}>
         <View>
-          <Image
-            style={styles.chatImage}
-            source={require("../assets/groupprofile.png")}
-          />
+          <Image style={styles.chatImage} source={item.image} />
           <Text style={styles.chatName}>{item.name}</Text>
         </View>
         <Text style={styles.memberCount}>{item.memberCount} members</Text>
@@ -104,14 +116,16 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.secondary,
     borderRadius: 50,
     padding: 20,
+    paddingHorizontal: 0,
     height: 225,
     width: "100%",
     alignSelf: "center",
     alignItems: "center",
+    width: 250,
   },
   listContainer: {
     width: "100%",
-    marginBottom: 10,
+    height: "110%",
   },
   bar: {
     alignItems: "center",
@@ -123,17 +137,17 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     color: COLORS.primary,
-    left: 120,
+    left: 90,
   },
   memberCount: {
     fontSize: 16,
     color: COLORS.status,
-    left: 120,
+    left: 90,
   },
   chatImage: {
     height: 40,
     width: 40,
-    left: 60,
+    left: 30,
     position: "absolute",
     tintColor: COLORS.primary,
   },

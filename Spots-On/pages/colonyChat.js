@@ -56,122 +56,124 @@ const CustomDay = (props) => {
 };
 
 export default function ColonyChat({ navigation, route }) {
-    
-
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState("");
 
   const [isThreeDotsVisible, setIsThreeDotsVisible] = useState(false);
   const [isChatListVisible, setIsChatListVisible] = useState(false);
 
-  useEffect(()=>{
+  useEffect(() => {
     console.log("messages: " + JSON.stringify(messages));
-},[messages]);
+  }, [messages]);
 
-const getMsg = async () => {
+  const getMsg = async () => {
     try {
-        // Get the authorization token from AsyncStorage
-        const authToken = await AsyncStorage.getItem("token");
-        //console.log(JSON.stringify({ location: user.currentLocation }))
-        if (!authToken) {
-          // Handle the case where the token is not available
-          console.error("Authorization token not found.");
-          return;
-        }
-        
-        const response = await fetch(`${papiUrl}/getmessages/${item.gid}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${authToken}`, // Attach the token to the Authorization header
-          },
-        });
-  
-        if (!response.ok) {
-          // Handle error, e.g., display an error message
-          console.error("Error Getting msgs:", response.status);
-          return;
-        }
-        responsedata = await response.json();
-        // Successfully updated user location
-        //console.log('User got msgs successfully: ' + JSON.stringify(responsedata));
-        await setMessages(responsedata.messages.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
-      } catch (error) {
-        console.error("Error:", error);
-        // Handle other errors as needed
+      // Get the authorization token from AsyncStorage
+      const authToken = await AsyncStorage.getItem("token");
+      //console.log(JSON.stringify({ location: user.currentLocation }))
+      if (!authToken) {
+        // Handle the case where the token is not available
+        console.error("Authorization token not found.");
+        return;
       }
-  }
 
-useEffect(() => {
+      const response = await fetch(`${papiUrl}/getmessages/${item.gid}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`, // Attach the token to the Authorization header
+        },
+      });
+
+      if (!response.ok) {
+        // Handle error, e.g., display an error message
+        console.error("Error Getting msgs:", response.status);
+        return;
+      }
+      responsedata = await response.json();
+      // Successfully updated user location
+      //console.log('User got msgs successfully: ' + JSON.stringify(responsedata));
+      await setMessages(
+        responsedata.messages.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        )
+      );
+    } catch (error) {
+      console.error("Error:", error);
+      // Handle other errors as needed
+    }
+  };
+
+  useEffect(() => {
     const msgCheck = setInterval(async () => {
-        getMsg();
-      }, 1000); // 30 seconds
-  
-      // Clean up the interval when the component is unmounted
-      return () => clearInterval(msgCheck);
-}, []);
+      getMsg();
+    }, 1000);
 
-//   const route = useRoute();
+    // Clean up the interval when the component is unmounted
+    return () => clearInterval(msgCheck);
+  }, []);
+
+  //   const route = useRoute();
   const { item, colonies, user } = route.params;
   console.log("user: " + user.uid);
   console.log("item: " + JSON.stringify(item));
 
   const sendMsg = async (sendMsg) => {
     try {
-        // Get the authorization token from AsyncStorage
-        const authToken = await AsyncStorage.getItem("token");
-        //console.log(JSON.stringify({ location: user.currentLocation }))
-        if (!authToken) {
-          // Handle the case where the token is not available
-          console.error("Authorization token not found.");
-          return;
-        }
-        
-        const response = await fetch(`${papiUrl}/sendmessage`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${authToken}`, // Attach the token to the Authorization header
-          },
-          body: JSON.stringify({ gid: item.gid, message: sendMsg}),
-        });
-  
-        if (!response.ok) {
-          // Handle error, e.g., display an error message
-          console.error("Error updating user location:", response.status);
-          return;
-        }
-        responsedata = await response.json();
-        // Successfully updated user location
-        console.log('User sent msg successfully: ' + JSON.stringify(responsedata));
-
-      } catch (error) {
-        console.error("Error:", error);
-        // Handle other errors as needed
+      // Get the authorization token from AsyncStorage
+      const authToken = await AsyncStorage.getItem("token");
+      //console.log(JSON.stringify({ location: user.currentLocation }))
+      if (!authToken) {
+        // Handle the case where the token is not available
+        console.error("Authorization token not found.");
+        return;
       }
-  }
+
+      const response = await fetch(`${papiUrl}/sendmessage`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`, // Attach the token to the Authorization header
+        },
+        body: JSON.stringify({ gid: item.gid, message: sendMsg }),
+      });
+
+      if (!response.ok) {
+        // Handle error, e.g., display an error message
+        console.error("Error updating user location:", response.status);
+        return;
+      }
+      responsedata = await response.json();
+      // Successfully updated user location
+      console.log(
+        "User sent msg successfully: " + JSON.stringify(responsedata)
+      );
+    } catch (error) {
+      console.error("Error:", error);
+      // Handle other errors as needed
+    }
+  };
 
   const onSend = () => {
     if (inputText.trim() === "") {
       return;
     }
-    
+
     // Add the user"s message to the chat
     const newMessage = {
-        _id: (`${messages.length + 1} ` + user.uid),
-        text: inputText,
-        createdAt: new Date(),
-        user: {
-          _id: user.uid,
-          name: user.nickname, // You can set the user"s name dynamically if needed
-        },
-      }
+      _id: `${messages.length + 1} ` + user.uid,
+      text: inputText,
+      createdAt: new Date(),
+      user: {
+        _id: user.uid,
+        name: user.nickname, // You can set the user"s name dynamically if needed
+      },
+    };
 
-
-    try{
-        sendMsg(newMessage);
+    try {
+      sendMsg(newMessage);
     } catch {
-        console.log("message failed.");
+      console.log("message failed.");
     }
     setMessages(GiftedChat.append(messages, newMessage));
     setInputText("");

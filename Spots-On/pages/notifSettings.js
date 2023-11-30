@@ -12,8 +12,8 @@ import COLORS from "../components/colors";
 import Swiper from "react-native-swiper";
 import { Dropdown } from "react-native-element-dropdown";
 
-export default function Notifications({ navigation, route}) {
-    const {colonies} = route.params;
+export default function Notifications({ navigation, route }) {
+  const { colonies } = route.params;
 
   const carouselData = [
     {
@@ -51,16 +51,16 @@ export default function Notifications({ navigation, route}) {
 
   const [selectedColony, setSelectedColony] = useState(null);
 
-//   const colonies = [
-//     { name: "Colony A", value: "colonyA" },
-//     { name: "Colony B", value: "colonyB" },
-//     { name: "Colony C", value: "colonyC" },
-//     // Add more colonies as needed
-//   ];
+  //   const colonies = [
+  //     { name: "Colony A", value: "colonyA" },
+  //     { name: "Colony B", value: "colonyB" },
+  //     { name: "Colony C", value: "colonyC" },
+  //     // Add more colonies as needed
+  //   ];
 
-  const statusList = ["friend1", "friend2", "friend3"];
+  const statusList = ["michelle", "Milan", "Richard"];
 
-  const locationList = ["friend1", "friend2", "friend3"];
+  const locationList = ["michelle", "Milan", "Richard"];
 
   const [statusSwitches, setStatusSwitches] = useState({
     friend1: false,
@@ -104,7 +104,9 @@ export default function Notifications({ navigation, route}) {
             false: COLORS.darkerprimary, // color when switch is off
             true: COLORS.gold, // color when switch is on
           }}
-          thumbColor={statusSwitches[text] ? COLORS.white : COLORS.lighterprimary}
+          thumbColor={
+            statusSwitches[text] ? COLORS.white : COLORS.lighterprimary
+          }
         />
       </View>
     );
@@ -122,7 +124,9 @@ export default function Notifications({ navigation, route}) {
             false: COLORS.darkerprimary, // color when switch is off
             true: COLORS.gold, // color when switch is on
           }}
-          thumbColor={locationSwitches[text] ? COLORS.white : COLORS.lighterprimary}
+          thumbColor={
+            locationSwitches[text] ? COLORS.white : COLORS.lighterprimary
+          }
         />
       </View>
     );
@@ -150,7 +154,7 @@ export default function Notifications({ navigation, route}) {
           <TouchableOpacity
             onPress={() => {
               console.log("Pressed back button");
-              navigation.navigate("Settings", {colonies: colonies});
+              navigation.navigate("Settings", { colonies: colonies });
             }}
           >
             <View style={styles.backButton}>
@@ -185,7 +189,9 @@ export default function Notifications({ navigation, route}) {
             maxHeight={300}
             labelField="name"
             valueField="value"
-            placeholder={selectedColony ? selectedColony.name : "Select Colony Name"}
+            placeholder={
+              selectedColony ? selectedColony.name : "Select Colony Name"
+            }
             onChange={(item) => {
               setSelectedColony(item);
             }}
@@ -256,7 +262,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: 20,
     top: 3,
-    tintColor: COLORS.secondary
+    tintColor: COLORS.secondary,
   },
   settingsItems: {
     marginTop: 20,
@@ -292,7 +298,7 @@ const styles = StyleSheet.create({
   },
   carouselContainer: {
     marginVertical: 25,
-    alignItems: 'center',
+    alignItems: "center",
   },
   carouselItem: {
     backgroundColor: COLORS.secondary,
@@ -307,32 +313,32 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     color: COLORS.primary,
-    textAlign: 'left',
+    textAlign: "left",
   },
   carouselText: {
     fontSize: 16,
     color: COLORS.primary,
   },
   cardContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   cardImage: {
     width: 40,
     height: 40,
     marginRight: 15,
-    tintColor: COLORS.gold
+    tintColor: COLORS.gold,
   },
   textContent: {
     flex: 1, // Take the remaining space
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   inputContainer: {
     width: "98%",
     flex: 1,
     marginTop: -40,
     marginBottom: -10,
-    alignSelf: 'center',
+    alignSelf: "center",
   },
   dropdown: {
     margin: 16,

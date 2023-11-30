@@ -27,7 +27,7 @@ const ProfileModal = ({ isModalVisible, hideModal }) => {
     >
       <View style={styles.modalContent}>
         <Image
-          source={require("../assets/michelle.png")}
+          source={require("../assets/richard.jpg")}
           style={styles.profilePicture}
         />
         <Text style={styles.nameText}>Michelle Vo</Text>

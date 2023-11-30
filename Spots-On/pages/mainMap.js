@@ -318,15 +318,16 @@ export default function MainMap({ navigation }) {
   const getEventUpcoming = async () => {
     try {
       const authToken = await AsyncStorage.getItem("token");
-      const response = await fetch(`${papiUrl}/allEventsOut24/${await AsyncStorage.getItem("uid")}`,
+      const response = await fetch(
+        `${papiUrl}/allEventsOut24/${await AsyncStorage.getItem("uid")}`,
         {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${authToken}`,
           },
-        });
-
+        }
+      );
 
       if (!response.ok) {
         // Handle error, e.g., display an error message
@@ -335,13 +336,13 @@ export default function MainMap({ navigation }) {
       }
 
       const data = await response.json();
-      for (let event of data){
-          event.dateTime = moment(event.dateTime).local();
-          event.dateTime = event.dateTime.format('MMMM D, YYYY h:mm A');
+      for (let event of data) {
+        event.dateTime = moment(event.dateTime).local();
+        event.dateTime = event.dateTime.format("MMMM D, YYYY h:mm A");
       }
 
       console.log("Events upcoming: " + JSON.stringify(data));
-      setEventsUpcoming(data)
+      setEventsUpcoming(data);
     } catch (error) {
       console.error("Error:", error);
       // Handle other errors as needed
@@ -556,7 +557,7 @@ export default function MainMap({ navigation }) {
             height: 40,
             borderRadius: 100,
             borderWidth: 2,
-            borderColor: COLORS.primary,
+            borderColor: getStatusColor(user),
             // tintColor: getStatusColor(user),
           }}
         />
@@ -592,9 +593,11 @@ export default function MainMap({ navigation }) {
   };
 
   const getStatusColor = (user) => {
-    const { statusCode, incognito } = user;
+    const { statusCode, incognito, status_code } = user;
     if (statusCode === 2 || incognito) return COLORS.active;
     if (statusCode === 1) return COLORS.status;
+    if (status_code === 2 || incognito) return COLORS.active;
+    if (status_code === 1) return COLORS.status;
     return COLORS.green;
   };
 
@@ -1021,6 +1024,7 @@ export default function MainMap({ navigation }) {
               setUsers={setUsers}
               getUsersInColony={getUsersInColony}
               findSelectedColony={findSelectedColony}
+              getStatusColor={getStatusColor}
             />
 
             {/* Social Button */}

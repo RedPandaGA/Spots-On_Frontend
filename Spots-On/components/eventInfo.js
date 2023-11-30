@@ -8,6 +8,7 @@ import {
   Linking,
   Platform,
   TouchableWithoutFeedback,
+  Image,
 } from "react-native";
 import COLORS from "./colors";
 import Modal from "react-native-modal";
@@ -104,16 +105,33 @@ const EventInfo = ({ isModalVisible, hideModal, showModal, event }) => {
             <View style={styles.modalTitle}>
               <Text style={styles.eventTitle}>{event.name}</Text>
             </View>
-            <ScrollView style={{ width: "100%" }}>
+            <ScrollView style={{ width: "100%", marginTop: 30 }}>
               <TouchableWithoutFeedback>
                 <View style={styles.eventInfo}>
-                  <Text style={styles.eventText}>{event.colonyName}</Text>
-
-                  <Text style={styles.eventText}>{`${eventDateString(
-                    event
-                  )}`}</Text>
-                  <Text style={styles.eventText}>{`${event.address}`}</Text>
-                  <Text style={styles.eventText}>{`${event.description}`}</Text>
+                  {/* <Text style={styles.eventText}>{event.colonyName}</Text> */}
+                  <View style={styles.eventItemContainer}>
+                    <Image
+                      source={require("../assets/calendar.png")}
+                      style={{
+                        tintColor: COLORS.primary,
+                        height: 20,
+                        width: 20,
+                      }}
+                    />
+                    <Text style={styles.eventText}>
+                      {`${eventDateString(event)}`}
+                    </Text>
+                  </View>
+                  <View style={styles.eventItemContainer}>
+                    <Image
+                      source={require("../assets/marker.png")}
+                      style={styles.image}
+                    />
+                    <Text style={styles.eventText}>{`${event.address}`}</Text>
+                  </View>
+                  <Text
+                    style={[styles.eventText]}
+                  >{`${event.description}`}</Text>
                 </View>
               </TouchableWithoutFeedback>
             </ScrollView>
@@ -170,6 +188,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     padding: 10,
     paddingBottom: 0,
+    marginTop: 30,
   },
   eventColony: {
     fontSize: 24,
@@ -181,12 +200,14 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: COLORS.primary,
     marginVertical: 10,
-    backgroundColor: COLORS.darkersecondary,
     borderRadius: 15,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
+    paddingVertical: 5,
+    marginHorizontal: 10,
+    // paddingHorizontal: 20,
     fontWeight: "bold",
     // textAlign: "center",
+    flexDirection: "row",
+    justifyContent: "space-around",
   },
   directionButton: {
     backgroundColor: COLORS.primary,
@@ -219,8 +240,21 @@ const styles = StyleSheet.create({
     width: "100%",
     borderWidth: 1,
     borderColor: COLORS.secondary,
-    borderRadius: 10,
+    borderRadius: 20,
     marginVertical: 20,
+  },
+  eventItemContainer: {
+    flexDirection: "row",
+    backgroundColor: COLORS.darkersecondary,
+    alignItems: "center",
+    borderRadius: 10,
+    marginBottom: 10,
+    paddingHorizontal: 10,
+  },
+  image: {
+    tintColor: COLORS.primary,
+    height: 20,
+    width: 20,
   },
 });
 
