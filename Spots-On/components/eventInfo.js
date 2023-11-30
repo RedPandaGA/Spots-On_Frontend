@@ -103,11 +103,12 @@ const EventInfo = ({ isModalVisible, hideModal, showModal, event }) => {
           <View style={styles.infoContainer}>
             <View style={styles.modalTitle}>
               <Text style={styles.eventTitle}>{event.name}</Text>
-              <Text style={styles.eventColony}>{event.colonyName}</Text>
             </View>
             <ScrollView style={{ width: "100%" }}>
               <TouchableWithoutFeedback>
                 <View style={styles.eventInfo}>
+                  <Text style={styles.eventText}>{event.colonyName}</Text>
+
                   <Text style={styles.eventText}>{`${eventDateString(
                     event
                   )}`}</Text>
@@ -182,9 +183,10 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     backgroundColor: COLORS.darkersecondary,
     borderRadius: 15,
-    padding: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     fontWeight: "bold",
-    textAlign: "center",
+    // textAlign: "center",
   },
   directionButton: {
     backgroundColor: COLORS.primary,

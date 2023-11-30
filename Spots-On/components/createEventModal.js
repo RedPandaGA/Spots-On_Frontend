@@ -523,8 +523,8 @@ const CreateEventModal = ({
                       labelField="name"
                       valueField="coordinate"
                       placeholder={
-                        // event.spotName === "" ? "Spot *" : event.spotName
-                        "Choose Spot"
+                        event.spotName === "" ? "Spot *" : event.spotName
+                        // "Choose Spot"
                       }
                       value={event.spotName}
                       disable={filteredSpots.length < 1}
