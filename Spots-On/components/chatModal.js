@@ -80,7 +80,11 @@ const ChatModal = ({ isModalVisible, hideModal, navigation, colonies }) => {
           {/* ------ SEARCH BAR ------ */}
           <SearchBarModal
             imageSource={require("../assets/search.png")}
-            style={styles.searchBar}
+            style={
+              Platform.OS == "android"
+                ? styles.searchBarAndroid
+                : styles.searchBarIOS
+            }
             onPress={() => console.log("Pressed search bar")}
           />
 
@@ -180,9 +184,13 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 50,
     flex: 1,
   },
-  searchBar: {
+  searchBarAndroid: {
     alignSelf: "center",
-    marginTop: 43,
+    marginTop: 45,
+  },
+  searchBarIOS: {
+    alignSelf: "center",
+    marginTop: 59,
   },
   infoContainer: {
     flexDirection: "row",

@@ -11,7 +11,7 @@ import { GiftedChat, Bubble, Day, Time } from "react-native-gifted-chat";
 import COLORS from "../components/colors";
 import ThreeDotsModal from "../components/threeDotsModal.js";
 import ColonyChatList from "../components/colonyChatList.js";
-import { useRoute } from '@react-navigation/native';
+import { useRoute } from "@react-navigation/native";
 
 const renderBubble = (props) => (
   <Bubble
@@ -97,7 +97,11 @@ export default function ColonyChat({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
+      <View
+        style={
+          Platform.OS == "android" ? styles.headerAndroid : styles.headerIOS
+        }
+      >
         <TouchableOpacity onPress={toggleChatList}>
           <Text style={styles.title}>{item.name}</Text>
         </TouchableOpacity>
@@ -168,10 +172,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.primary,
-    paddingBottom: 10
+    paddingBottom: 10,
   },
-  header: {
+  headerAndroid: {
     paddingTop: 50,
+    backgroundColor: COLORS.lighterprimary,
+    height: 120,
+  },
+  headerIOS: {
+    paddingTop: 70,
     backgroundColor: COLORS.lighterprimary,
     height: 120,
   },
@@ -180,7 +189,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: "bold",
     alignSelf: "center",
-    top: -5
+    top: -5,
   },
   backButton: {
     height: 50,

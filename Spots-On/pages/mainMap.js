@@ -788,7 +788,7 @@ export default function MainMap({ navigation }) {
   // GET ALL COLONIES FROM DATABASE AND STORE INTO VARIABLES TO USE AND DISPLAY
   // USE THE SELECTED VALUE OR SOMETHING SIMILAR TO GRAB SPECIFIC MEMBERS/SPOTS BASED ON THE SELECTED COLONY
   const [colonies, setColonies] = useState([]);
-  const [filteredColonies, setFilteredColonies] = useState([]);
+  const [filteredColonies, setFilteredColonies] = useState(colonies);
 
   /*[
     { name: "SASE", selected: true, value: 1 },

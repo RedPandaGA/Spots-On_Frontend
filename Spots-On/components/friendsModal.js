@@ -177,7 +177,11 @@ const FriendsModal = ({
           {/* ------ SEARCH BAR ------ */}
           <SearchBarModal
             imageSource={require("../assets/search.png")}
-            style={styles.searchBar}
+            style={
+              Platform.OS == "android"
+                ? styles.searchBarAndroid
+                : styles.searchBarIOS
+            }
             onPress={() => console.log("Pressed search bar")}
           />
 
@@ -260,9 +264,13 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 50,
     flex: 1,
   },
-  searchBar: {
+  searchBarAndroid: {
     alignSelf: "center",
     marginTop: 45,
+  },
+  searchBarIOS: {
+    alignSelf: "center",
+    marginTop: 61,
   },
   sliderContainer: {
     marginTop: 13,
