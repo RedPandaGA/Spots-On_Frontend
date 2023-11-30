@@ -1157,31 +1157,33 @@ const styles = StyleSheet.create({
   },
   searchBar: {
     position: "absolute",
-    top: "5%",
-    left: "5%",
+    top: "7%",
+    // left: "5%",
   },
   colonySlider: {
     position: "absolute",
-    top: "12%",
+    top: "13.5%",
+    // left: "-2%",
+    // width: "100%",
   },
   spotsButton: {
     position: "absolute",
-    bottom: "35%",
+    bottom: "30%",
     left: "85%",
   },
   incognitoButton: {
     position: "absolute",
-    bottom: "45%",
+    bottom: "40%",
     left: "85%",
   },
   statusButton: {
     position: "absolute",
-    bottom: "55%",
+    bottom: "50%",
     left: "85%",
   },
   mapViewButton: {
     position: "absolute",
-    bottom: "65%",
+    bottom: "60%",
     left: "85%",
   },
   targetButton: {
@@ -1191,7 +1193,7 @@ const styles = StyleSheet.create({
   },
   settingsButton: {
     position: "absolute",
-    top: "5%",
+    top: "25%",
     left: "85%",
   },
   socialImage: {
@@ -1209,6 +1211,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.6,
     shadowRadius: 3,
     borderRadius: 50,
+    opacity: 0.9,
   },
   socialButton: {
     alignItems: "center",

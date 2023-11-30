@@ -17,17 +17,17 @@ export default function ColonySlider({
   setSpots,
   setUsers,
   getUsersInColony,
-  findSelectedColony
+  findSelectedColony,
 }) {
-useEffect(() => {
+  useEffect(() => {
     async function grabColonyInfo() {
-        if (Object.keys(findSelectedColony(colonies)).length > 0) {
-            setSpots(await getSpots());
-            setUsers(await getUsersInColony());
-        }
+      if (Object.keys(findSelectedColony(colonies)).length > 0) {
+        setSpots(await getSpots());
+        setUsers(await getUsersInColony());
+      }
     }
     grabColonyInfo();
-    }, [colonies])
+  }, [colonies]);
 
   const onPress = async (name) => {
     // Update the selected state for each colony
@@ -76,10 +76,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: COLORS.primary,
     borderRadius: 50,
-    paddingVertical: 11,
-    paddingHorizontal: 10,
-    height: 45,
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+    height: 40,
     minWidth: 100,
+    opacity: 0.9,
   },
   selected: {
     backgroundColor: COLORS.secondary,
@@ -97,11 +98,11 @@ const styles = StyleSheet.create({
   },
   text: {
     textAlign: "center",
-    fontSize: 16,
+    fontSize: 14,
     color: "white",
     fontWeight: "bold",
   },
   list: {
-    marginLeft: 16,
+    marginLeft: 10,
   },
 });

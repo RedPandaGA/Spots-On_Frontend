@@ -38,10 +38,11 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     paddingVertical: 14,
     paddingHorizontal: 10,
+    opacity: 0.8,
   },
   image: {
-    width: 35,
-    height: 35,
+    width: 28,
+    height: 28,
   },
   shadow: {
     elevation: 20,
