@@ -413,7 +413,7 @@ export default function MainMap({ navigation }) {
             borderColor: getStatusColor(user),
           }}
         />
-        <Callout>
+        <Callout onPress={() => console.log("Current user:", user)}>
           <View style={{ minWidth: 150 }}>
             <Text
               style={{
