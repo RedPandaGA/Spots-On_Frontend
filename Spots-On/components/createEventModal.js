@@ -578,58 +578,54 @@ const CreateEventModal = ({
                     >
                       <Text style={styles.buttonDateTimeText}>{timeText}</Text>
                     </TouchableOpacity>
-                    {show && (
-                      <View>
-                        <DateTimePicker
-                          testId="dateTimePicker"
-                          value={event.date}
-                          mode={mode}
-                          is24Hour={false}
-                          display="spinner"
-                          textColor={COLORS.primary}
-                          onChange={onChange}
-                        />
-                        {Platform.OS === "ios" && (
-                          <TouchableOpacity
-                            style={styles.confirmButton}
-                            onPress={() => {
-                              setShow(false);
-                              setErrors({ ...errors, ["dateTime"]: "" });
-                            }}
-                          >
-                            <Text style={styles.confirmButtonText}>
-                              Confirm
-                            </Text>
-                          </TouchableOpacity>
-                        )}
-                      </View>
-                    )}
                   </View>
-                  {errors.dateTime ? (
-                    <Text style={styles.errorMessage}>{errors.dateTime}</Text>
-                  ) : null}
 
-                  <TextInput
-                    style={[
-                      styles.input,
-                      { height: 100, textAlignVertical: "top" },
-                    ]}
-                    placeholder="Description"
-                    placeholderTextColor={COLORS.primary}
-                    multiline
-                    numberOfLines={4}
-                    value={event.description}
-                    onChangeText={(text) => {
-                      handleInputChange("description", text);
-                      setErrors({ ...errors, ["description"]: "" });
-                    }}
-                  />
-                  {errors.description ? (
-                    <Text style={styles.errorMessage}>
-                      {errors.description}
-                    </Text>
-                  ) : null}
+                  {show && (
+                    <View>
+                      <DateTimePicker
+                        testId="dateTimePicker"
+                        value={event.date}
+                        mode={mode}
+                        is24Hour={false}
+                        display="spinner"
+                        textColor={COLORS.primary}
+                        onChange={onChange}
+                      />
+                      {Platform.OS === "ios" && (
+                        <TouchableOpacity
+                          style={styles.confirmButton}
+                          onPress={() => {
+                            setShow(false);
+                            setErrors({ ...errors, ["dateTime"]: "" });
+                          }}
+                        >
+                          <Text style={styles.confirmButtonText}>Confirm</Text>
+                        </TouchableOpacity>
+                      )}
+                    </View>
+                  )}
                 </View>
+                {errors.dateTime ? (
+                  <Text style={styles.errorMessage}>{errors.dateTime}</Text>
+                ) : null}
+                <TextInput
+                  style={[
+                    styles.input,
+                    { height: 100, textAlignVertical: "top" },
+                  ]}
+                  placeholder="Description"
+                  placeholderTextColor={COLORS.primary}
+                  multiline
+                  numberOfLines={4}
+                  value={event.description}
+                  onChangeText={(text) => {
+                    handleInputChange("description", text);
+                    setErrors({ ...errors, ["description"]: "" });
+                  }}
+                />
+                {errors.description ? (
+                  <Text style={styles.errorMessage}>{errors.description}</Text>
+                ) : null}
               </ScrollView>
 
               <View style={styles.buttonContainer}>
