@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   TextInput,
   Text,
+  Platform,
 } from "react-native";
 import { GiftedChat, Bubble, Day, Time } from "react-native-gifted-chat";
 import COLORS from "../components/colors.js";
@@ -88,7 +89,11 @@ export default function FriendChat({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
+      <View
+        style={
+          Platform.OS == "android" ? styles.headerAndroid : styles.headerIOS
+        }
+      >
         <TouchableOpacity
           style={styles.pictureContainer}
           onPress={toggleProfile}
@@ -155,8 +160,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.primary,
   },
-  header: {
+  headerAndroid: {
     paddingTop: 15,
+    paddingBottom: 5,
+    backgroundColor: COLORS.lighterprimary,
+  },
+  headerIOS: {
+    paddingTop: 40,
     paddingBottom: 5,
     backgroundColor: COLORS.lighterprimary,
   },

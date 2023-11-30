@@ -12,32 +12,41 @@ import Bar from "./bar";
 import COLORS from "./colors";
 import Modal from "react-native-modal";
 
-const ColonyChatList = ({ isModalVisible, hideModal, navigation, colonies }) => {
-//   const chatList = [
-//     {
-//       name: "Bestiesss",
-//       memberCount: 3,
-//     },
-//     {
-//       name: "Volleyball squad",
-//       memberCount: 4,
-//     },
-//     {
-//       name: "OOD group",
-//       memberCount: 5,
-//     },
-//     {
-//       name: "CSC 3102",
-//       memberCount: 20,
-//     },
-//     {
-//       name: "SASE people",
-//       memberCount: 28,
-//     },
-//   ];
+const ColonyChatList = ({
+  isModalVisible,
+  hideModal,
+  navigation,
+  colonies,
+}) => {
+  //   const chatList = [
+  //     {
+  //       name: "Bestiesss",
+  //       memberCount: 3,
+  //     },
+  //     {
+  //       name: "Volleyball squad",
+  //       memberCount: 4,
+  //     },
+  //     {
+  //       name: "OOD group",
+  //       memberCount: 5,
+  //     },
+  //     {
+  //       name: "CSC 3102",
+  //       memberCount: 20,
+  //     },
+  //     {
+  //       name: "SASE people",
+  //       memberCount: 28,
+  //     },
+  //   ];
 
   const renderItem = ({ item }) => (
-    <TouchableOpacity onPress={() => navigation.navigate("ColonyChat",{ item: item, colonies: colonies })}>
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate("ColonyChat", { item: item, colonies: colonies })
+      }
+    >
       <View style={styles.chatItem}>
         <View>
           <Image
@@ -114,17 +123,17 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     color: COLORS.primary,
-    left: 80,
+    left: 120,
   },
   memberCount: {
     fontSize: 16,
     color: COLORS.status,
-    left: 80,
+    left: 120,
   },
   chatImage: {
     height: 40,
     width: 40,
-    left: 20,
+    left: 60,
     position: "absolute",
     tintColor: COLORS.primary,
   },
