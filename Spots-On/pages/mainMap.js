@@ -326,33 +326,27 @@ export default function MainMap({ navigation }) {
             "Content-Type": "application/json",
             Authorization: `Bearer ${authToken}`,
           },
-        }
-      );
+        });
+
 
       if (!response.ok) {
         // Handle error, e.g., display an error message
-        console.error("Error fetching user colonies:", response.status);
-        return [];
-      }
-
-      if (!response.ok) {
-        // Handle error, e.g., display an error message
-        console.error("Error fetching user colonies:", response.status);
-        return [];
+        console.error("Error fetching Upcoming Events:", response.status);
+        return;
       }
 
       const data = await response.json();
-
-      for (const colony of data) {
-        colony.memberCount = await getNumOfMembers(colony.cid);
-        colony.selected = false;
+      for (let event of data){
+          event.dateTime = moment(event.dateTime).local();
+          event.dateTime = event.dateTime.format('MMMM D, YYYY h:mm A');
       }
-      console.log("DATAARG: " + JSON.stringify(data));
-      return data;
+
+      console.log("Events upcoming: " + JSON.stringify(data));
+      setEventsUpcoming(data)
     } catch (error) {
       console.error("Error:", error);
       // Handle other errors as needed
-      return [];
+      return;
     }
   };
 
@@ -1046,6 +1040,8 @@ export default function MainMap({ navigation }) {
               isModalVisible={modals.social}
               hideModal={() => hideModal("social")}
               showModal={showModal}
+              getEventToday={getEventToday}
+              getEventUpcoming={getEventUpcoming}
             />
             <ViewEventsModal
               isModalVisible={modals.viewEvents}
