@@ -191,7 +191,7 @@ const CreateEventModal = ({
       console.log(event);
       let createEvent = {};
 
-      if (event.isCustomAddress) {
+      if (isCustomAddress) {
         console.log("spot");
         console.log(event);
         createEvent = JSON.stringify({
