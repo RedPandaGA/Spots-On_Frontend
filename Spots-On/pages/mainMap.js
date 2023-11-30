@@ -1158,6 +1158,7 @@ export default function MainMap({ navigation }) {
               filteredColonies={filteredColonies}
               setFilteredColonies={setFilteredColonies}
               renderUsersOnMap={renderUsersOnMap}
+              users={users}
             />
 
             {/* ------ SIDE BUTTONS ------ */}

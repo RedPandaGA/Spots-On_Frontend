@@ -21,13 +21,14 @@ export default function ColonySlider({
   filteredColonies,
   setFilteredColonies,
   renderUsersOnMap,
+  users,
 }) {
   useEffect(() => {
     async function grabColonyInfo() {
       if (Object.keys(findSelectedColony(colonies)).length > 0) {
         setSpots(await getSpots());
         setUsers(await getUsersInColony());
-        renderUsersOnMap();
+        renderUsersOnMap(users, colonies);
       }
     }
     grabColonyInfo();
