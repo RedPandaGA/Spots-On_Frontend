@@ -33,15 +33,16 @@ export default function ColonySlider({
 
   const onPress = async (name) => {
     // Update the selected state for each colony
+    const updatedFilteredColony = filteredColonies.map((item) => ({
+      ...item,
+      selected: item.name === name,
+    }));
     const updatedColony = colonies.map((item) => ({
       ...item,
       selected: item.name === name,
     }));
     setColonies(updatedColony);
-    const updatedFilteredColony = filteredColonies.map((item) => ({
-      ...item,
-      selected: item.name === name,
-    }));
+
     setFilteredColonies(updatedFilteredColony);
     //console.log("colonies: " + JSON.stringify(colonies));
   };
