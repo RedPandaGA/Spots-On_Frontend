@@ -19,31 +19,43 @@ const LandingPage = ({ navigation }) => {
     >
       <View style={styles.slide}>
         <Image
-          source={require("../assets/discover.gif")}
+          source={
+            Platform.OS == "android"
+              ? require("../assets/discover.gif")
+              : require("../assets/discover.png")
+          }
           style={styles.image}
         />
         <Text style={styles.text}>Discover</Text>
       </View>
       <View style={styles.slide}>
         <Image
-          source={require("../assets/share.gif")}
+          source={
+            Platform.OS == "android"
+              ? require("../assets/share.gif")
+              : require("../assets/plan.png")
+          }
           style={styles.shareImage}
         />
         <Text style={styles.text}>Plan</Text>
       </View>
       <View style={styles.slide}>
-  <Image
-    source={require("../assets/connect.gif")}
-    style={styles.image}
-  />
-  <Text style={styles.text}>Connect</Text>
-  <View style={styles.bottomContent}>
-    <Text style={styles.smallText}>Your colony, your rules.</Text>
-    <TouchableOpacity style={styles.button} onPress={handleGetStarted}>
-      <Text style={styles.buttonText}>Get Started</Text>
-    </TouchableOpacity>
-  </View>
-</View>
+        <Image
+          source={
+            Platform.OS == "android"
+              ? require("../assets/connect.gif")
+              : require("../assets/connect.png")
+          }
+          style={styles.image}
+        />
+        <Text style={styles.text}>Connect</Text>
+        <View style={styles.bottomContent}>
+          <Text style={styles.smallText}>Your colony, your rules.</Text>
+          <TouchableOpacity style={styles.button} onPress={handleGetStarted}>
+            <Text style={styles.buttonText}>Get Started</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     </Swiper>
   );
 };
@@ -65,7 +77,7 @@ const styles = StyleSheet.create({
     color: COLORS.secondary,
     fontSize: 20,
     fontWeight: "bold",
-    bottom: 70
+    bottom: 70,
   },
   button: {
     borderRadius: 30,
@@ -102,7 +114,7 @@ const styles = StyleSheet.create({
     resizeMode: "stretch",
     width: 256,
     height: 256,
-    tintColor: COLORS.secondary
+    tintColor: COLORS.secondary,
   },
   shareImage: {
     marginBottom: 30,
@@ -111,7 +123,7 @@ const styles = StyleSheet.create({
     top: 30,
     width: 256,
     height: 256,
-    tintColor: COLORS.secondary
+    tintColor: COLORS.secondary,
   },
   bottomContent: {
     position: "absolute",
