@@ -15,6 +15,7 @@ import Bar from "./bar";
 import COLORS from "./colors";
 import Config from "../.config.js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Entypo } from "@expo/vector-icons";
 
 const papiUrl = Config.PAPI_URL;
 import Modal from "react-native-modal";
@@ -187,7 +188,22 @@ const CreateColonyModal = ({
                 }}
                 disabled={!user.premium} // Disable TouchableOpacity if user.premium is false
               >
-                <Text style={styles.buttonText}>Public</Text>
+                <Entypo
+                  style={{
+                    position: "absolute",
+                    left: "43%",
+                    top: "20%",
+                    opacity: 1,
+                  }}
+                  name="lock"
+                  size={24}
+                  color={COLORS.primary}
+                />
+                <Text
+                  style={[styles.buttonText, !user.premium && { opacity: 0.2 }]}
+                >
+                  Public
+                </Text>
               </TouchableOpacity>
             </View>
             <View style={{ width: "100%" }}>
@@ -200,10 +216,7 @@ const CreateColonyModal = ({
               />
             </View>
             <TouchableOpacity
-              style={[
-                styles.buttonNormal,
-                { alignSelf: "center", marginTop: 10 },
-              ]}
+              style={styles.createButton}
               onPress={() => {
                 console.log("Created Colony: " + colonyName);
                 createColony();
@@ -211,7 +224,7 @@ const CreateColonyModal = ({
                 setColonyName("");
               }}
             >
-              <Text style={styles.buttonText}>Create Colony</Text>
+              <Text style={styles.createText}>Create Colony</Text>
             </TouchableOpacity>
           </View>
         </KeyboardAvoidingView>
@@ -299,7 +312,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   disabledButton: {
-    opacity: 0.5,
+    // opacity: 0.5,
   },
   shadow: {
     elevation: 20,
@@ -307,6 +320,21 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.5,
     shadowRadius: 10,
+  },
+  createButton: {
+    backgroundColor: COLORS.primary,
+    borderRadius: 24,
+    alignSelf: "center",
+    marginTop: 10,
+  },
+  createText: {
+    fontSize: 20,
+    color: COLORS.secondary,
+    textAlign: "center",
+    fontWeight: "bold",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    alignSelf: "center",
   },
 });
 

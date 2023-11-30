@@ -8,36 +8,36 @@ import {
 } from "react-native";
 import COLORS from "./colors";
 
-export default function ColonySliderModal({ 
-    style, 
-    colonies, 
-    setColonies, 
-    getSpots,
-    spots,
-    setSpots,
-    setUsers,
-    getUsersInColony,
-    findSelectedColony }) {
+export default function ColonySliderModal({
+  style,
+  colonies,
+  setColonies,
+  getSpots,
+  spots,
+  setSpots,
+  setUsers,
+  getUsersInColony,
+  findSelectedColony,
+}) {
+  useEffect(() => {
+    async function grabColonyInfo() {
+      if (Object.keys(findSelectedColony(colonies)).length > 0) {
+        setSpots(await getSpots());
+        setUsers(await getUsersInColony());
+      }
+    }
+    grabColonyInfo();
+  }, [colonies]);
 
-    useEffect(() => {
-        async function grabColonyInfo() {
-            if (Object.keys(findSelectedColony(colonies)).length > 0) {
-                setSpots(await getSpots());
-                setUsers(await getUsersInColony());
-            }
-        }
-        grabColonyInfo();
-        }, [colonies])
-    
-        const onPress = async (name) => {
-        // Update the selected state for each colony
-        const updatedColony = colonies.map((item) => ({
-            ...item,
-            selected: item.name === name,
-        }));
-        setColonies(updatedColony);
-        //console.log("colonies: " + JSON.stringify(colonies));
-        };
+  const onPress = async (name) => {
+    // Update the selected state for each colony
+    const updatedColony = colonies.map((item) => ({
+      ...item,
+      selected: item.name === name,
+    }));
+    setColonies(updatedColony);
+    //console.log("colonies: " + JSON.stringify(colonies));
+  };
 
   return (
     <View style={style}>
@@ -61,16 +61,17 @@ export default function ColonySliderModal({
 
 const styles = StyleSheet.create({
   button: {
-    marginVertical: 5,
+    marginBottom: 5,
     marginHorizontal: 5,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 50,
-    paddingVertical: 11,
-    paddingHorizontal: 10,
     backgroundColor: COLORS.secondary,
-    height: 45,
+    borderRadius: 50,
+    // paddingVertical: 2,
+    paddingHorizontal: 15,
+    height: 35,
     minWidth: 100,
+    opacity: 0.9,
   },
   shadow: {
     elevation: 2,
@@ -88,5 +89,6 @@ const styles = StyleSheet.create({
   },
   list: {
     marginRight: 20,
+    marginLeft: 3,
   },
 });

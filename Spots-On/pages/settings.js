@@ -10,38 +10,42 @@ import {
 import COLORS from "../components/colors";
 
 export default function Settings({ navigation, route }) {
-  const {colonies} = route.params;
+  const { colonies } = route.params;
 
   const findSelectedColony = (colonies) => {
-    if(colonies != null && colonies.length > 0){
-        console.log("inhere: "+ JSON.stringify(colonies));
-        let selectedColony = colonies.find((colony) => colony.selected == true);
-        if(selectedColony != undefined){
-            return selectedColony
-        } else {
-            return {};
-        }    
-    } else {
+    if (colonies != null && colonies.length > 0) {
+      console.log("inhere: " + JSON.stringify(colonies));
+      let selectedColony = colonies.find((colony) => colony.selected == true);
+      if (selectedColony != undefined) {
+        return selectedColony;
+      } else {
         return {};
+      }
+    } else {
+      return {};
     }
   };
 
   console.log("colonies: " + JSON.stringify(colonies));
   console.log(JSON.stringify(findSelectedColony(colonies)));
-  const colonyList = ["Notifications", "Colony Management", "Location/Status Sharing"];
+  const colonyList = [
+    "Notifications",
+    "Colony Management",
+    "Location/Status Sharing",
+  ];
 
   const colonyButtonActions = [
     () => {
       console.log("Notifications clicked");
-      navigation.navigate("Notifications", {colonies: colonies});
+      navigation.navigate("Notifications", { colonies: colonies });
     },
     () => {
       console.log("Colony management clicked");
-      navigation.navigate("ColonyManagement", {colonies: colonies});
+      navigation.navigate("ColonyManagement", { colonies: colonies });
     },
     () => {
       console.log("Location sharing clicked");
-      navigation.navigate("LocationSharing", {colonies: colonies});
+      navigation.navigate("LocationSharing", { colonies: colonies });
     },
   ];
 
@@ -50,7 +54,7 @@ export default function Settings({ navigation, route }) {
   const universalButtonActions = [
     () => {
       console.log("Account clicked");
-      navigation.navigate("Account", {colonies: colonies});
+      navigation.navigate("Account", { colonies: colonies });
     },
     () => {
       console.log("Privacy & Security clicked");
@@ -107,7 +111,11 @@ export default function Settings({ navigation, route }) {
           </TouchableOpacity>
           <Text style={styles.title}>Settings</Text>
         </View>
-        <Text style={styles.subtitle}>{findSelectedColony(colonies).name + " settings"}</Text>
+        <Text style={styles.subtitle}>
+          {findSelectedColony(colonies).name
+            ? findSelectedColony(colonies).name + " Settings"
+            : "Status Settings"}
+        </Text>
         <View style={styles.settingsItems}>
           {colonyList.map((buttonText, index) =>
             renderColonyButton(buttonText, index)

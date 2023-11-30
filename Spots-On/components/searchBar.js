@@ -8,7 +8,7 @@ export default function SearchBar({ imageSource, style, color }) {
       <View style={styles.button}>
         <TextInput
           style={styles.input}
-          placeholder="Search for groups or people"
+          placeholder="Search for colonies"
           placeholderTextColor={COLORS.white}
           // value={searchText}
           // onChangeText={setSearchText}
@@ -24,28 +24,29 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     height: 45,
-    width: "90%",
+    width: "89%",
     borderRadius: 50,
     paddingVertical: 14,
     paddingRight: 10,
     paddingLeft: 20,
-    backgroundColor: "rgba(44, 103, 101, .8)",
+    backgroundColor: "rgba(44, 103, 101, 1)",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginHorizontal: 13,
+    marginHorizontal: 16.5,
+    opacity: 0.8,
   },
   input: {
     height: 45,
     width: "100%",
     color: "white",
     fontWeight: "bold",
-    fontSize: 16,
+    fontSize: 18,
   },
   image: {
-    width: 25,
-    height: 25,
-    right: 40,
+    width: 20,
+    height: 20,
+    right: 25,
   },
   shadow: {
     elevation: 20,

@@ -88,7 +88,6 @@ const EventInfo = ({ isModalVisible, hideModal, showModal, event }) => {
           showModal("viewEvents");
         }, 500);
       }}
-      backdropOpacity={0}
       swipeThreshold={200}
       swipeDirection="down"
       propagateSwipe

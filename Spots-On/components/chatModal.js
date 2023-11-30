@@ -6,19 +6,33 @@ import {
   FlatList,
   Image,
   TouchableOpacity,
+  TextInput,
 } from "react-native";
 import SearchBarModal from "./searchBarModal";
 import Modal from "react-native-modal";
 import COLORS from "./colors";
 import Config from "../.config.js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AntDesign } from "@expo/vector-icons";
+import { LayoutAnimation, UIManager } from "react-native";
 
 const papiUrl = Config.PAPI_URL;
 
 const ChatModal = ({ isModalVisible, hideModal, navigation, colonies }) => {
-
   const [isColoniesPressed, setIsColoniesPressed] = useState(true);
   const [isFriendsPressed, setIsFriendsPressed] = useState(false);
+
+  const [addingFriend, setAddingFriend] = useState(false);
+
+  const expandButton = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setAddingFriend(true);
+  };
+
+  const collapseButton = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setAddingFriend(false);
+  };
 
   const [isClickingChat, setIsClickingChat] = useState(false);
 
@@ -100,13 +114,53 @@ const ChatModal = ({ isModalVisible, hideModal, navigation, colonies }) => {
 
           {/* Display the list of friends and statuses using FlatList */}
           <View style={{ marginTop: "3%", flex: 1, width: "100%" }}>
-            <FlatList
-              data={colonies}
-              renderItem={renderItem}
-              keyExtractor={(item, index) => index.toString()}
-              showsVerticalScrollIndicator={false}
-              noBorder
-            />
+            {isColoniesPressed && !isFriendsPressed && (
+              <FlatList
+                data={colonies}
+                renderItem={renderItem}
+                keyExtractor={(item, index) => index.toString()}
+                showsVerticalScrollIndicator={false}
+                noBorder
+              />
+            )}
+            {!isColoniesPressed && isFriendsPressed && (
+              <View>
+                {addingFriend ? (
+                  <View>
+                    <TextInput
+                      placeholder="Enter friend's phone #"
+                      placeholderTextColor={COLORS.secondary}
+                      onSubmitEditing={(event) => {
+                        const friendName = event.nativeEvent.text;
+                        console.log("New friend added:", friendName);
+                        collapseButton();
+                      }}
+                      style={styles.expandedInput}
+                      keyboardType="numeric"
+                    />
+                    <AntDesign
+                      style={styles.addFriendImageInput}
+                      name="pluscircle"
+                      size={40}
+                      color={COLORS.secondary}
+                    />
+                  </View>
+                ) : (
+                  <TouchableOpacity
+                    style={styles.addFriendButton}
+                    onPress={expandButton}
+                  >
+                    <AntDesign
+                      style={styles.addFriendImage}
+                      name="pluscircle"
+                      size={40}
+                      color={COLORS.secondary}
+                    />
+                    <Text style={styles.addFriendText}>Add a new friend</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+            )}
           </View>
         </View>
       </View>
@@ -169,7 +223,7 @@ const styles = StyleSheet.create({
     borderColor: COLORS.lighterprimary,
     marginVertical: 5,
     alignItems: "center",
-    marginHorizontal: 5,
+    marginHorizontal: 10,
   },
   buttonPressed: {
     borderRadius: 30,
@@ -179,7 +233,7 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     alignItems: "center",
     backgroundColor: COLORS.lighterprimary,
-    marginHorizontal: 5,
+    marginHorizontal: 10,
   },
   buttonText: {
     fontSize: 16,
@@ -189,6 +243,40 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 10,
     alignSelf: "center",
+  },
+  addFriendButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 10,
+    marginLeft: 20,
+  },
+  addFriendImage: {
+    marginRight: 20,
+  },
+  addFriendImageInput: {
+    marginLeft: 30,
+    marginTop: 12.25,
+    position: "absolute",
+  },
+  addFriendText: {
+    color: COLORS.secondary,
+    fontSize: 18,
+    fontWeight: "bold",
+    paddingVertical: 10,
+  },
+  expandedInput: {
+    marginLeft: 30,
+    marginRight: -10,
+    marginTop: 12.25,
+    backgroundColor: COLORS.darkerprimary,
+    paddingVertical: 6.25,
+    paddingLeft: 60,
+    marginBottom: 12,
+    borderRadius: 30,
+    fontSize: 18,
+    color: COLORS.secondary,
+    fontWeight: "bold",
+    width: "84%",
   },
 });
 

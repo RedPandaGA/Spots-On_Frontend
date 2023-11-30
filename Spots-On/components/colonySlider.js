@@ -76,9 +76,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: COLORS.primary,
     borderRadius: 50,
-    paddingVertical: 12,
+    // paddingVertical: 2,
     paddingHorizontal: 15,
-    height: 40,
+    height: 35,
     minWidth: 100,
     opacity: 0.9,
   },
@@ -101,8 +101,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "white",
     fontWeight: "bold",
+    justifyContent: "center",
   },
   list: {
-    marginLeft: 10,
+    marginLeft: 14,
   },
 });
