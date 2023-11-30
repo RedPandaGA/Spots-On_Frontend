@@ -447,7 +447,7 @@ const CreateEventModal = ({
                 <View style={styles.inputContainer}>
                   <TextInput
                     style={styles.input}
-                    placeholder="Event Name *"
+                    placeholder="Event Name"
                     placeholderTextColor={COLORS.primary}
                     value={event.name}
                     onChangeText={(text) => {
@@ -470,9 +470,7 @@ const CreateEventModal = ({
                     labelField="name"
                     valueField="value"
                     placeholder={
-                      event.colonyName === ""
-                        ? "Colony Name *"
-                        : event.colonyName
+                      event.colonyName === "" ? "Colony Name" : event.colonyName
                     }
                     value={event.colonyName}
                     onChange={onChangeColony}
@@ -494,7 +492,7 @@ const CreateEventModal = ({
                   {isCustomAddress ? (
                     <View style={styles.findLocationContainer}>
                       <GooglePlacesInput
-                        placeholderText="Custom Address *"
+                        placeholderText="Custom Address"
                         placeholderTextColor={COLORS.primary}
                         changeMapRegion={true}
                         textInputStyle={[
@@ -522,7 +520,7 @@ const CreateEventModal = ({
                       valueField="coordinate"
                       placeholder={
                         // event.spotName === "" ? "Spot *" : event.spotName
-                        "Spot *"
+                        "Choose Spot"
                       }
                       value={event.spotName}
                       disable={filteredSpots.length < 1}

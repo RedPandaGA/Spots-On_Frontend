@@ -35,17 +35,17 @@ const FriendsModal = ({
     }
   }
 
-  const [addingFriend, setAddingFriend] = useState(false);
+  // const [addingFriend, setAddingFriend] = useState(false);
 
-  const expandButton = () => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    setAddingFriend(true);
-  };
+  // const expandButton = () => {
+  //   LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+  //   setAddingFriend(true);
+  // };
 
-  const collapseButton = () => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    setAddingFriend(false);
-  };
+  // const collapseButton = () => {
+  //   LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+  //   setAddingFriend(false);
+  // };
 
   // Define an array of friends and their statuses
   //   const friendsList = [
@@ -202,7 +202,7 @@ const FriendsModal = ({
 
           {/* Display the list of friends and statuses using FlatList */}
           <View style={{ flex: 1, marginTop: 20, marginRight: 20 }}>
-            {addingFriend ? (
+            {/* {addingFriend ? (
               <View>
                 <TextInput
                   placeholder="Enter friend's phone #"
@@ -235,7 +235,7 @@ const FriendsModal = ({
                 />
                 <Text style={styles.addFriendText}>Add a new friend</Text>
               </TouchableOpacity>
-            )}
+            )} */}
             <FlatList
               data={usersWithImages}
               renderItem={renderItem}

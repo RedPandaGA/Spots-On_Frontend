@@ -980,7 +980,7 @@ export default function MainMap({ navigation }) {
 
             {/* ------ MAIN NAV BUTTONS ------ */}
             {/* Friends Button */}
-            <MapButton
+            {/* <MapButton
               imageSource={require("../assets/people.png")}
               style={styles.friendsButton}
               onPress={() => {
@@ -989,7 +989,22 @@ export default function MainMap({ navigation }) {
               }}
               width={60}
               height={60}
-            />
+            /> */}
+            <TouchableOpacity
+              onPress={() => {
+                showModal("friends");
+                console.log("Pressed members button");
+              }}
+              style={styles.memberButtonOnMap}
+            >
+              <View style={styles.navButton}>
+                <Image
+                  source={require("../assets/people.png")}
+                  style={styles.navImage}
+                />
+              </View>
+            </TouchableOpacity>
+
             <FriendsModal
               isModalVisible={modals.friends}
               hideModal={() => hideModal("friends")}
@@ -1067,7 +1082,7 @@ export default function MainMap({ navigation }) {
               setColonies={setColonies}
             />
             {/* Chats Button */}
-            <MapButton
+            {/* <MapButton
               imageSource={require("../assets/speech-bubble.png")}
               style={styles.chatButton}
               onPress={() => {
@@ -1076,7 +1091,21 @@ export default function MainMap({ navigation }) {
               }}
               width={60}
               height={60}
-            />
+            /> */}
+            <TouchableOpacity
+              onPress={() => {
+                showModal("chat");
+                console.log("Pressed chat list button");
+              }}
+              style={styles.chatButtonOnMap}
+            >
+              <View style={styles.navButton}>
+                <Image
+                  source={require("../assets/speech-bubble.png")}
+                  style={styles.navImage}
+                />
+              </View>
+            </TouchableOpacity>
             <ChatModal
               isModalVisible={modals.chat}
               hideModal={() => hideModal("chat")}
@@ -1088,13 +1117,21 @@ export default function MainMap({ navigation }) {
             {/* PASS IN COLONIES/PEOPLE TO SEARCH FOR IN ORDER TO USE SEARCH FUNCTION */}
             <SearchBar
               imageSource={require("../assets/search.png")}
-              style={styles.searchBar}
+              style={
+                Platform.OS == "android"
+                  ? styles.searchBarAndroid
+                  : styles.searchBarIOS
+              }
               onPress={() => console.log("Pressed search bar")}
             />
 
             {/* Colony Buttons Slider */}
             <ColonySlider
-              style={styles.colonySlider}
+              style={
+                Platform.OS == "android"
+                  ? styles.colonySliderAndroid
+                  : styles.colonySliderIOS
+              }
               colonies={colonies}
               setColonies={setColonies}
               getSpots={getUsersSpotsInColony}
@@ -1111,8 +1148,8 @@ export default function MainMap({ navigation }) {
                 imageSource={require("../assets/target.png")}
                 style={styles.targetButton}
                 onPress={handleResetMap}
-                width={45}
-                height={45}
+                width={40}
+                height={40}
               />
             )}
 
@@ -1121,8 +1158,8 @@ export default function MainMap({ navigation }) {
               imageSource={require("../assets/incognito.png")}
               style={styles.incognitoButton}
               onPress={() => handleIncognito()}
-              width={45}
-              height={45}
+              width={40}
+              height={40}
               active={user.incognito}
             />
             {/* Status Button */}
@@ -1130,8 +1167,8 @@ export default function MainMap({ navigation }) {
               imageSource={require("../assets/sensor.png")}
               style={styles.statusButton}
               onPress={() => showModal("status")}
-              width={45}
-              height={45}
+              width={40}
+              height={40}
             />
             <StatusModal
               isModalVisible={modals.status}
@@ -1149,8 +1186,8 @@ export default function MainMap({ navigation }) {
                 handleMapType();
                 console.log("Pressed map view button");
               }}
-              width={45}
-              height={45}
+              width={40}
+              height={40}
             />
             <EditSpot
               isModalVisible={modals.editSpot}
@@ -1175,8 +1212,8 @@ export default function MainMap({ navigation }) {
               onPress={() => {
                 showModal("spots");
               }}
-              width={45}
-              height={45}
+              width={40}
+              height={40}
             />
             <CreateSpotModal
               isModalVisible={modals.spots}
@@ -1203,8 +1240,8 @@ export default function MainMap({ navigation }) {
                 console.log("Pressed settings button");
                 navigation.navigate("Settings", { colonies: colonies });
               }}
-              width={45}
-              height={45}
+              width={40}
+              height={40}
             />
           </View>
         )}
@@ -1223,43 +1260,56 @@ const styles = StyleSheet.create({
     height: "100%",
     width: "100%",
   },
-  friendsButton: {
+  // friendsButton: {
+  //   position: "absolute",
+  //   bottom: "5%",
+  //   left: "15%",
+  // },
+  // chatButton: {
+  //   position: "absolute",
+  //   bottom: "5%",
+  //   left: "70%",
+  // },
+  searchBarIOS: {
     position: "absolute",
-    bottom: "5%",
-    left: "15%",
+    top: "7%",
+    // left: "5%",
   },
-  chatButton: {
+  colonySliderIOS: {
     position: "absolute",
-    bottom: "5%",
-    left: "70%",
+    top: "13.5%",
+    // left: "-2%",
+    // width: "100%",
   },
-  searchBar: {
+  searchBarAndroid: {
     position: "absolute",
     top: "5%",
-    left: "5%",
+    // left: "5%",
   },
-  colonySlider: {
+  colonySliderAndroid: {
     position: "absolute",
-    top: "12%",
+    top: "11.5%",
+    // left: "-2%",
+    // width: "100%",
   },
   spotsButton: {
     position: "absolute",
-    bottom: "35%",
+    bottom: "30%",
     left: "85%",
   },
   incognitoButton: {
     position: "absolute",
-    bottom: "45%",
+    bottom: "40%",
     left: "85%",
   },
   statusButton: {
     position: "absolute",
-    bottom: "55%",
+    bottom: "50%",
     left: "85%",
   },
   mapViewButton: {
     position: "absolute",
-    bottom: "65%",
+    bottom: "60%",
     left: "85%",
   },
   targetButton: {
@@ -1269,8 +1319,46 @@ const styles = StyleSheet.create({
   },
   settingsButton: {
     position: "absolute",
-    top: "5%",
+    top: "25%",
     left: "85%",
+  },
+  navImage: {
+    height: 30,
+    width: 30,
+  },
+  memberButtonOnMap: {
+    position: "absolute",
+    bottom: "5%",
+    left: "15%",
+    elevation: 2,
+    shadowColor: "#171717",
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.6,
+    shadowRadius: 3,
+    borderRadius: 50,
+    opacity: 0.9,
+  },
+  chatButtonOnMap: {
+    position: "absolute",
+    bottom: "5%",
+    left: "70%",
+    elevation: 2,
+    shadowColor: "#171717",
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.6,
+    shadowRadius: 3,
+    borderRadius: 50,
+    opacity: 0.9,
+  },
+  navButton: {
+    alignItems: "center",
+    justifyContent: "center",
+    width: 60,
+    height: 60,
+    borderRadius: 50,
+    paddingVertical: 14,
+    paddingHorizontal: 10,
+    backgroundColor: "rgba(44, 103, 101, 1)",
   },
   socialImage: {
     height: 60,
@@ -1287,6 +1375,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.6,
     shadowRadius: 3,
     borderRadius: 50,
+    opacity: 0.9,
   },
   socialButton: {
     alignItems: "center",

@@ -8,7 +8,7 @@ export default function SearchBarModal({ imageSource, style, color }) {
       <View style={styles.button}>
         <TextInput
           style={styles.input}
-          placeholder="Search for groups or people"
+          placeholder="Search for people"
           placeholderTextColor={COLORS.primary}
           // value={searchText}
           // onChangeText={setSearchText}
@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     width: 300,
     borderRadius: 50,
     paddingVertical: 14,
-    paddingHorizontal: 10,
+    paddingHorizontal: 20,
     backgroundColor: COLORS.secondary,
     flexDirection: "row",
     alignItems: "center",
@@ -38,12 +38,12 @@ const styles = StyleSheet.create({
     width: 250,
     color: COLORS.primary,
     fontWeight: "bold",
-    fontSize: 16,
+    fontSize: 20,
   },
   image: {
-    width: 30,
-    height: 30,
-    right: 5,
+    width: 20,
+    height: 20,
+    right: 10,
     tintColor: COLORS.primary,
   },
   shadow: {
